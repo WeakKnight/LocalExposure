@@ -21,7 +21,7 @@ void downsample(uint3 tid : SV_DispatchThreadID)
     outputTexture[tid.xy] = value * 0.25;
 }
 
-#include "aces.slang"
+#include "lut_proxy.slang"
 Texture2D<float4> hdrSource;
 RWTexture2D<float4> baseOutput;
 float globalEV;
@@ -45,10 +45,10 @@ void setup_weights(uint3 tid : SV_DispatchThreadID)
     if (tid.x >= width || tid.y >= height) return;
     // Channels encode exposures, not color: R=darker, G=base, B=brighter.
     float3 hdr = max(hdrSource[tid.xy].rgb, 0.0);
-    float3 darker = acesFilmic(hdr * exp2(globalEV - highlightEV));
-    float3 base = acesFilmic(hdr * exp2(globalEV));
-    float3 brighter = acesFilmic(hdr * exp2(globalEV + shadowEV));
-    baseOutput[tid.xy] = float4(base, 1.0);
+    float3 darker = proxyToneOperator(hdr * exp2(globalEV - highlightEV));
+    float3 base = proxyToneOperator(hdr * exp2(globalEV));
+    float3 brighter = proxyToneOperator(hdr * exp2(globalEV + shadowEV));
+    baseOutput[tid.xy] = float4(toneOperator(hdr * exp2(globalEV)), 1.0);
     float3 y = float3(lightness(darker), lightness(base), lightness(brighter));
     float3 distance = y - 0.5;
     float3 logWeight = -distance * distance / (2.0 * sigma * sigma);

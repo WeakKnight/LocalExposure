@@ -5,6 +5,8 @@ import OpenEXR
 from PIL import Image
 import slangpy as spy
 
+from lut_proxy import ToneLut
+
 ROOT = Path(__file__).resolve().parent
 
 
@@ -55,6 +57,8 @@ class ToneMapper:
         weights = self.device.create_compute_kernel(session.load_program("pyramid.slang", ["setup_weights"]))
         reconstruct = self.device.create_compute_kernel(session.load_program("fusion.slang", ["reconstruct"]))
         convert = self.device.create_compute_kernel(session.load_program("fusion.slang", ["convert_exposure"]))
+        lut = ToneLut(self.device, session=session)
+        self.lut = lut
         self.session, self.kernel = session, kernel
         self.downsample_kernel, self.weight_kernel = downsample, weights
         self.reconstruction_kernel, self.convert_kernel = reconstruct, convert
@@ -89,7 +93,7 @@ class ToneMapper:
             self.weight_pyramid = self.create_texture(source.width, source.height, levels=levels)
         self.weight_kernel.dispatch(
             thread_count=[source.width, source.height, 1],
-            vars={"hdrSource": source, "globalEV": exposure_ev,
+            vars={**self.lut.bindings(), "hdrSource": source, "globalEV": exposure_ev,
                   "highlightEV": highlight_ev, "shadowEV": shadow_ev,
                   "baseOutput": self.base_color,
                   "luminanceOutput": self.luminance_pyramid.create_view(mip=0, mip_count=1),
@@ -122,7 +126,7 @@ class ToneMapper:
                       "reconstructionOutput": self.reconstructed.create_view(mip=mip, mip_count=1)},
                 command_encoder=encoder)
         self.convert_kernel.dispatch(thread_count=[hdr_source.width, hdr_source.height, 1],
-            vars={"hdrSource": hdr_source, "fusedLightness": self.reconstructed,
+            vars={**self.lut.bindings(), "hdrSource": hdr_source, "fusedLightness": self.reconstructed,
                   "globalEV": exposure_ev, "exposureOutput": self.local_exposure, "colorOutput": self.final_color},
             command_encoder=encoder)
         self._result_key = self._weight_key

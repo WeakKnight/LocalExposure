@@ -1,4 +1,4 @@
-#include "aces.slang"
+#include "lut_proxy.slang"
 Texture2D<float4> fineLuminance;
 Texture2D<float4> coarseLuminance;
 Texture2D<float4> layerWeights;
@@ -38,7 +38,7 @@ float globalEV;
 
 float mappedLuminance(float3 color)
 {
-    return dot(acesFilmic(color), float3(0.2126, 0.7152, 0.0722));
+    return dot(proxyToneOperator(color), float3(0.2126, 0.7152, 0.0722));
 }
 
 [shader("compute")]
@@ -53,8 +53,8 @@ void convert_exposure(uint3 tid : SV_DispatchThreadID)
     float target = lightness * lightness; // undo perceptual sqrt
     float baseline = mappedLuminance(color);
     float multiplier = 1.0;
-    // Numerically invert the ACTUAL RGB tone-map luminance along this color's
-    // exposure ray. inverseACES(dot(rgb)) is not inverse(dot(ACES(rgb))).
+    // Solve one scalar exposure along the RGB ray using the same LUT as setup.
+    // Only the final color evaluates the real operator.
     // Preserve identity when target already matches, including clipped whites.
     if (max(color.x, max(color.y, color.z)) > 1e-12 && abs(target - baseline) > 2e-6)
     {
@@ -68,5 +68,5 @@ void convert_exposure(uint3 tid : SV_DispatchThreadID)
         multiplier = exp2((lo + hi) * 0.5);
     }
     exposureOutput[tid.xy] = multiplier;
-    colorOutput[tid.xy] = float4(acesFilmic(color * multiplier), 1.0);
+    colorOutput[tid.xy] = float4(toneOperator(color * multiplier), 1.0);
 }

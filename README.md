@@ -44,12 +44,27 @@ The View menu offers **Fusion Result / Original Comparison / Local Exposure EV**
 
 `HDR → Three-exposure lightness and weights → Multiscale pyramids → Weighted Laplacian blending and coarse-to-fine reconstruction → Local exposure multiplier → HDR × Exposure → ACES → sRGB`
 
-`shaders/pyramid.slang` generates lightness and weights. `shaders/fusion.slang` handles blending, reconstruction, and numerical exposure inversion. The implementation uses UE Fusion-style four-tap downsampling and exp2 weights. It currently derives luminance from an RGB ACES approximation and is not a full reproduction of UE FilmToneMap.
+`shaders/pyramid.slang` generates lightness and weights. `shaders/fusion.slang` handles blending, reconstruction, and numerical exposure inversion. The implementation uses UE Fusion-style four-tap downsampling and exp2 weights. It derives luminance from an RGB LUT proxy of the current tone operator (ACES Filmic by default), and is not a full reproduction of UE FilmToneMap.
 
 ```powershell
 .\.venv\Scripts\python.exe test_pyramid.py          # Numerical regression tests
 .\.venv\Scripts\python.exe docs/render_examples.py  # Regenerate README comparisons
 ```
+
+## Log-Input 3D LUT Proxy
+
+Fusion uses a GPU-baked **16-cubed RGB10A2_UNORM LUT** (16 KiB). Each HDR RGB channel is encoded as `log2(1 + x/k) / log2(1 + M/k)`, with `k = 1/64` and `M = 65535`. Log spacing concentrates samples in shadows and midtones while preserving black. The LUT stores **display-linear RGB** with 10 bits per channel (alpha is unused), so its output needs no log decoding. Baking and shader arithmetic remain float32.
+
+The LUT is rebuilt on startup and **F5**, using `shaders/tone_operator.slang`. Three-exposure lightness and scalar exposure search use the same trilinear lookup; the original comparison and final image use the real operator. Inputs outside [0, 65535] clamp to the LUT boundary; lookup never falls back to the real operator. No curve fitting or SciPy dependency is required.
+
+The adapter must return finite linear Rec.709 SDR RGB in [0, 1]. Validation checks the real operator and ideal trilinear LUT on 25 color rays for nonmonotone luminance responses before accepting a new LUT; a failed reload retains the previous shaders and LUT. Hardware-filter rounding is recorded separately (maximum downward luminance step about 0.0000392 on the current validation set). This sampled check is not a proof of monotonicity for arbitrary operators. Spatial or temporal tone mapping cannot be represented by this fixed RGB LUT.
+
+```powershell
+.\.venv\Scripts\python.exe lut_proxy.py   # Bake and validate independently
+.\.venv\Scripts\python.exe test_lut.py    # LUT, channel coupling, bounds, reload tests
+```
+
+Open `outputs/lut/report.html` for validation errors. `validation.json` and `samples.npz` contain metrics and measured responses. The report tool also accepts `--size 33` or `--size 129` to compare precision; the viewer uses 16 cubed. On the current ACES validation set, maximum RGB error is approximately **0.02424**, and RGB RMSE is **0.00715**. Exposure is still one scalar multiplier shared by RGB, solved with 22 LUT-based bisection iterations within +/-12 EV.
 
 ## References
 

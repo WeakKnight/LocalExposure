@@ -59,7 +59,8 @@ void convert_exposure(uint3 tid : SV_DispatchThreadID)
     if (max(color.x, max(color.y, color.z)) > 1e-12 && abs(target - baseline) > 2e-6)
     {
         float lo = -12.0, hi = 12.0;
-        for (uint i = 0; i < 22; ++i)
+        // 24 / 2^10 = 0.0234375 EV final search interval.
+        for (uint i = 0; i < 10; ++i)
         {
             float mid = (lo + hi) * 0.5;
             if (mappedLuminance(color * exp2(mid)) < target) lo = mid;

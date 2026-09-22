@@ -64,7 +64,7 @@ The adapter must return finite linear Rec.709 SDR RGB in [0, 1]. Validation chec
 .\.venv\Scripts\python.exe test_lut.py    # LUT, channel coupling, bounds, reload tests
 ```
 
-Open `outputs/lut/report.html` for validation errors. `validation.json` and `samples.npz` contain metrics and measured responses. The report tool also accepts `--size 33` or `--size 129` to compare precision; the viewer uses 16 cubed. On the current ACES validation set, maximum RGB error is approximately **0.02424**, and RGB RMSE is **0.00715**. Exposure is still one scalar multiplier shared by RGB, solved with 22 LUT-based bisection iterations within +/-12 EV.
+Open `outputs/lut/report.html` for validation errors. `validation.json` and `samples.npz` contain metrics and measured responses. The report tool also accepts `--size 33` or `--size 129` to compare precision; the viewer uses 16 cubed. On the current ACES validation set, maximum RGB error is approximately **0.02424**, and RGB RMSE is **0.00715**. Exposure is still one scalar multiplier shared by RGB, solved with 10 LUT-based bisection iterations within +/-12 EV.
 
 ## References
 

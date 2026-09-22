@@ -140,7 +140,15 @@ class PyramidTests(unittest.TestCase):
             # steps. Bound that discrepancy using the actual baked node slopes.
             node_y = self.mapper.lut.nodes @ np.array([.2126,.7152,.0722])
             filter_step = sum(np.max(np.abs(np.diff(node_y, axis=a))) for a in range(3))/256
-            np.testing.assert_allclose(proxy_y[reachable], target[reachable], atol=2*filter_step+2e-6)
+            # Ten iterations return the midpoint of a 24/1024 EV interval.
+            # Verify that the target lies within that interval's luminance range,
+            # including the separate-dispatch filter rounding bound.
+            half_interval = 12.0 / 1024
+            lower = self.mapper.lut.sample(rgba[..., :3]*multiplier[..., None]*2**(-half_interval)) @ np.array([.2126,.7152,.0722])
+            upper = self.mapper.lut.sample(rgba[..., :3]*multiplier[..., None]*2**half_interval) @ np.array([.2126,.7152,.0722])
+            tolerance = 2*filter_step+2e-6
+            self.assertTrue(np.all(target[reachable] >= lower[reachable]-tolerance))
+            self.assertTrue(np.all(target[reachable] <= upper[reachable]+tolerance))
             np.testing.assert_allclose(actual_y[reachable],target[reachable],atol=.03)
 
     def test_zero_brackets_are_identity_including_black_and_white(self):

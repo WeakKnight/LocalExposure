@@ -33,7 +33,6 @@ void reconstruct(uint3 tid : SV_DispatchThreadID)
 Texture2D<float4> hdrSource;
 Texture2D<float> fusedLightness;
 RWTexture2D<float> exposureOutput;
-RWTexture2D<float4> colorOutput;
 float globalEV;
 
 float mappedLuminance(float3 color)
@@ -46,7 +45,7 @@ float mappedLuminance(float3 color)
 void convert_exposure(uint3 tid : SV_DispatchThreadID)
 {
     uint width, height;
-    colorOutput.GetDimensions(width, height);
+    exposureOutput.GetDimensions(width, height);
     if (tid.x >= width || tid.y >= height) return;
     float3 color = max(hdrSource[tid.xy].rgb, 0.0) * exp2(globalEV);
     float lightness = saturate(fusedLightness[tid.xy]);
@@ -69,5 +68,4 @@ void convert_exposure(uint3 tid : SV_DispatchThreadID)
         multiplier = exp2((lo + hi) * 0.5);
     }
     exposureOutput[tid.xy] = multiplier;
-    colorOutput[tid.xy] = float4(toneOperator(color * multiplier), 1.0);
 }

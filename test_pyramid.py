@@ -51,7 +51,7 @@ class PyramidTests(unittest.TestCase):
         self.assertEqual(fusion_mip_count(131072, 131072), 16)
         self.assertEqual(fusion_mip_count(4096, 2048, 6), 6)
         self.assertEqual(fusion_mip_count(1, 8), 1)
-        mapper = ToneMapper(self.device, max_levels=1)
+        mapper = ToneMapper(self.device, max_levels=1, fusion_scale=1)
         rgba = np.ones((4, 8, 4), np.float32) * .18
         source = create_hdr_texture(self.device, rgba)
         output = mapper.create_output(8, 4)
@@ -66,7 +66,7 @@ class PyramidTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.device = spy.Device(enable_hot_reload=False)
-        cls.mapper = ToneMapper(cls.device)
+        cls.mapper = ToneMapper(cls.device, fusion_scale=1)
 
     def test_weights_normalization_preference_and_filter_order(self):
         rgba = np.ones((8, 8, 4), np.float32)

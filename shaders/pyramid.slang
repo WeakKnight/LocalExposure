@@ -23,7 +23,6 @@ void downsample(uint3 tid : SV_DispatchThreadID)
 
 #include "lut_proxy.slang"
 Texture2D<float4> hdrSource;
-RWTexture2D<float4> baseOutput;
 float globalEV;
 float highlightEV;
 float shadowEV;
@@ -48,7 +47,6 @@ void setup_weights(uint3 tid : SV_DispatchThreadID)
     float3 darker = proxyToneOperator(hdr * exp2(globalEV - highlightEV));
     float3 base = proxyToneOperator(hdr * exp2(globalEV));
     float3 brighter = proxyToneOperator(hdr * exp2(globalEV + shadowEV));
-    baseOutput[tid.xy] = float4(toneOperator(hdr * exp2(globalEV)), 1.0);
     float3 y = float3(lightness(darker), lightness(base), lightness(brighter));
     float3 distance = y - 0.5;
     float3 logWeight = -distance * distance / (2.0 * sigma * sigma);

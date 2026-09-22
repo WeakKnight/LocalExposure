@@ -38,7 +38,8 @@ The View menu offers **Fusion Result / Original Comparison / Local Exposure EV**
 | `--exposure` | 0 | Global exposure in EV |
 | `--highlight-contrast` / `--shadow-contrast` | 0.8 / 0.8 | Each exposure offset has magnitude `6 × (1 − Scale)` EV; 1 means no offset |
 | `--sigma` | 0.2 | Exposure weight width; smaller values make exposure selection more selective |
-| `--levels` | 16 | Maximum pyramid levels, capped by the shorter image dimension |
+| `--levels` | 16 | Maximum pyramid levels, capped by the shorter working-image dimension |
+| `--fusion-scale` | 4 | Resolution divisor per axis: 4 for guided quarter resolution, 1 for full reference |
 
 ## Implementation
 
@@ -49,6 +50,18 @@ The View menu offers **Fusion Result / Original Comparison / Local Exposure EV**
 ```powershell
 .\.venv\Scripts\python.exe test_pyramid.py          # Numerical regression tests
 .\.venv\Scripts\python.exe docs/render_examples.py  # Regenerate README comparisons
+```
+
+## Quarter-Resolution Fusion
+
+By default, Fusion and the 10-step exposure search run at **1/4 width x 1/4 height** (1/16 as many pixels). A 4096x2048 input uses a 1024x512 working image. The UI's **Fusion resolution** selector switches between the guided version and the full-resolution reference; `--fusion-scale 1` selects the reference from the command line.
+
+`shaders/guided.slang` downsamples linear HDR and log-luminance guidance separately, fits local `EV = a * guide + b` models in 5x5 low-resolution windows, averages the coefficients, and evaluates them with full-resolution guidance. Regularization is 0.04 EV squared, and the resulting local EV is limited to [-12, 12]. Only exposure application and the real tone mapper run at full resolution.
+
+This is an approximation: averaging HDR before nonlinear tone mapping and omitting the finest Fusion bands can change fine detail and strong highlights. Guided upsampling reduces edge bleed but cannot recover information already lost during reduction. The lower working pixel count is not a measured 16x frame-time speedup; full-resolution output and guided-filter passes still have a cost.
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest test_guided test_lut test_pyramid
 ```
 
 ## Log-Input 3D LUT Proxy

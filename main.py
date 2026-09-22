@@ -27,7 +27,7 @@ class Viewer:
     def __init__(self, args):
         self.args = args
         self.device = spy.Device(type=getattr(spy.DeviceType, args.device), enable_hot_reload=False)
-        self.mapper = ToneMapper(self.device, args.levels)
+        self.mapper = ToneMapper(self.device, args.levels, args.fusion_scale)
         self.assets = sorted((ROOT / "Assets").glob("*.exr"))
         if args.image not in self.assets:
             self.assets.insert(0, args.image)
@@ -62,11 +62,14 @@ class Viewer:
         self.surface.configure(width=self.window.width, height=self.window.height,
                                format=spy.Format.rgba8_unorm, vsync=True)
         self.ui = spy.ui.Context(self.device)
-        panel = spy.ui.Window(self.ui.screen, "Local Exposure", spy.float2(12, 12), spy.float2(480, 385))
+        panel = spy.ui.Window(self.ui.screen, "Local Exposure", spy.float2(12, 12), spy.float2(480, 420))
         self.label = spy.ui.Text(panel, self.assets[self.index].name)
         spy.ui.ComboBox(panel, "View", items=VIEW_LABELS,
                         value=self.view_mode, callback=self.set_view)
         self.view_help = spy.ui.Text(panel, VIEW_HELP[self.view_mode])
+        spy.ui.ComboBox(panel, "Fusion resolution", items=["1/4 x 1/4 (guided)", "Full resolution reference"],
+                        value=0 if self.mapper.fusion_scale == 4 else 1,
+                        callback=lambda value: setattr(self.mapper, "fusion_scale", 4 if value == 0 else 1))
         self.slider = spy.ui.SliderFloat(panel, "Exposure (EV)", min=-16, max=16,
                                         value=self.exposure, callback=self.set_exposure)
         spy.ui.SliderFloat(panel, "Highlight Contrast Scale", min=0, max=1,
@@ -195,6 +198,8 @@ def parse_args(argv=None):
     parser.add_argument("--image", type=Path, default=ROOT / "Assets" / "veranda_4k.exr")
     parser.add_argument("--exposure", type=float, default=0.0, help="Exposure compensation in EV")
     parser.add_argument("--view", choices=VIEW_NAMES, default="fusion")
+    parser.add_argument("--fusion-scale", type=int, choices=[1, 4], default=4,
+                        help="Fusion resolution divisor per axis: 4 guided (default), 1 full reference")
     parser.add_argument("--sigma", type=float, default=0.2, help="UE exp2 weight width (0.02 to 0.8; default 0.2)")
     parser.add_argument("--levels", type=int, default=16, help="Maximum fusion levels, capped by shorter side (UE default: 16)")
     highlight_group = parser.add_mutually_exclusive_group()

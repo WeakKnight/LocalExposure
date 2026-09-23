@@ -102,15 +102,15 @@ class ToneMapper:
             width = (source.width + self.fusion_scale - 1) // self.fusion_scale
             height = (source.height + self.fusion_scale - 1) // self.fusion_scale
             levels = fusion_mip_count(width, height, self.max_levels)
-            # Bounded SDR colors tolerate FP16 storage; HDR and the inverse
-            # problem's pyramids/coefficients still require FP32.
+            # SDR colors and bounded exposure multipliers use FP16 storage.
+            # HDR, inverse-problem pyramids and guided coefficients stay FP32.
             self.base_color = self.create_texture(source.width, source.height, spy.Format.rgba16_float)
             self.final_color = self.create_texture(source.width, source.height, spy.Format.rgba16_float)
-            self.local_exposure = self.create_texture(source.width, source.height, spy.Format.r32_float)
+            self.local_exposure = self.create_texture(source.width, source.height, spy.Format.r16_float)
             self.luminance_pyramid = self.create_texture(width, height, levels=levels)
             self.weight_pyramid = self.create_texture(width, height, levels=levels)
             self.reconstructed = self.create_texture(width, height, spy.Format.r32_float, levels=levels)
-            self.low_exposure = self.create_texture(width, height, spy.Format.r32_float)
+            self.low_exposure = self.create_texture(width, height, spy.Format.r16_float)
             self.coefficients = self.create_texture(width, height, spy.Format.rg32_float)
             self.averaged_coefficients = self.create_texture(width, height, spy.Format.rg32_float)
             self.work_source = self.create_texture(width, height) if self.fusion_scale == 4 else source

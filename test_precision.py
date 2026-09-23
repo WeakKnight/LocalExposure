@@ -30,6 +30,8 @@ class PrecisionTests(unittest.TestCase):
         self.assertTrue(np.isfinite(exposure).all())
         self.assertEqual(mapper.weight_pyramid.format, spy.Format.rgba32_float)
         self.assertEqual(mapper.final_color.format, spy.Format.rgba16_float)
+        self.assertEqual(mapper.low_exposure.format, spy.Format.r16_float)
+        self.assertEqual(mapper.local_exposure.format, spy.Format.r16_float)
         return rgb, exposure
 
     def test_identity_extremes_and_odd_sizes(self):
@@ -74,6 +76,13 @@ class PrecisionTests(unittest.TestCase):
                 self.assertEqual(float(half_mid), mid)
                 children.extend([(lo, mid), (mid, hi)])
             intervals = children
+        # The solved EV stays float, then its multiplier rounds to half.
+        midpoints = np.array([(lo+hi)*.5 for lo, hi in intervals])
+        multipliers = np.exp2(midpoints).astype(np.float16).astype(float)
+        self.assertTrue(np.isfinite(multipliers).all())
+        self.assertTrue((multipliers >= 2**-12).all())
+        self.assertTrue((multipliers <= 2**12).all())
+        self.assertLess(float(np.max(np.abs(np.log2(multipliers)-midpoints))), .00071)
 
     def test_display_dense_sdr_ramps(self):
         # Include dark/subnormal inputs, the sRGB junction, and every binary16

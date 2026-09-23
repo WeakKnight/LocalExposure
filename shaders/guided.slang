@@ -31,7 +31,7 @@ void reduce_source(uint3 tid : SV_DispatchThreadID)
 }
 
 Texture2D<float4> reducedSource;
-Texture2D<float> lowExposure;
+Texture2D<half> lowExposure;
 RWTexture2D<float2> coefficientOutput;
 
 // Fast guided filter: fit EV = a * log-luminance + b in a 5x5 low-res window.
@@ -46,7 +46,8 @@ void fit_coefficients(uint3 tid : SV_DispatchThreadID)
     float center = reducedSource[tid.xy].a;
     // Only per-sample centered values/products use half. Accumulate all 25
     // samples and solve covariance/variance in float to avoid cancellation.
-    // Keep a,b and the final a*guide+b float as well.
+    // Form the cancellation-sensitive differences in float before narrowing.
+    // Intercept construction, coefficient storage and final a*guide+b stay float.
     float meanG = 0, meanE = 0, meanGG = 0, meanGE = 0;
     for (int y = -2; y <= 2; ++y)
         for (int x = -2; x <= 2; ++x)
@@ -60,8 +61,12 @@ void fit_coefficients(uint3 tid : SV_DispatchThreadID)
         }
     meanG /= 25; meanE /= 25; meanGG /= 25; meanGE /= 25;
     float variance = max(meanGG - meanG*meanG, 0.0);
-    float a = (meanGE - meanG*meanE) / (variance + 0.04); // epsilon: EV^2
-    coefficientOutput[tid.xy] = float2(a, meanE - a*(meanG + center));
+    // Regularization keeps the denominator >= 0.04; the centered covariance
+    // and regularized denominator can be narrowed before half division.
+    half covariance = half(meanGE - meanG*meanE);
+    half denominator = half(variance + 0.04); // epsilon: EV^2
+    half a = covariance / denominator;
+    coefficientOutput[tid.xy] = float2(float(a), meanE - float(a)*(meanG + center));
 }
 
 Texture2D<float2> coefficients;
@@ -82,9 +87,9 @@ void average_coefficients(uint3 tid : SV_DispatchThreadID)
 }
 
 Texture2D<float2> averagedCoefficients;
-RWTexture2D<float> fullExposureOutput;
-RWTexture2D<float4> baseOutput;
-RWTexture2D<float4> colorOutput;
+RWTexture2D<half> fullExposureOutput;
+RWTexture2D<half4> baseOutput;
+RWTexture2D<half4> colorOutput;
 float globalEV;
 bool guided;
 
@@ -98,16 +103,18 @@ void apply_exposure(uint3 tid : SV_DispatchThreadID)
     colorOutput.GetDimensions(w, h);
     if (tid.x >= w || tid.y >= h) return;
     float3 hdr = max(fullSource[tid.xy].rgb, 0.0);
-    float multiplier;
+    // 2^-12 .. 2^12 is entirely within half's normal finite range. Round
+    // explicitly so the HDR multiplication and saved exposure use one value.
+    half multiplier;
     if (guided)
     {
         float2 uv = (float2(tid.xy) + 0.5) / float2(w, h);
         float2 ab = averagedCoefficients.SampleLevel(linearSampler, uv, 0);
-        multiplier = exp2(clamp(ab.x*logGuide(hdr) + ab.y, -12.0, 12.0));
+        multiplier = half(exp2(clamp(ab.x*logGuide(hdr) + ab.y, -12.0, 12.0)));
     }
-    else multiplier = lowExposure[tid.xy];
+    else multiplier = half(lowExposure[tid.xy]);
     float3 color = hdr * exp2(globalEV);
     fullExposureOutput[tid.xy] = multiplier;
-    baseOutput[tid.xy] = float4(toneOperator(color), 1.0);
-    colorOutput[tid.xy] = float4(toneOperator(color * multiplier), 1.0);
+    baseOutput[tid.xy] = half4(half3(toneOperator(color)), half(1.0));
+    colorOutput[tid.xy] = half4(half3(toneOperator(color * float(multiplier))), half(1.0));
 }

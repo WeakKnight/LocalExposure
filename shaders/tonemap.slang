@@ -6,9 +6,9 @@ half toSRGB(half x)
     return x <= half(0.0031308) ? half(12.92) * x : half(1.055) * half(pow(float(x), 1.0 / 2.4)) - half(0.055);
 }
 
-Texture2D<float4> source;
-Texture2D<float4> finalColor;
-Texture2D<float> localExposure;
+Texture2D<half4> source;
+Texture2D<half4> finalColor;
+Texture2D<half> localExposure;
 SamplerState linearSampler;
 RWTexture2D<float4> output;
 uint viewMode; // 0: fusion, 1: compare, 2: local exposure EV

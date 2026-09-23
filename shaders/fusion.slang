@@ -34,7 +34,7 @@ void reconstruct(uint3 tid : SV_DispatchThreadID)
 
 Texture2D<float4> hdrSource;
 Texture2D<float> fusedLightness;
-RWTexture2D<float> exposureOutput;
+RWTexture2D<half> exposureOutput;
 float globalEV;
 
 float mappedLuminance(float3 color)
@@ -53,7 +53,7 @@ void convert_exposure(uint3 tid : SV_DispatchThreadID)
     float lightness = saturate(fusedLightness[tid.xy]);
     float target = lightness * lightness; // undo perceptual sqrt
     float baseline = mappedLuminance(color);
-    float multiplier = 1.0;
+    half multiplier = half(1.0);
     // Solve one scalar exposure along the RGB ray using the same LUT as setup.
     // Only the final color evaluates the real operator.
     // Preserve identity when target already matches, including clipped whites.
@@ -70,8 +70,8 @@ void convert_exposure(uint3 tid : SV_DispatchThreadID)
             if (mappedLuminance(color * exp2(float(mid))) < target) lo = mid;
             else hi = mid;
         }
-        // The eleventh midpoint and exp2 need float; do not round to half.
-        multiplier = exp2((float(lo) + float(hi)) * 0.5);
+        // Keep the eleventh midpoint and exp2 float; only narrow their result.
+        multiplier = half(exp2((float(lo) + float(hi)) * 0.5));
     }
     exposureOutput[tid.xy] = multiplier;
 }

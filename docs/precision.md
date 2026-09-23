@@ -4,10 +4,9 @@ Precision is fixed per stage. Safe operations directly use `half`; there is no f
 
 | Stage | Decision | Reason |
 | --- | --- | --- |
-| Exposure search `lo`, `hi`, `mid` | Native half arithmetic | All ten midpoints of the fixed [-12, 12] search are exactly representable. The final midpoint and `exp2` stay float. Recheck if the iteration count or bounds change. |
 | Final/base tone-mapped color | Half shader resources and RGBA16F storage | Operator output is explicitly narrowed to half. Arithmetic inside the arbitrary operator remains float. Both full-resolution textures use half the previous storage. |
 | HDR reduction, global/local exposure application | Float arithmetic and storage | 65535 already exceeds half's maximum finite value, 65504. Exposure and the 16-sample sum extend the range further. |
-| LUT baking, encoding, coordinates and sampling results | Float | Log encoding, dark values and interpolation feed the inverse problem. LUT storage remains RGB10A2_UNORM. |
+| Z-curve evaluation and inverse 1D LUT | Float arithmetic and R16F LUT | Coordinates and exp2 remain float; FP16 storage is validated with a 0.02 EV round-trip budget. The 1024-entry LUT (2 KiB) stores log2 luminance; no per-pixel search remains. |
 | Lightness, Gaussian weights and both pyramids | Float arithmetic and storage | Small sigma magnifies errors; subsequent inversion can strongly amplify even small bounded weight errors. See rejected experiment below. |
 | Laplacian and reconstruction | Float | Signed small differences and accumulation across levels; preserve zero-bracket identity. |
 | Inversion target and luminance | Float | Flat/clipped tone responses are ill-conditioned. |
@@ -49,11 +48,9 @@ Compared with round two, the four 4K assets (global EV -1, default Fusion settin
 ## Current verification
 
 ```powershell
-.venv/Scripts/python.exe -m unittest test_pyramid test_guided test_lut test_precision
+.venv/Scripts/python.exe -m unittest test_pyramid test_guided test_zcurve test_precision
 ```
 
-The 21 tests include CPU numerical reference checks, mixed-precision guided filtering, all 1,023 possible ten-step search midpoints and 1,024 narrowed multipliers, odd/tiny images, black, 65535, global EV +/-16, zero-bracket identity, sharp weights, and both Fusion resolutions. New tests cover dense linear/dark/sRGB-junction ramps, every half value in [0,1], monotonic display output, and extreme guided windows against a double-precision CPU solve. Guided EV error is limited to half of the final search interval in that test. Color checks allow one FP16 ULP below 1; the current shader explicitly narrows color before storage.
+The current pipeline uses a fitted scalar Z curve and inverse 1D LUT. The 20 tests cover four-parameter fitting, monotonicity, dense GPU forward/inverse checks, custom operators, domain endpoints, atomic reload, CPU pyramid/guided references, odd/tiny images, zero-bracket identity, and dense display ramps. Guided EV error against the CPU regression is limited to 0.012 EV in the stress test. Half exposure maps retain the normal finite range [2^-12,2^12].
 
-During the original review, before removing the temporary FP32 comparison path, on all four repository 4K HDR assets at global EV -1, default brackets and quarter resolution: exposure fields were identical, maximum linear RGB error was 0.000488222, and the 1600x800 8-bit display differed by at most one code value. The original comparison images and metrics are in `outputs/precision/`.
-
-The tested D3D12 DXIL contains `phi half`, `fadd ... half`, `fmul ... half` and explicit promotion before LUT evaluation; this is native half arithmetic, not merely renamed float variables. Mobile compiler output and timing still require measurement on the target phone.
+Earlier rounds above describe measured precision changes to the **previous RGB-proxy pipeline**, including its now-removed ten-step search. Those image deltas are historical results, not quality claims for the new luminance proxy. Retained half operations remain covered by current tests. Mobile compiler output and timing require measurement on a target phone.

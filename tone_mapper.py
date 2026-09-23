@@ -5,7 +5,7 @@ import OpenEXR
 from PIL import Image
 import slangpy as spy
 
-from lut_proxy import ToneLut
+from zcurve import ZCurve
 
 ROOT = Path(__file__).resolve().parent
 
@@ -63,8 +63,8 @@ class ToneMapper:
         convert = self.device.create_compute_kernel(session.load_program("fusion.slang", ["convert_exposure"]))
         guided_kernels = {name: self.device.create_compute_kernel(session.load_program("guided.slang", [name]))
                           for name in ("reduce_source", "fit_coefficients", "average_coefficients", "apply_exposure")}
-        lut = ToneLut(self.device, session=session)
-        self.lut = lut
+        curve = ZCurve(self.device, session=session)
+        self.curve = curve
         self.guided_kernels = guided_kernels
         self.session, self.kernel = session, kernel
         self.downsample_kernel, self.weight_kernel = downsample, weights
@@ -127,7 +127,7 @@ class ToneMapper:
         work = self.work_source
         self.weight_kernel.dispatch(
             thread_count=[work.width, work.height, 1],
-            vars={**self.lut.bindings(), "hdrSource": work, "globalEV": exposure_ev,
+            vars={**self.curve.bindings(), "hdrSource": work, "globalEV": exposure_ev,
                   "highlightEV": highlight_ev, "shadowEV": shadow_ev,
                   "luminanceOutput": self.luminance_pyramid.create_view(mip=0, mip_count=1),
                   "weightOutput": self.weight_pyramid.create_view(mip=0, mip_count=1), "sigma": sigma},
@@ -154,7 +154,7 @@ class ToneMapper:
                       "reconstructionOutput": self.reconstructed.create_view(mip=mip, mip_count=1)},
                 command_encoder=encoder)
         self.convert_kernel.dispatch(thread_count=[work.width, work.height, 1],
-            vars={**self.lut.bindings(), "hdrSource": work, "fusedLightness": self.reconstructed,
+            vars={**self.curve.bindings(), "hdrSource": work, "fusedLightness": self.reconstructed,
                   "globalEV": exposure_ev, "exposureOutput": self.low_exposure},
             command_encoder=encoder)
         if self.fusion_scale == 4:

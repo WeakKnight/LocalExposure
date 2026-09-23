@@ -77,7 +77,7 @@ class PyramidTests(unittest.TestCase):
             encoder = self.device.create_command_encoder()
             self.mapper.prepare_weights(encoder, texture, 0, 2, 2, sigma)
             self.device.submit_command_buffer(encoder.finish())
-            y = np.stack([np.sqrt(np.sum(self.mapper.lut.sample(rgba[...,:3]*2.0**ev) * [0.2126,.7152,.0722],axis=-1)) for ev in [-2,0,2]],axis=-1)
+            y = np.stack([self.mapper.curve.sample((rgba[...,:3] @ np.array([.2126,.7152,.0722]))*2.0**ev)[...,0] for ev in [-2,0,2]],axis=-1)
             logw = -(y-.5)**2/(2*sigma*sigma)
             w = np.exp2(logw-logw.max(axis=-1,keepdims=True))
             w /= w.sum(axis=-1,keepdims=True)
@@ -96,7 +96,7 @@ class PyramidTests(unittest.TestCase):
         self.device.submit_command_buffer(encoder.finish())
         np.testing.assert_allclose(self.mapper.weight_pyramid.to_numpy()[...,:3], 1/3, atol=1e-6)
 
-    def test_reconstruction_and_rgb_exposure_inversion(self):
+    def test_reconstruction_and_scalar_exposure_inversion(self):
         rng = np.random.default_rng(91)
         for height, width in [(8, 8), (7, 13), (1, 1)]:
             rgba = rng.random((height, width, 4), dtype=np.float32) * 2
@@ -129,27 +129,12 @@ class PyramidTests(unittest.TestCase):
             actual_rgb = self.mapper.final_color.to_numpy()[...,:3]
             self.assertTrue(np.isfinite(multiplier).all())
             np.testing.assert_allclose(actual_rgb, aces(rgba[...,:3]*multiplier[...,None]), atol=2**-11 + 2e-6)
-            actual_y = np.sum(actual_rgb * [.2126,.7152,.0722],axis=-1)
-            target = np.clip(self.mapper.reconstructed.to_numpy(),0,1)**2
+            # Inversion targets the fitted scalar proxy, not actual RGB output.
+            luminance = rgba[..., :3] @ np.array([.2126,.7152,.0722])
+            achieved = self.mapper.curve.sample(luminance*multiplier)[..., 0]
+            target = np.clip(self.mapper.reconstructed.to_numpy(), 0, self.mapper.curve.max_lightness)
             reachable = (multiplier > 2**-11.99) & (multiplier < 2**11.99)
-            proxy_rgb = self.mapper.lut.sample(rgba[..., :3]*multiplier[..., None])
-            proxy_y = proxy_rgb @ np.array([.2126,.7152,.0722])
-            # Hardware interpolation has quantized fractional weights; bisection
-            # can land at a small lookup step rather than an exact target.
-            # Separate dispatches may round a coordinate to adjacent filter
-            # steps. Bound that discrepancy using the actual baked node slopes.
-            node_y = self.mapper.lut.nodes @ np.array([.2126,.7152,.0722])
-            filter_step = sum(np.max(np.abs(np.diff(node_y, axis=a))) for a in range(3))/256
-            # Ten iterations return the midpoint of a 24/1024 EV interval.
-            # Verify that the target lies within that interval's luminance range,
-            # including the separate-dispatch filter rounding bound.
-            half_interval = 12.0 / 1024
-            lower = self.mapper.lut.sample(rgba[..., :3]*multiplier[..., None]*2**(-half_interval)) @ np.array([.2126,.7152,.0722])
-            upper = self.mapper.lut.sample(rgba[..., :3]*multiplier[..., None]*2**half_interval) @ np.array([.2126,.7152,.0722])
-            tolerance = 2*filter_step+2e-6
-            self.assertTrue(np.all(target[reachable] >= lower[reachable]-tolerance))
-            self.assertTrue(np.all(target[reachable] <= upper[reachable]+tolerance))
-            np.testing.assert_allclose(actual_y[reachable],target[reachable],atol=.03)
+            np.testing.assert_allclose(achieved[reachable], target[reachable], atol=.001)
 
     def test_zero_brackets_are_identity_including_black_and_white(self):
         rgba = np.ones((4, 4, 4),np.float32)
@@ -174,7 +159,7 @@ class PyramidTests(unittest.TestCase):
                 self.mapper.execute(encoder, texture, output, ev,
                                     highlight_ev=highlight, shadow_ev=shadow, sigma=sigma)
                 self.device.submit_command_buffer(encoder.finish())
-                expected = np.stack([np.sqrt(np.sum(self.mapper.lut.sample(rgba[..., :3]*2.0**e) * [.2126,.7152,.0722], axis=-1))
+                expected = np.stack([self.mapper.curve.sample((rgba[..., :3] @ np.array([.2126,.7152,.0722]))*2.0**e)[...,0]
                                      for e in [ev-highlight, ev, ev+shadow]], axis=-1)
                 np.testing.assert_allclose(self.mapper.base_color.to_numpy()[..., :3],
                                            aces(rgba[..., :3]*2.0**ev), atol=2**-11 + 2e-6)

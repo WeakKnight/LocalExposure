@@ -1,4 +1,4 @@
-#include "lut_proxy.slang"
+#include "zcurve.slang"
 Texture2D<float4> fineLuminance;
 Texture2D<float4> coarseLuminance;
 Texture2D<float4> layerWeights;
@@ -37,11 +37,6 @@ Texture2D<float> fusedLightness;
 RWTexture2D<half> exposureOutput;
 float globalEV;
 
-float mappedLuminance(float3 color)
-{
-    return dot(proxyToneOperator(color), float3(0.2126, 0.7152, 0.0722));
-}
-
 [shader("compute")]
 [numthreads(8, 8, 1)]
 void convert_exposure(uint3 tid : SV_DispatchThreadID)
@@ -49,29 +44,16 @@ void convert_exposure(uint3 tid : SV_DispatchThreadID)
     uint width, height;
     exposureOutput.GetDimensions(width, height);
     if (tid.x >= width || tid.y >= height) return;
-    float3 color = max(hdrSource[tid.xy].rgb, 0.0) * exp2(globalEV);
-    float lightness = saturate(fusedLightness[tid.xy]);
-    float target = lightness * lightness; // undo perceptual sqrt
-    float baseline = mappedLuminance(color);
+    float luminance = dot(max(hdrSource[tid.xy].rgb, 0.0), float3(0.2126, 0.7152, 0.0722)) * exp2(globalEV);
+    float target = clamp(fusedLightness[tid.xy], 0.0, zMaxLightness);
+    float baseline = fusionLightness(luminance);
     half multiplier = half(1.0);
-    // Solve one scalar exposure along the RGB ray using the same LUT as setup.
-    // Only the final color evaluates the real operator.
-    // Preserve identity when target already matches, including clipped whites.
-    if (max(color.x, max(color.y, color.z)) > 1e-12 && abs(target - baseline) > 2e-6)
+    // The same scalar curve defines both setup and inverse reconstruction.
+    // Preserve identity near equality, including domain-clamped highlights.
+    if (luminance > 1e-12 && abs(target - baseline) > 2e-6)
     {
-        // These bounds and the first 10 bisection midpoints are exactly
-        // representable in half (multiples of 24/1024 within [-12,12]).
-        // Revisit this type if the search range or iteration count changes.
-        half lo = half(-12.0), hi = half(12.0);
-        // 24 / 2^10 = 0.0234375 EV final search interval.
-        for (uint i = 0; i < 10; ++i)
-        {
-            half mid = (lo + hi) * half(0.5);
-            if (mappedLuminance(color * exp2(float(mid))) < target) lo = mid;
-            else hi = mid;
-        }
-        // Keep the eleventh midpoint and exp2 float; only narrow their result.
-        multiplier = half(exp2((float(lo) + float(hi)) * 0.5));
+        float targetLuminance = inverseFusionLightness(target);
+        multiplier = half(clamp(targetLuminance / luminance, exp2(-12.0), exp2(12.0)));
     }
     exposureOutput[tid.xy] = multiplier;
 }

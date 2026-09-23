@@ -94,7 +94,7 @@ float globalEV;
 bool guided;
 
 // Full resolution only applies exposure and tone mapping, never runs Fusion
-// or the 10-step exposure search. Full-res reference bypasses guided filtering.
+// or inverse LUT lookup. Full-res reference bypasses guided filtering.
 [shader("compute")]
 [numthreads(8, 8, 1)]
 void apply_exposure(uint3 tid : SV_DispatchThreadID)

@@ -21,7 +21,7 @@ void downsample(uint3 tid : SV_DispatchThreadID)
     outputTexture[tid.xy] = value * 0.25;
 }
 
-#include "lut_proxy.slang"
+#include "zcurve.slang"
 Texture2D<float4> hdrSource;
 float globalEV;
 float highlightEV;
@@ -29,11 +29,6 @@ float shadowEV;
 RWTexture2D<float4> luminanceOutput;
 RWTexture2D<float4> weightOutput;
 float sigma;
-
-float lightness(float3 color)
-{
-    return sqrt(max(dot(color, float3(0.2126, 0.7152, 0.0722)), 0.0));
-}
 
 [shader("compute")]
 [numthreads(8, 8, 1)]
@@ -44,10 +39,10 @@ void setup_weights(uint3 tid : SV_DispatchThreadID)
     if (tid.x >= width || tid.y >= height) return;
     // Channels encode exposures, not color: R=darker, G=base, B=brighter.
     float3 hdr = max(hdrSource[tid.xy].rgb, 0.0);
-    float3 darker = proxyToneOperator(hdr * exp2(globalEV - highlightEV));
-    float3 base = proxyToneOperator(hdr * exp2(globalEV));
-    float3 brighter = proxyToneOperator(hdr * exp2(globalEV + shadowEV));
-    float3 y = float3(lightness(darker), lightness(base), lightness(brighter));
+    float luminance = dot(hdr, float3(0.2126, 0.7152, 0.0722)) * exp2(globalEV);
+    float3 y = float3(fusionLightness(luminance * exp2(-highlightEV)),
+                      fusionLightness(luminance),
+                      fusionLightness(luminance * exp2(shadowEV)));
     float3 distance = y - 0.5;
     // Float even though y is bounded: small sigma magnifies input errors.
     float3 logWeight = -distance * distance / (2.0 * sigma * sigma);

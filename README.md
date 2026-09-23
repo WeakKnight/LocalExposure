@@ -45,7 +45,7 @@ The View menu offers **Fusion Result / Original Comparison / Local Exposure EV**
 
 `HDR → Three-exposure lightness and weights → Multiscale pyramids → Weighted Laplacian blending and coarse-to-fine reconstruction → Local exposure multiplier → HDR × Exposure → ACES → sRGB`
 
-`shaders/pyramid.slang` generates lightness and weights. `shaders/fusion.slang` handles blending, reconstruction, and numerical exposure inversion. The implementation uses UE Fusion-style four-tap downsampling and exp2 weights. It derives luminance from an RGB LUT proxy of the current tone operator (ACES Filmic by default), and is not a full reproduction of UE FilmToneMap.
+`shaders/pyramid.slang` generates lightness and weights. `shaders/fusion.slang` handles blending, reconstruction, and inverse exposure conversion. The implementation uses UE Fusion-style four-tap downsampling and exp2 weights. It extracts scalar luminance and uses a monotone Z curve fitted to the current tone operator's neutral response (ACES Filmic by default). This is not a full reproduction of UE FilmToneMap.
 
 ```powershell
 .\.venv\Scripts\python.exe test_pyramid.py          # Numerical regression tests
@@ -54,32 +54,36 @@ The View menu offers **Fusion Result / Original Comparison / Local Exposure EV**
 
 ## Quarter-Resolution Fusion
 
-By default, Fusion and the 10-step exposure search run at **1/4 width x 1/4 height** (1/16 as many pixels). A 4096x2048 input uses a 1024x512 working image. The UI's **Fusion resolution** selector switches between the guided version and the full-resolution reference; `--fusion-scale 1` selects the reference from the command line.
+By default, Fusion and inverse exposure conversion run at **1/4 width x 1/4 height** (1/16 as many pixels). A 4096x2048 input uses a 1024x512 working image. The UI's **Fusion resolution** selector switches between the guided version and the full-resolution reference; `--fusion-scale 1` selects the reference from the command line.
 
 `shaders/guided.slang` downsamples linear HDR and log-luminance guidance separately, fits local `EV = a * guide + b` models in 5x5 low-resolution windows, averages the coefficients, and evaluates them with full-resolution guidance. Regularization is 0.04 EV squared, and the resulting local EV is limited to [-12, 12]. Only exposure application and the real tone mapper run at full resolution.
 
 This is an approximation: averaging HDR before nonlinear tone mapping and omitting the finest Fusion bands can change fine detail and strong highlights. Guided upsampling reduces edge bleed but cannot recover information already lost during reduction. The lower working pixel count is not a measured 16x frame-time speedup; full-resolution output and guided-filter passes still have a cost.
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest test_guided test_lut test_pyramid
+.\.venv\Scripts\python.exe -m unittest test_guided test_zcurve test_pyramid test_precision
 ```
 
-## Log-Input 3D LUT Proxy
+## Fitted Z Curve and Inverse 1D LUT
 
-Fusion uses a GPU-baked **16-cubed RGB10A2_UNORM LUT** (16 KiB). Each HDR RGB channel is encoded as `log2(1 + x/k) / log2(1 + M/k)`, with `k = 1/64` and `M = 65535`. Log spacing concentrates samples in shadows and midtones while preserving black. The LUT stores **display-linear RGB** with 10 bits per channel (alpha is unused), so its output needs no log decoding. LUT baking and lookup arithmetic remain float32.
+On startup and **F5**, the GPU samples `shaders/tone_operator.slang` on neutral RGB `(L,L,L)` over [0,65535]. SciPy fits all four parameters of:
 
-The LUT is rebuilt on startup and **F5**, using `shaders/tone_operator.slang`. Three-exposure lightness and scalar exposure search use the same trilinear lookup; the original comparison and final image use the real operator. Inputs outside [0, 65535] clamp to the LUT boundary; lookup never falls back to the real operator. No curve fitting or SciPy dependency is required.
+`f(L) = L^contrast / (b * L^(contrast * shoulder) + c)`
 
-The adapter must return finite linear Rec.709 SDR RGB in [0, 1]. Validation checks the real operator and ideal trilinear LUT on 25 color rays for nonmonotone luminance responses before accepting a new LUT; a failed reload retains the previous shaders and LUT. Hardware-filter rounding is recorded separately (maximum downward luminance step about 0.0000392 on the current validation set). This sampled check is not a proof of monotonicity for arbitrary operators. Spatial or temporal tone mapping cannot be represented by this fixed RGB LUT.
+The constraints `contrast,b,c > 0` and `0 < shoulder <= 1` guarantee monotonicity. Shoulder is optimized, not fixed. The fit minimizes perceptual lightness error. Fusion uses `F(L) = sqrt(f(L))` for all three exposures, reconstructs lightness `S`, and computes `exposure = F_inverse(S) / L`, limited to +/-12 EV. Matched targets preserve identity, including black and domain-clamped highlights. Final HDR RGB still goes through the real operator.
+
+The inverse is baked once into a **1024-entry R16F 1D LUT (2 KiB)**. It stores log2 luminance with logit-spaced lightness coordinates to resolve shadows and the shoulder. A shader performs one filtered lookup and exp2; there is no runtime bisection or 3D LUT. CPU numerical inversion runs only during calibration. Inputs and reconstructed targets clamp to the fitted domain endpoints; the proxy itself is not clipped to 1, which would destroy invertibility.
+
+This models **neutral luminance**, not arbitrary RGB hue/saturation interactions. The operator must be spatially independent, black-preserving, and return finite linear SDR RGB in [0,1] with a monotone neutral response. Invalid or poorly fitted operators fail calibration; failed F5 reloads preserve the previous working shaders and curve. Measured errors are sampled checks, not universal bounds.
+
+Current ACES fit: contrast **1.52577**, shoulder **0.999449**, b **1.00612**, c **0.210214**. Independent samples give luminance RMSE **0.00463**, maximum luminance error **0.01867**, and maximum lightness error **0.01024**. GPU round-trip error over [1e-8,65535] is about **0.0156 EV** across 32,768 samples (regression budget: **0.02 EV**).
 
 ```powershell
-.\.venv\Scripts\python.exe lut_proxy.py   # Bake and validate independently
-.\.venv\Scripts\python.exe test_lut.py    # LUT, channel coupling, bounds, reload tests
+.\.venv\Scripts\python.exe zcurve.py       # Write outputs/zcurve/report.json
+.\.venv\Scripts\python.exe test_zcurve.py  # Fit, inverse, operator, reload tests
 ```
 
-Open `outputs/lut/report.html` for validation errors. `validation.json` and `samples.npz` contain metrics and measured responses. The report tool also accepts `--size 33` or `--size 129` to compare precision; the viewer uses 16 cubed. On the current ACES validation set, maximum RGB error is approximately **0.02424**, and RGB RMSE is **0.00715**. Exposure is still one scalar multiplier shared by RGB, solved with 10 LUT-based bisection iterations within +/-12 EV.
-
-Precision: colors use RGBA16F and exposure maps use R16F, with half shader resource types. Search bounds, guided-filter sample products and regularized slope division, and sRGB multiply/add operations use half. Sensitive Fusion calculations, guided accumulation and coefficient evaluation remain float. See the [precision review](docs/precision.md) for error measurements and rejected candidates.
+Colors use RGBA16F and exposure maps use R16F. Guided sample products, regularized slope division, and display multiply/add operations use half. Curve evaluation, inverse lookup, sensitive Fusion calculations and guided accumulation/evaluation remain float. See the [precision review](docs/precision.md).
 
 ## References
 

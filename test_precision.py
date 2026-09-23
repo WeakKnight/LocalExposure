@@ -65,25 +65,6 @@ class PrecisionTests(unittest.TestCase):
                     self.assertTrue((weights >= 0).all())
                     np.testing.assert_allclose(weights.sum(-1), 1, atol=3e-6)
 
-    def test_ten_step_half_search_is_exact(self):
-        # Exhaust every possible branch sequence, independent of the LUT.
-        intervals = [(-12., 12.)]
-        for _ in range(10):
-            children = []
-            for lo, hi in intervals:
-                mid = (lo + hi) * .5
-                half_mid = (np.float16(lo) + np.float16(hi)) * np.float16(.5)
-                self.assertEqual(float(half_mid), mid)
-                children.extend([(lo, mid), (mid, hi)])
-            intervals = children
-        # The solved EV stays float, then its multiplier rounds to half.
-        midpoints = np.array([(lo+hi)*.5 for lo, hi in intervals])
-        multipliers = np.exp2(midpoints).astype(np.float16).astype(float)
-        self.assertTrue(np.isfinite(multipliers).all())
-        self.assertTrue((multipliers >= 2**-12).all())
-        self.assertTrue((multipliers <= 2**12).all())
-        self.assertLess(float(np.max(np.abs(np.log2(multipliers)-midpoints))), .00071)
-
     def test_display_dense_sdr_ramps(self):
         # Include dark/subnormal inputs, the sRGB junction, and every binary16
         # value in [0,1], plus dense float samples between representable values.
@@ -110,7 +91,7 @@ class PrecisionTests(unittest.TestCase):
         self.assertEqual(actual.flat[-1], 255)
 
     def test_guided_products_extreme_windows(self):
-        # Prescribed low-res guidance and search EV isolate regression error
+        # Prescribed low-res guidance and local EV isolate regression error
         # from Fusion. CPU uses double precision and no half quantization.
         rng = np.random.default_rng(1701)
         h, w = 32, 64
@@ -149,8 +130,8 @@ class PrecisionTests(unittest.TestCase):
                 full_g = np.clip(gf+offset, -19.9, 16)
                 expected_ev = np.clip(a*full_g+b, -12, 12)
                 actual_ev = np.clip(ab[..., 0]*full_g+ab[..., 1], -12, 12)
-                # Less than the half-width of one 10-step search interval.
-                np.testing.assert_allclose(actual_ev, expected_ev, atol=12/1024)
+                # Explicit guided-regression error budget, in EV.
+                np.testing.assert_allclose(actual_ev, expected_ev, atol=.012)
                 actual_rgb = aces(np.exp2(full_g+actual_ev))
                 expected_rgb = aces(np.exp2(full_g+expected_ev))
                 np.testing.assert_allclose(actual_rgb, expected_rgb, atol=.002)

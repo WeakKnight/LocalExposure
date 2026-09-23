@@ -17,10 +17,12 @@ void reconstruct(uint3 tid : SV_DispatchThreadID)
     reconstructionOutput.GetDimensions(width, height);
     if (tid.x >= width || tid.y >= height) return;
     float2 uv = (float2(tid.xy) + 0.5) / float2(width, height);
+    // Float subtraction/accumulation preserves small signed detail bands.
     float3 detail = fineLuminance[tid.xy].rgb;
     if (!isCoarsest)
         detail -= coarseLuminance.SampleLevel(linearSampler, uv, 0).rgb;
     float3 w = layerWeights[tid.xy].rgb;
+    // Float normalization is required before exposure inversion.
     w /= max(w.x + w.y + w.z, 1e-20);
     float3 contribution = detail * w;
     float value = contribution.x + contribution.y + contribution.z;
@@ -57,15 +59,19 @@ void convert_exposure(uint3 tid : SV_DispatchThreadID)
     // Preserve identity when target already matches, including clipped whites.
     if (max(color.x, max(color.y, color.z)) > 1e-12 && abs(target - baseline) > 2e-6)
     {
-        float lo = -12.0, hi = 12.0;
+        // These bounds and the first 10 bisection midpoints are exactly
+        // representable in half (multiples of 24/1024 within [-12,12]).
+        // Revisit this type if the search range or iteration count changes.
+        half lo = half(-12.0), hi = half(12.0);
         // 24 / 2^10 = 0.0234375 EV final search interval.
         for (uint i = 0; i < 10; ++i)
         {
-            float mid = (lo + hi) * 0.5;
-            if (mappedLuminance(color * exp2(mid)) < target) lo = mid;
+            half mid = (lo + hi) * half(0.5);
+            if (mappedLuminance(color * exp2(float(mid))) < target) lo = mid;
             else hi = mid;
         }
-        multiplier = exp2((lo + hi) * 0.5);
+        // The eleventh midpoint and exp2 need float; do not round to half.
+        multiplier = exp2((float(lo) + float(hi)) * 0.5);
     }
     exposureOutput[tid.xy] = multiplier;
 }

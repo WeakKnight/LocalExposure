@@ -66,7 +66,7 @@ This is an approximation: averaging HDR before nonlinear tone mapping and omitti
 
 ## Log-Input 3D LUT Proxy
 
-Fusion uses a GPU-baked **16-cubed RGB10A2_UNORM LUT** (16 KiB). Each HDR RGB channel is encoded as `log2(1 + x/k) / log2(1 + M/k)`, with `k = 1/64` and `M = 65535`. Log spacing concentrates samples in shadows and midtones while preserving black. The LUT stores **display-linear RGB** with 10 bits per channel (alpha is unused), so its output needs no log decoding. Baking and shader arithmetic remain float32.
+Fusion uses a GPU-baked **16-cubed RGB10A2_UNORM LUT** (16 KiB). Each HDR RGB channel is encoded as `log2(1 + x/k) / log2(1 + M/k)`, with `k = 1/64` and `M = 65535`. Log spacing concentrates samples in shadows and midtones while preserving black. The LUT stores **display-linear RGB** with 10 bits per channel (alpha is unused), so its output needs no log decoding. LUT baking and lookup arithmetic remain float32.
 
 The LUT is rebuilt on startup and **F5**, using `shaders/tone_operator.slang`. Three-exposure lightness and scalar exposure search use the same trilinear lookup; the original comparison and final image use the real operator. Inputs outside [0, 65535] clamp to the LUT boundary; lookup never falls back to the real operator. No curve fitting or SciPy dependency is required.
 
@@ -78,6 +78,8 @@ The adapter must return finite linear Rec.709 SDR RGB in [0, 1]. Validation chec
 ```
 
 Open `outputs/lut/report.html` for validation errors. `validation.json` and `samples.npz` contain metrics and measured responses. The report tool also accepts `--size 33` or `--size 129` to compare precision; the viewer uses 16 cubed. On the current ACES validation set, maximum RGB error is approximately **0.02424**, and RGB RMSE is **0.00715**. Exposure is still one scalar multiplier shared by RGB, solved with 10 LUT-based bisection iterations within +/-12 EV.
+
+Precision: final/base colors use RGBA16F, and the ten-step search interval uses native half arithmetic. Sensitive Fusion and guided-filter stages remain float. See the [precision review](docs/precision.md) for the rejected half-weight experiment and reproducible comparisons.
 
 ## References
 

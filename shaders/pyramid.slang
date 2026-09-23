@@ -49,6 +49,7 @@ void setup_weights(uint3 tid : SV_DispatchThreadID)
     float3 brighter = proxyToneOperator(hdr * exp2(globalEV + shadowEV));
     float3 y = float3(lightness(darker), lightness(base), lightness(brighter));
     float3 distance = y - 0.5;
+    // Float even though y is bounded: small sigma magnifies input errors.
     float3 logWeight = -distance * distance / (2.0 * sigma * sigma);
     // Equivalent normalized Gaussian; subtract maximum to avoid underflow
     // when all exposures are far from the target and sigma is small.

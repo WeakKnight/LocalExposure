@@ -53,7 +53,8 @@ class ToneMapper:
 
     def reload(self):
         # A fresh session also makes manual reload reliable after a compile error.
-        session = self.device.create_slang_session(compiler_options={"include_paths": [ROOT / "shaders"]})
+        session = self.device.create_slang_session(compiler_options={
+            "include_paths": [ROOT / "shaders"]})
         program = session.load_program("tonemap.slang", ["compute_main"])
         kernel = self.device.create_compute_kernel(program)
         downsample = self.device.create_compute_kernel(session.load_program("pyramid.slang", ["downsample"]))
@@ -101,8 +102,10 @@ class ToneMapper:
             width = (source.width + self.fusion_scale - 1) // self.fusion_scale
             height = (source.height + self.fusion_scale - 1) // self.fusion_scale
             levels = fusion_mip_count(width, height, self.max_levels)
-            self.base_color = self.create_texture(source.width, source.height)
-            self.final_color = self.create_texture(source.width, source.height)
+            # Bounded SDR colors tolerate FP16 storage; HDR and the inverse
+            # problem's pyramids/coefficients still require FP32.
+            self.base_color = self.create_texture(source.width, source.height, spy.Format.rgba16_float)
+            self.final_color = self.create_texture(source.width, source.height, spy.Format.rgba16_float)
             self.local_exposure = self.create_texture(source.width, source.height, spy.Format.r32_float)
             self.luminance_pyramid = self.create_texture(width, height, levels=levels)
             self.weight_pyramid = self.create_texture(width, height, levels=levels)

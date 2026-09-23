@@ -6,6 +6,7 @@ RWTexture2D<float4> reducedOutput;
 
 float logGuide(float3 rgb)
 {
+    // HDR (including 65535) exceeds half; retain precision near the dark floor.
     return log2(max(dot(max(rgb, 0.0), float3(0.2126, 0.7152, 0.0722)), 1e-6));
 }
 
@@ -43,6 +44,8 @@ void fit_coefficients(uint3 tid : SV_DispatchThreadID)
     coefficientOutput.GetDimensions(w, h);
     if (tid.x >= w || tid.y >= h) return;
     float center = reducedSource[tid.xy].a;
+    // Keep moments and covariance in float: nearly flat windows subtract
+    // almost equal values. Half also loses accuracy in a*guide+b downstream.
     float meanG = 0, meanE = 0, meanGG = 0, meanGE = 0;
     for (int y = -2; y <= 2; ++y)
         for (int x = -2; x <= 2; ++x)

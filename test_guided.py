@@ -39,7 +39,8 @@ class GuidedTests(unittest.TestCase):
             self.assertEqual((self.mapper.work_source.width, self.mapper.work_source.height), ((w+3)//4,(h+3)//4))
             self.assertEqual(self.mapper.local_exposure.to_numpy().shape, (h,w))
             np.testing.assert_allclose(self.mapper.local_exposure.to_numpy(), 1, atol=2e-6)
-            np.testing.assert_allclose(self.mapper.final_color.to_numpy()[...,:3], aces(rgba[...,:3]), atol=2e-6)
+            # Typed FP16 UAV storage may truncate: allow one ULP below 1.
+            np.testing.assert_allclose(self.mapper.final_color.to_numpy()[...,:3], aces(rgba[...,:3]), atol=2**-11 + 2e-6)
         rgba = rng.random((16,32,4), dtype=np.float32)
         for scale in [1,4,1,4]:
             self.mapper.fusion_scale = scale
@@ -71,7 +72,7 @@ class GuidedTests(unittest.TestCase):
         actual_multiplier = self.mapper.local_exposure.to_numpy()
         np.testing.assert_allclose(np.log2(actual_multiplier), expected_ev, atol=.003)
         np.testing.assert_allclose(self.mapper.final_color.to_numpy()[...,:3],
-                                   aces(rgba[...,:3]*actual_multiplier[...,None]), atol=2e-6)
+                                   aces(rgba[...,:3]*actual_multiplier[...,None]), atol=2**-11 + 2e-6)
 
     def test_guidance_reduces_exposure_bleed_across_step(self):
         # Prescribe an exposure field to isolate upsampling from Fusion itself.

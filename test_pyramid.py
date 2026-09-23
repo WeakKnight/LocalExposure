@@ -128,7 +128,7 @@ class PyramidTests(unittest.TestCase):
             multiplier = self.mapper.local_exposure.to_numpy()
             actual_rgb = self.mapper.final_color.to_numpy()[...,:3]
             self.assertTrue(np.isfinite(multiplier).all())
-            np.testing.assert_allclose(actual_rgb, aces(rgba[...,:3]*multiplier[...,None]), atol=2e-6)
+            np.testing.assert_allclose(actual_rgb, aces(rgba[...,:3]*multiplier[...,None]), atol=2**-11 + 2e-6)
             actual_y = np.sum(actual_rgb * [.2126,.7152,.0722],axis=-1)
             target = np.clip(self.mapper.reconstructed.to_numpy(),0,1)**2
             reachable = (multiplier > 2**-11.99) & (multiplier < 2**11.99)
@@ -161,7 +161,7 @@ class PyramidTests(unittest.TestCase):
             self.mapper.execute(encoder,texture,output,ev,view_mode=0,highlight_ev=0,shadow_ev=0)
             self.device.submit_command_buffer(encoder.finish())
             np.testing.assert_allclose(self.mapper.local_exposure.to_numpy(),1,atol=1e-6)
-            np.testing.assert_allclose(self.mapper.final_color.to_numpy()[...,:3],aces(rgba[...,:3]*2.0**ev),atol=2e-6)
+            np.testing.assert_allclose(self.mapper.final_color.to_numpy()[...,:3],aces(rgba[...,:3]*2.0**ev),atol=2**-11 + 2e-6)
 
     def test_parameter_changes_resize_and_reload(self):
         rng = np.random.default_rng(17)
@@ -177,7 +177,7 @@ class PyramidTests(unittest.TestCase):
                 expected = np.stack([np.sqrt(np.sum(self.mapper.lut.sample(rgba[..., :3]*2.0**e) * [.2126,.7152,.0722], axis=-1))
                                      for e in [ev-highlight, ev, ev+shadow]], axis=-1)
                 np.testing.assert_allclose(self.mapper.base_color.to_numpy()[..., :3],
-                                           aces(rgba[..., :3]*2.0**ev), atol=2e-6)
+                                           aces(rgba[..., :3]*2.0**ev), atol=2**-11 + 2e-6)
                 for mip in range(self.mapper.luminance_pyramid.mip_count):
                     tolerance = .002 if (width % 2 or height % 2) and mip else 2e-6
                     np.testing.assert_allclose(self.mapper.luminance_pyramid.to_numpy(mip=mip)[..., :3],

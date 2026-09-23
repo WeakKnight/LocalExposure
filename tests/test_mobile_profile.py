@@ -1,5 +1,5 @@
 import unittest
-from tools.mobile_profile import workload, spirv_stats, aoc_metrics, aoc_sections, compare
+from tools.profiling.mobile_profile import workload, spirv_stats, aoc_metrics, aoc_sections, compare
 
 
 class MobileProfileTests(unittest.TestCase):

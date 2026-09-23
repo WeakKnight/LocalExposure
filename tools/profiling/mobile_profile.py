@@ -11,7 +11,7 @@ import subprocess
 import urllib.request
 import zipfile
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 VERSION = "2026.12"
 ARCHIVE = f"slang-{VERSION}-windows-x86_64.zip"
 URL = f"https://github.com/shader-slang/slang/releases/download/v{VERSION}/{ARCHIVE}"

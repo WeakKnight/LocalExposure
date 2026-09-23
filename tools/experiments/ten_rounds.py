@@ -2,7 +2,7 @@ from pathlib import Path
 import sys, json, subprocess, time
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT))
-from tools.mobile_profile import export_pass,compiler,aoc_sections,run
+from tools.profiling.mobile_profile import export_pass,compiler,aoc_sections,run
 OUT=ROOT/'outputs/optimization10'
 OUT.mkdir(parents=True,exist_ok=True)
 BASE=(ROOT/'tests/fixtures/guided_before_ten_rounds.slang').read_text()
@@ -79,7 +79,7 @@ for index,(name,module,entry,src) in enumerate(variants,1):
         cmd=[AOC,'-api=Vulkan','-arch=a730','-entry_point_cs',entry,'-cs',dest/'shader.spv','-dump=all']
         raw=run(cmd,dest/'aoc.log',cwd=dest)
         if 'Compilation succeeded.' not in raw:raise RuntimeError('AOC failed')
-        test=subprocess.run([sys.executable,'-m','unittest','test_fit','test_average','test_reduction','test_rounds'],cwd=ROOT,capture_output=True,text=True)
+        test=subprocess.run([sys.executable,'-m','unittest','tests.test_fit','tests.test_average','tests.test_reduction','tests.test_rounds'],cwd=ROOT,capture_output=True,text=True)
         (dest/'tests.log').write_text(test.stdout+test.stderr)
         result=dict(round=index,name=name,entry=entry,bitwise_tests_pass=test.returncode==0,
                     sections=aoc_sections(raw),export=export)

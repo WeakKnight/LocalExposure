@@ -1,4 +1,4 @@
-"""Regenerate README comparisons: .venv/Scripts/python.exe docs/render_examples.py."""
+"""Regenerate README comparisons: .venv/Scripts/python.exe tools/render_examples.py."""
 from pathlib import Path
 import sys
 

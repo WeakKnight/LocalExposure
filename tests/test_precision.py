@@ -5,8 +5,8 @@ import numpy as np
 import slangpy as spy
 
 from tone_mapper import ToneMapper, create_hdr_texture
-from test_pyramid import aces
-from test_guided import box5
+from tests.test_pyramid import aces
+from tests.test_guided import box5
 
 
 class PrecisionTests(unittest.TestCase):

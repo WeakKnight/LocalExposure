@@ -48,7 +48,7 @@ Compared with round two, the four 4K assets (global EV -1, default Fusion settin
 ## Current verification
 
 ```powershell
-.venv/Scripts/python.exe -m unittest test_pyramid test_guided test_zcurve test_precision
+.venv/Scripts/python.exe -m unittest tests.test_pyramid tests.test_guided tests.test_zcurve tests.test_precision
 ```
 
 The current pipeline uses a fitted scalar Z curve and inverse 1D LUT. The 20 tests cover four-parameter fitting, monotonicity, dense GPU forward/inverse checks, custom operators, domain endpoints, atomic reload, CPU pyramid/guided references, odd/tiny images, zero-bracket identity, and dense display ramps. Guided EV error against the CPU regression is limited to 0.012 EV in the stress test. Half exposure maps retain the normal finite range [2^-12,2^12].

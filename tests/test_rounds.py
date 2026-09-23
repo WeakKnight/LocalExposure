@@ -5,7 +5,7 @@ import numpy as np
 import slangpy as spy
 from tone_mapper import ToneMapper, create_hdr_texture
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class RoundTests(unittest.TestCase):

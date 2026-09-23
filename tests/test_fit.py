@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 import slangpy as spy
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class FitTests(unittest.TestCase):

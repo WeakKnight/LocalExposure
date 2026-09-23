@@ -4,7 +4,7 @@ import numpy as np
 import slangpy as spy
 
 from tone_mapper import ToneMapper, create_hdr_texture
-from test_pyramid import sample_bilinear, aces
+from tests.test_pyramid import sample_bilinear, aces
 
 LUMA = np.array([.2126, .7152, .0722])
 

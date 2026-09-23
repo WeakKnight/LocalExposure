@@ -1,5 +1,5 @@
 $ErrorActionPreference = 'Stop'
-$toolRoot = Join-Path $PSScriptRoot '../.tools/mobile'
+$toolRoot = Join-Path $PSScriptRoot '../../.tools/mobile'
 $toolRoot = [IO.Path]::GetFullPath($toolRoot)
 New-Item -ItemType Directory -Force $toolRoot | Out-Null
 $package = Join-Path $toolRoot 'Arm_Performance_Studio_2026.5_windows_x86-64.msi'

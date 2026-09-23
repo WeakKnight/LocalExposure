@@ -2,7 +2,7 @@
 
 These are ten tested candidates, **not ten proven speedups**. Two changes are retained; eight were rejected, deferred or reverted. No phone timings have been collected. Each candidate starts from the same frozen pre-experiment shaders, so its result is not confused with earlier candidates. Retained changes were then combined and validated again.
 
-Toolchain: Slang 2026.12, SPIR-V 1.3, AOC 7.0.15 / E17.52.07.00, `a730`. The previous baseline is [a730-fit-tile](baselines/a730-fit-tile.md); the combined result is [a730-ten-rounds](baselines/a730-ten-rounds.md). [Machine-readable per-round results](baselines/ten-rounds-results.json) preserve AOC sections, including preamble and performance projections.
+Toolchain: Slang 2026.12, SPIR-V 1.3, AOC 7.0.15 / E17.52.07.00, `a730`. The previous baseline is [a730-fit-tile](../baselines/archive/a730-fit-tile.md); the combined result is [a730-ten-rounds](../baselines/a730-ten-rounds.md). [Machine-readable per-round results](ten-rounds-results.json) preserve AOC sections, including preamble and performance projections.
 
 | Round | Candidate | Main instructions, before -> candidate | Decision |
 |---|---|---:|---|
@@ -31,7 +31,7 @@ In the combined A730 report, all nine passes still have **zero scratch and 100% 
 
 ## Validation and reproduction
 
-Every candidate passed `test_fit`, `test_average`, `test_reduction` and `test_rounds`. The first three compare intermediate outputs bitwise against frozen shaders. The pipeline test compares source reduction, low/full exposure, coefficients, averaged coefficients, baseline/final colors and displayed pixels against pre-batch shaders, covering odd/tiny dimensions, HDR extremes, zero/nonzero exposure brackets, full/quarter Fusion, all three view modes and letterboxing. The merged result passed the complete **33-test suite**.
+Every candidate passed `tests.test_fit`, `tests.test_average`, `tests.test_reduction` and `tests.test_rounds`. The first three compare intermediate outputs bitwise against frozen shaders. The pipeline test compares source reduction, low/full exposure, coefficients, averaged coefficients, baseline/final colors and displayed pixels against pre-batch shaders, covering odd/tiny dimensions, HDR extremes, zero/nonzero exposure brackets, full/quarter Fusion, all three view modes and letterboxing. The merged result passed the complete **33-test suite**.
 
 This is local desktop GPU equivalence evidence, not a universal cross-driver guarantee. Adreno and Mali backends compiled successfully, but neither was run on a phone.
 
@@ -41,8 +41,8 @@ This is local desktop GPU equivalence evidence, not a universal cross-driver gua
 .\.venv\Scripts\python.exe tools/experiments/ten_rounds.py 1 10
 
 # Analyze the retained implementation.
-.\.venv\Scripts\python.exe tools/mobile_profile.py --require-aoc --out outputs/mobile/a730-ten-rounds
-.\.venv\Scripts\python.exe tools/mali_profile.py --out outputs/mobile/g720-ten-rounds
+.\.venv\Scripts\python.exe tools/profiling/mobile_profile.py --require-aoc --out outputs/mobile/a730-ten-rounds
+.\.venv\Scripts\python.exe tools/profiling/mali_profile.py --out outputs/mobile/g720-ten-rounds
 ```
 
 Experiment sources, raw compiler logs and per-candidate test logs are under `outputs/optimization10/`. The recipe and frozen reference shaders are retained in the repository. The experiment does not automatically select or merge candidates.

@@ -1,4 +1,4 @@
-"""GPU regression checks: run with .venv/Scripts/python.exe test_pyramid.py."""
+"""GPU regression checks: run with .venv/Scripts/python.exe -m tests.test_pyramid."""
 import unittest
 
 import numpy as np

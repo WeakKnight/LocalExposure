@@ -2,12 +2,12 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from tools.mali_profile import summarize, compare
+from tools.profiling.mali_profile import summarize, compare
 
 
 class MaliTests(unittest.TestCase):
     def setUp(self):
-        self.raw = json.loads((Path(__file__).parent/'docs/baselines/mali-fit-fixture.json').read_text())
+        self.raw = json.loads((Path(__file__).parent/'fixtures/mali-fit.json').read_text())
 
     def test_real_report(self):
         result = summarize(self.raw, 'Immortalis-G720')

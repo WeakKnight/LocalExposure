@@ -94,7 +94,7 @@ def main():
     candidates = sorted((ROOT/'.tools/mobile/arm-2026.5').rglob('malioc.exe'))
     malioc = Path(args.malioc).resolve() if args.malioc else (candidates[0] if len(candidates)==1 else None)
     if malioc is None or not malioc.is_file():
-        parser.error('Run tools/install_mali.ps1 or provide --malioc')
+        parser.error('Run tools/profiling/install_mali.ps1 or provide --malioc')
     exe = compiler()
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)

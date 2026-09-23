@@ -43,13 +43,26 @@ The View menu offers **Fusion Result / Original Comparison / Local Exposure EV**
 
 ## Implementation
 
+Start with the core files below. Tests, profiling tools, and historical experiments are kept outside the main reading path.
+
+| Read in order | Purpose |
+| --- | --- |
+| [tone_mapper.py](tone_mapper.py) | Pipeline orchestration, textures, and pass ordering |
+| [shaders/pyramid.slang](shaders/pyramid.slang) | Three exposures, weights, and downsampling |
+| [shaders/fusion.slang](shaders/fusion.slang) | Laplacian fusion, reconstruction, and exposure conversion |
+| [shaders/guided.slang](shaders/guided.slang) | Low-resolution guidance and full-resolution application |
+| [zcurve.py](zcurve.py) / [shaders/zcurve.slang](shaders/zcurve.slang) | Curve fitting and inverse LUT |
+| [main.py](main.py) | Interactive viewer and command-line entry point |
+
+Supporting material: [documentation](docs/README.md), [tests](tests/README.md), and [developer tools](tools/README.md). Profiling is optional; it is not needed to run the viewer.
+
 `HDR → Three-exposure lightness and weights → Multiscale pyramids → Weighted Laplacian blending and coarse-to-fine reconstruction → Local exposure multiplier → HDR × Exposure → ACES → sRGB`
 
 `shaders/pyramid.slang` generates lightness and weights. `shaders/fusion.slang` handles blending, reconstruction, and inverse exposure conversion. The implementation uses UE Fusion-style four-tap downsampling and exp2 weights. It extracts scalar luminance and uses a monotone Z curve fitted to the current tone operator's neutral response (ACES Filmic by default). This is not a full reproduction of UE FilmToneMap.
 
 ```powershell
-.\.venv\Scripts\python.exe test_pyramid.py          # Numerical regression tests
-.\.venv\Scripts\python.exe docs/render_examples.py  # Regenerate README comparisons
+.\.venv\Scripts\python.exe tests/test_pyramid.py          # Numerical regression tests
+.\.venv\Scripts\python.exe tools/render_examples.py  # Regenerate README comparisons
 ```
 
 ## Quarter-Resolution Fusion
@@ -61,7 +74,7 @@ By default, Fusion and inverse exposure conversion run at **1/4 width x 1/4 heig
 This is an approximation: averaging HDR before nonlinear tone mapping and omitting the finest Fusion bands can change fine detail and strong highlights. Guided upsampling reduces edge bleed but cannot recover information already lost during reduction. The lower working pixel count is not a measured 16x frame-time speedup; full-resolution output and guided-filter passes still have a cost.
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest test_guided test_zcurve test_pyramid test_precision
+.\.venv\Scripts\python.exe -m unittest tests.test_guided tests.test_zcurve tests.test_pyramid tests.test_precision
 ```
 
 ## Fitted Z Curve and Inverse 1D LUT
@@ -80,14 +93,14 @@ Current ACES fit: contrast **1.52577**, shoulder **0.999449**, b **1.00612**, c 
 
 ```powershell
 .\.venv\Scripts\python.exe zcurve.py       # Write outputs/zcurve/report.json
-.\.venv\Scripts\python.exe test_zcurve.py  # Fit, inverse, operator, reload tests
+.\.venv\Scripts\python.exe tests/test_zcurve.py  # Fit, inverse, operator, reload tests
 ```
 
 Colors use RGBA16F and exposure maps use R16F. Guided sample products, regularized slope division, and display multiply/add operations use half. Curve evaluation, inverse lookup, sensitive Fusion calculations and guided accumulation/evaluation remain float. See the [precision review](docs/precision.md).
 
 ## References
 
-Mobile optimization targets **Snapdragon 8 Gen 1 / Adreno 730** by default ([baseline](docs/baselines/a730-aoc.md)), using AOC 7.0.15. Immortalis-G720 and Adreno 750 remain reference targets. See the [workflow](docs/mobile-profiling.md), [Mali baseline](docs/baselines/g720-no-spill.md), and [Adreno baseline](docs/baselines/a750-aoc.md). These are offline estimates, not measured phone timings.
+Mobile optimization targets **Snapdragon 8 Gen 1 / Adreno 730** by default ([baseline](docs/performance/baselines/archive/a730-aoc.md)), using AOC 7.0.15. Immortalis-G720 and Adreno 750 remain reference targets. See the [workflow](docs/performance/README.md), [Mali baseline](docs/performance/baselines/archive/g720-no-spill.md), and [Adreno baseline](docs/performance/baselines/a750-aoc.md). These are offline estimates, not measured phone timings.
 
 - [Bart Wronski — Exposure Fusion: local tonemapping for real-time rendering](https://bartwronski.com/2022/02/28/exposure-fusion-local-tonemapping-for-real-time-rendering/): synthetic exposures, multiscale fusion, and applications in real-time rendering.
 - [kbmajeed / exposure_fusion](https://github.com/kbmajeed/exposure_fusion): a reference implementation of Mertens et al.'s Exposure Fusion method, including weights and pyramid blending.

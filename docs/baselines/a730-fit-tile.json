@@ -1,0 +1,3584 @@
+{
+  "schema": 1,
+  "status": "aoc-complete",
+  "config": {
+    "target": "a730",
+    "size": [
+      1920,
+      1080
+    ],
+    "fusion_scale": 4,
+    "max_levels": 16,
+    "flags": [
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name"
+    ],
+    "uniform_specialization": false
+  },
+  "compiler": {
+    "version": "2026.12",
+    "sha256": "f5413f54845abd4bdf349ffd410c0131adac92cc2e5d6ed6449512537bae059c",
+    "url": "https://github.com/shader-slang/slang/releases/download/v2026.12/slang-2026.12-windows-x86_64.zip",
+    "archive_sha256": "6a2f63174bac4edb994b196f18024c27c4900395fd955b876ecd7a0492347dec"
+  },
+  "aoc": {
+    "sha256": "100eebaddfb0f125ee7a7e1e621d56f32ecba7a15f80c2e45461ca5a941f5648",
+    "path": "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+    "version": "7.0.15",
+    "compiler_version": "E17.52.07.00"
+  },
+  "source_sha256": {
+    "shaders\\aces.slang": "926b65c08bd1cd46e13ce28eb82cba9ce6428b74a32ea5743ae7e3b8ac0d006f",
+    "shaders\\fusion.slang": "e80f9f6338164842fa8c518c5b0f4f5812647ea7476c61b7a2e35a78f1f7fd8d",
+    "shaders\\guided.slang": "604cac3339ee3718814a7274e56d9b99f9a5d88ce07904322470c84fc0f1dde1",
+    "shaders\\pyramid.slang": "e0f570d5dc49d77c8cf505e09fa035c33a9e9c19ff47fa7ad6d2166fa312753d",
+    "shaders\\tone_operator.slang": "5ddc7bf52dabba3427fb4d87d95fac268142101b9301f1d660aa82799891fb72",
+    "shaders\\tonemap.slang": "170675b49e606eba660e08caa70a01c321afe7249723f412384c8a1f31377493",
+    "shaders\\zcurve.slang": "94aeed77fb2843675a1104be81e076b7476c7430ce0c8b1bbaa53f225c39cc76",
+    "shaders\\zcurve_calibrate.slang": "36010790bb5cee42e4501e0cd8cc883631fe128a8be2211340914ed74537928a"
+  },
+  "workload": {
+    "low_size": [
+      480,
+      270
+    ],
+    "mip_sizes": [
+      [
+        480,
+        270
+      ],
+      [
+        240,
+        135
+      ],
+      [
+        120,
+        67
+      ],
+      [
+        60,
+        33
+      ],
+      [
+        30,
+        16
+      ],
+      [
+        15,
+        8
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "dispatches": [
+      {
+        "entry": "reduce_source",
+        "size": [
+          480,
+          270
+        ],
+        "useful_threads": 129600,
+        "launched_threads": 130560
+      },
+      {
+        "entry": "setup_weights",
+        "size": [
+          480,
+          270
+        ],
+        "useful_threads": 129600,
+        "launched_threads": 130560
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          240,
+          135
+        ],
+        "useful_threads": 32400,
+        "launched_threads": 32640
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          120,
+          67
+        ],
+        "useful_threads": 8040,
+        "launched_threads": 8640
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          60,
+          33
+        ],
+        "useful_threads": 1980,
+        "launched_threads": 2560
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          30,
+          16
+        ],
+        "useful_threads": 480,
+        "launched_threads": 512
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          15,
+          8
+        ],
+        "useful_threads": 120,
+        "launched_threads": 128
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          7,
+          4
+        ],
+        "useful_threads": 28,
+        "launched_threads": 64
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          3,
+          2
+        ],
+        "useful_threads": 6,
+        "launched_threads": 64
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          1,
+          1
+        ],
+        "useful_threads": 1,
+        "launched_threads": 64
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          240,
+          135
+        ],
+        "useful_threads": 32400,
+        "launched_threads": 32640
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          120,
+          67
+        ],
+        "useful_threads": 8040,
+        "launched_threads": 8640
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          60,
+          33
+        ],
+        "useful_threads": 1980,
+        "launched_threads": 2560
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          30,
+          16
+        ],
+        "useful_threads": 480,
+        "launched_threads": 512
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          15,
+          8
+        ],
+        "useful_threads": 120,
+        "launched_threads": 128
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          7,
+          4
+        ],
+        "useful_threads": 28,
+        "launched_threads": 64
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          3,
+          2
+        ],
+        "useful_threads": 6,
+        "launched_threads": 64
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          1,
+          1
+        ],
+        "useful_threads": 1,
+        "launched_threads": 64
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          1,
+          1
+        ],
+        "useful_threads": 1,
+        "launched_threads": 64
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          3,
+          2
+        ],
+        "useful_threads": 6,
+        "launched_threads": 64
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          7,
+          4
+        ],
+        "useful_threads": 28,
+        "launched_threads": 64
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          15,
+          8
+        ],
+        "useful_threads": 120,
+        "launched_threads": 128
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          30,
+          16
+        ],
+        "useful_threads": 480,
+        "launched_threads": 512
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          60,
+          33
+        ],
+        "useful_threads": 1980,
+        "launched_threads": 2560
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          120,
+          67
+        ],
+        "useful_threads": 8040,
+        "launched_threads": 8640
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          240,
+          135
+        ],
+        "useful_threads": 32400,
+        "launched_threads": 32640
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          480,
+          270
+        ],
+        "useful_threads": 129600,
+        "launched_threads": 130560
+      },
+      {
+        "entry": "convert_exposure",
+        "size": [
+          480,
+          270
+        ],
+        "useful_threads": 129600,
+        "launched_threads": 130560
+      },
+      {
+        "entry": "fit_coefficients",
+        "size": [
+          480,
+          270
+        ],
+        "useful_threads": 129600,
+        "launched_threads": 130560
+      },
+      {
+        "entry": "average_coefficients",
+        "size": [
+          480,
+          270
+        ],
+        "useful_threads": 129600,
+        "launched_threads": 130560
+      },
+      {
+        "entry": "apply_exposure",
+        "size": [
+          1920,
+          1080
+        ],
+        "useful_threads": 2073600,
+        "launched_threads": 2073600
+      },
+      {
+        "entry": "compute_main",
+        "size": [
+          1920,
+          1080
+        ],
+        "useful_threads": 2073600,
+        "launched_threads": 2073600
+      }
+    ],
+    "texture_payload_bytes": 89420828,
+    "inverse_lut_bytes": 2048
+  },
+  "passes": {
+    "reduce_source": {
+      "bytes": 2960,
+      "sha256": "2455ac5993a405a9af13b2ed1d1a25dd4e949f41e77555f14b8ebd5c7afdb211",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 1,
+          "OpBranch": 12,
+          "OpBranchConditional": 4,
+          "OpCapability": 4,
+          "OpCompositeConstruct": 3,
+          "OpCompositeExtract": 4,
+          "OpConstant": 12,
+          "OpConstantComposite": 7,
+          "OpConstantTrue": 1,
+          "OpConvertUToF": 5,
+          "OpDecorate": 10,
+          "OpDot": 1,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 4,
+          "OpExtInstImport": 1,
+          "OpFAdd": 3,
+          "OpFDiv": 1,
+          "OpFMul": 2,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpIAdd": 2,
+          "OpImageQuerySize": 1,
+          "OpImageSampleExplicitLod": 1,
+          "OpImageWrite": 1,
+          "OpLabel": 18,
+          "OpLoad": 6,
+          "OpLoopMerge": 2,
+          "OpMemberDecorate": 3,
+          "OpMemberName": 3,
+          "OpMemoryModel": 1,
+          "OpName": 14,
+          "OpPhi": 5,
+          "OpReturn": 1,
+          "OpSampledImage": 1,
+          "OpSelectionMerge": 5,
+          "OpSource": 1,
+          "OpSwitch": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 1,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 2,
+          "OpTypeInt": 2,
+          "OpTypePointer": 6,
+          "OpTypeSampledImage": 1,
+          "OpTypeSampler": 1,
+          "OpTypeStruct": 1,
+          "OpTypeVector": 5,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpULessThan": 2,
+          "OpVariable": 5,
+          "OpVectorShuffle": 3
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 11,
+        "image_sample_sites": 1,
+        "image_read_sites": 0,
+        "image_write_sites": 1,
+        "loop_sites": 2,
+        "capabilities": [
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "Shader"
+        ]
+      },
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "reduce_source",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\reduce_source\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "reduce_source",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\reduce_source\\shader.spvasm"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+          "-api=Vulkan",
+          "-arch=a730",
+          "-cs",
+          "-entry_point_cs",
+          "reduce_source",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\reduce_source\\shader.spv",
+          "-dump=all"
+        ]
+      ],
+      "adreno_sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            69.0
+          ],
+          "ALU instruction count - 32 bit": [
+            0.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            2.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            8.0
+          ],
+          "Long latency sync instruction count": [
+            0.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            1.0
+          ],
+          "Memory write instruction count": [
+            7.0
+          ],
+          "Miscellaneous instruction count": [
+            50.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            183.0
+          ],
+          "ALU instruction count - 32 bit": [
+            78.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            4.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            6.0
+          ],
+          "Barrier and fence Instruction count": [
+            10.0
+          ],
+          "Short latency sync instruction count": [
+            5.0
+          ],
+          "Long latency sync instruction count": [
+            3.0
+          ],
+          "Texture read instruction count": [
+            4.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            1.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            72.0
+          ],
+          "Full precision register footprint per shader instance": [
+            7.0
+          ],
+          "Half precision register footprint per shader instance": [
+            0.0
+          ],
+          "Overall register footprint per shader instance": [
+            7.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            1.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            22.5
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            5.0
+          ],
+          "Cycles with long latency sync instructions": [
+            96.4
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            30.2
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            36.7
+          ],
+          "Cycles with Complex instructions": [
+            15.8
+          ],
+          "Cycles with Memory instructions": [
+            1.3
+          ],
+          "Cycles with Texture instructions": [
+            26.1
+          ]
+        }
+      },
+      "adreno": {
+        "Total instruction count": [
+          69.0,
+          183.0
+        ],
+        "ALU instruction count - 32 bit": [
+          0.0,
+          78.0
+        ],
+        "ALU instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Complex instruction count - 32 bit": [
+          2.0,
+          4.0
+        ],
+        "Complex instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Flow control instruction count": [
+          1.0,
+          6.0
+        ],
+        "Barrier and fence Instruction count": [
+          0.0,
+          10.0
+        ],
+        "Short latency sync instruction count": [
+          8.0,
+          5.0
+        ],
+        "Long latency sync instruction count": [
+          0.0,
+          3.0
+        ],
+        "Texture read instruction count": [
+          0.0,
+          4.0
+        ],
+        "Memory read instruction count": [
+          1.0,
+          0.0
+        ],
+        "Memory write instruction count": [
+          7.0,
+          1.0
+        ],
+        "Miscellaneous instruction count": [
+          50.0,
+          72.0
+        ],
+        "Ray intersection instruction count": [
+          0.0
+        ],
+        "Full precision register footprint per shader instance": [
+          7.0
+        ],
+        "Half precision register footprint per shader instance": [
+          0.0
+        ],
+        "Overall register footprint per shader instance": [
+          7.0
+        ],
+        "Scratch memory usage per shader instance": [
+          0.0
+        ],
+        "Loop count": [
+          1.0
+        ],
+        "Output component count": [
+          0.0
+        ],
+        "Input component count": [
+          0.0
+        ],
+        "ALU fiber occupancy percentage": [
+          100.0
+        ],
+        "Cycles with short latency sync instructions": [
+          22.5
+        ],
+        "Cycles with exposed short latency sync instructions": [
+          5.0
+        ],
+        "Cycles with long latency sync instructions": [
+          96.4
+        ],
+        "Cycles with exposed long latency sync instructions": [
+          30.2
+        ],
+        "Cycles with ALU instructions": [
+          36.7
+        ],
+        "Cycles with Complex instructions": [
+          15.8
+        ],
+        "Cycles with Memory instructions": [
+          1.3
+        ],
+        "Cycles with Texture instructions": [
+          26.1
+        ]
+      }
+    },
+    "fit_coefficients": {
+      "bytes": 4668,
+      "sha256": "4f99139163dec304acda0a8771871ab786aeedf0fdf8a485a4a82ef586a3f0b3",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 3,
+          "OpBitcast": 8,
+          "OpBranch": 16,
+          "OpBranchConditional": 5,
+          "OpCapability": 6,
+          "OpCompositeConstruct": 4,
+          "OpCompositeExtract": 11,
+          "OpConstant": 17,
+          "OpConstantComposite": 3,
+          "OpConstantTrue": 1,
+          "OpControlBarrier": 1,
+          "OpDecorate": 9,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 4,
+          "OpExtInstImport": 1,
+          "OpFAdd": 6,
+          "OpFConvert": 13,
+          "OpFDiv": 1,
+          "OpFMul": 11,
+          "OpFSub": 4,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpIAdd": 13,
+          "OpIMul": 4,
+          "OpISub": 3,
+          "OpImageFetch": 2,
+          "OpImageQuerySize": 1,
+          "OpImageWrite": 1,
+          "OpLabel": 23,
+          "OpLoad": 9,
+          "OpLoopMerge": 3,
+          "OpMemoryModel": 1,
+          "OpName": 30,
+          "OpPhi": 12,
+          "OpReturn": 1,
+          "OpSLessThanEqual": 2,
+          "OpSelectionMerge": 6,
+          "OpSource": 1,
+          "OpStore": 1,
+          "OpSwitch": 1,
+          "OpTypeArray": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 2,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 3,
+          "OpTypeInt": 2,
+          "OpTypePointer": 6,
+          "OpTypeVector": 6,
+          "OpTypeVoid": 1,
+          "OpUDiv": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpULessThan": 1,
+          "OpUMod": 1,
+          "OpVariable": 7,
+          "OpVectorShuffle": 2
+        },
+        "float16_arithmetic_sites": 3,
+        "float32_arithmetic_sites": 22,
+        "image_sample_sites": 0,
+        "image_read_sites": 2,
+        "image_write_sites": 1,
+        "loop_sites": 3,
+        "capabilities": [
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "StorageImageExtendedFormats",
+          "Float16",
+          "Shader"
+        ]
+      },
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "fit_coefficients",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\fit_coefficients\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "fit_coefficients",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\fit_coefficients\\shader.spvasm"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+          "-api=Vulkan",
+          "-arch=a730",
+          "-cs",
+          "-entry_point_cs",
+          "fit_coefficients",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\fit_coefficients\\shader.spv",
+          "-dump=all"
+        ]
+      ],
+      "adreno_sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            32.0
+          ],
+          "ALU instruction count - 32 bit": [
+            2.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            0.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            3.0
+          ],
+          "Long latency sync instruction count": [
+            0.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            4.0
+          ],
+          "Miscellaneous instruction count": [
+            22.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            578.0
+          ],
+          "ALU instruction count - 32 bit": [
+            129.0
+          ],
+          "ALU instruction count - 16 bit": [
+            85.0
+          ],
+          "Complex instruction count - 32 bit": [
+            6.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            5.0
+          ],
+          "Barrier and fence Instruction count": [
+            10.0
+          ],
+          "Short latency sync instruction count": [
+            20.0
+          ],
+          "Long latency sync instruction count": [
+            5.0
+          ],
+          "Texture read instruction count": [
+            6.0
+          ],
+          "Memory read instruction count": [
+            16.0
+          ],
+          "Memory write instruction count": [
+            4.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            292.0
+          ],
+          "Full precision register footprint per shader instance": [
+            9.0
+          ],
+          "Half precision register footprint per shader instance": [
+            18.0
+          ],
+          "Overall register footprint per shader instance": [
+            9.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            0.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            58.4
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            4.1
+          ],
+          "Cycles with long latency sync instructions": [
+            95.9
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            11.0
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            73.4
+          ],
+          "Cycles with Complex instructions": [
+            24.3
+          ],
+          "Cycles with Memory instructions": [
+            14.7
+          ],
+          "Cycles with Texture instructions": [
+            29.3
+          ]
+        }
+      },
+      "adreno": {
+        "Total instruction count": [
+          32.0,
+          578.0
+        ],
+        "ALU instruction count - 32 bit": [
+          2.0,
+          129.0
+        ],
+        "ALU instruction count - 16 bit": [
+          0.0,
+          85.0
+        ],
+        "Complex instruction count - 32 bit": [
+          0.0,
+          6.0
+        ],
+        "Complex instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Flow control instruction count": [
+          1.0,
+          5.0
+        ],
+        "Barrier and fence Instruction count": [
+          0.0,
+          10.0
+        ],
+        "Short latency sync instruction count": [
+          3.0,
+          20.0
+        ],
+        "Long latency sync instruction count": [
+          0.0,
+          5.0
+        ],
+        "Texture read instruction count": [
+          0.0,
+          6.0
+        ],
+        "Memory read instruction count": [
+          0.0,
+          16.0
+        ],
+        "Memory write instruction count": [
+          4.0,
+          4.0
+        ],
+        "Miscellaneous instruction count": [
+          22.0,
+          292.0
+        ],
+        "Ray intersection instruction count": [
+          0.0
+        ],
+        "Full precision register footprint per shader instance": [
+          9.0
+        ],
+        "Half precision register footprint per shader instance": [
+          18.0
+        ],
+        "Overall register footprint per shader instance": [
+          9.0
+        ],
+        "Scratch memory usage per shader instance": [
+          0.0
+        ],
+        "Loop count": [
+          0.0
+        ],
+        "Output component count": [
+          0.0
+        ],
+        "Input component count": [
+          0.0
+        ],
+        "ALU fiber occupancy percentage": [
+          100.0
+        ],
+        "Cycles with short latency sync instructions": [
+          58.4
+        ],
+        "Cycles with exposed short latency sync instructions": [
+          4.1
+        ],
+        "Cycles with long latency sync instructions": [
+          95.9
+        ],
+        "Cycles with exposed long latency sync instructions": [
+          11.0
+        ],
+        "Cycles with ALU instructions": [
+          73.4
+        ],
+        "Cycles with Complex instructions": [
+          24.3
+        ],
+        "Cycles with Memory instructions": [
+          14.7
+        ],
+        "Cycles with Texture instructions": [
+          29.3
+        ]
+      }
+    },
+    "average_coefficients": {
+      "bytes": 3232,
+      "sha256": "59cf9618c83f7055348d305f731d156ca686d30e76a42eed6ff74f591a9ff1f6",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 2,
+          "OpBitcast": 8,
+          "OpBranch": 16,
+          "OpBranchConditional": 5,
+          "OpCapability": 4,
+          "OpCompositeConstruct": 3,
+          "OpCompositeExtract": 8,
+          "OpConstant": 15,
+          "OpConstantComposite": 5,
+          "OpConstantTrue": 1,
+          "OpControlBarrier": 1,
+          "OpDecorate": 7,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 1,
+          "OpExtInstImport": 1,
+          "OpFAdd": 1,
+          "OpFMul": 1,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpIAdd": 10,
+          "OpIMul": 3,
+          "OpISub": 3,
+          "OpImageFetch": 1,
+          "OpImageQuerySize": 1,
+          "OpImageWrite": 1,
+          "OpLabel": 23,
+          "OpLoad": 7,
+          "OpLoopMerge": 3,
+          "OpMemoryModel": 1,
+          "OpName": 14,
+          "OpPhi": 6,
+          "OpReturn": 1,
+          "OpSLessThanEqual": 2,
+          "OpSelectionMerge": 6,
+          "OpSource": 1,
+          "OpStore": 1,
+          "OpSwitch": 1,
+          "OpTypeArray": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 1,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 2,
+          "OpTypeInt": 2,
+          "OpTypePointer": 5,
+          "OpTypeVector": 5,
+          "OpTypeVoid": 1,
+          "OpUDiv": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpULessThan": 1,
+          "OpUMod": 1,
+          "OpUndef": 1,
+          "OpVariable": 6,
+          "OpVectorShuffle": 3
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 2,
+        "image_sample_sites": 0,
+        "image_read_sites": 1,
+        "image_write_sites": 1,
+        "loop_sites": 3,
+        "capabilities": [
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "Shader"
+        ]
+      },
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "average_coefficients",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\average_coefficients\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "average_coefficients",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\average_coefficients\\shader.spvasm"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+          "-api=Vulkan",
+          "-arch=a730",
+          "-cs",
+          "-entry_point_cs",
+          "average_coefficients",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\average_coefficients\\shader.spv",
+          "-dump=all"
+        ]
+      ],
+      "adreno_sections": {
+        "Main Shader Stats": {
+          "Total instruction count": [
+            333.0
+          ],
+          "ALU instruction count - 32 bit": [
+            94.0
+          ],
+          "ALU instruction count - 16 bit": [
+            34.0
+          ],
+          "Complex instruction count - 32 bit": [
+            2.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            3.0
+          ],
+          "Barrier and fence Instruction count": [
+            5.0
+          ],
+          "Short latency sync instruction count": [
+            16.0
+          ],
+          "Long latency sync instruction count": [
+            4.0
+          ],
+          "Texture read instruction count": [
+            3.0
+          ],
+          "Memory read instruction count": [
+            15.0
+          ],
+          "Memory write instruction count": [
+            4.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            153.0
+          ],
+          "Full precision register footprint per shader instance": [
+            5.0
+          ],
+          "Half precision register footprint per shader instance": [
+            9.0
+          ],
+          "Overall register footprint per shader instance": [
+            5.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            0.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            62.8
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            14.0
+          ],
+          "Cycles with long latency sync instructions": [
+            97.6
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            23.9
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            59.5
+          ],
+          "Cycles with Complex instructions": [
+            11.3
+          ],
+          "Cycles with Memory instructions": [
+            17.7
+          ],
+          "Cycles with Texture instructions": [
+            20.7
+          ]
+        }
+      },
+      "adreno": {
+        "Total instruction count": [
+          333.0
+        ],
+        "ALU instruction count - 32 bit": [
+          94.0
+        ],
+        "ALU instruction count - 16 bit": [
+          34.0
+        ],
+        "Complex instruction count - 32 bit": [
+          2.0
+        ],
+        "Complex instruction count - 16 bit": [
+          0.0
+        ],
+        "Flow control instruction count": [
+          3.0
+        ],
+        "Barrier and fence Instruction count": [
+          5.0
+        ],
+        "Short latency sync instruction count": [
+          16.0
+        ],
+        "Long latency sync instruction count": [
+          4.0
+        ],
+        "Texture read instruction count": [
+          3.0
+        ],
+        "Memory read instruction count": [
+          15.0
+        ],
+        "Memory write instruction count": [
+          4.0
+        ],
+        "Ray intersection instruction count": [
+          0.0
+        ],
+        "Miscellaneous instruction count": [
+          153.0
+        ],
+        "Full precision register footprint per shader instance": [
+          5.0
+        ],
+        "Half precision register footprint per shader instance": [
+          9.0
+        ],
+        "Overall register footprint per shader instance": [
+          5.0
+        ],
+        "Scratch memory usage per shader instance": [
+          0.0
+        ],
+        "Loop count": [
+          0.0
+        ],
+        "Output component count": [
+          0.0
+        ],
+        "Input component count": [
+          0.0
+        ],
+        "ALU fiber occupancy percentage": [
+          100.0
+        ],
+        "Cycles with short latency sync instructions": [
+          62.8
+        ],
+        "Cycles with exposed short latency sync instructions": [
+          14.0
+        ],
+        "Cycles with long latency sync instructions": [
+          97.6
+        ],
+        "Cycles with exposed long latency sync instructions": [
+          23.9
+        ],
+        "Cycles with ALU instructions": [
+          59.5
+        ],
+        "Cycles with Complex instructions": [
+          11.3
+        ],
+        "Cycles with Memory instructions": [
+          17.7
+        ],
+        "Cycles with Texture instructions": [
+          20.7
+        ]
+      }
+    },
+    "apply_exposure": {
+      "bytes": 4176,
+      "sha256": "857a47a7d4f7d4d2bca6024a45877ac8466b6567ce1d4fd90f5f4fbd0cc63105",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 2,
+          "OpBranch": 6,
+          "OpBranchConditional": 3,
+          "OpCapability": 4,
+          "OpCompositeConstruct": 4,
+          "OpCompositeExtract": 7,
+          "OpConstant": 20,
+          "OpConstantComposite": 11,
+          "OpConstantTrue": 1,
+          "OpConvertUToF": 3,
+          "OpDecorate": 18,
+          "OpDot": 1,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 11,
+          "OpExtInstImport": 1,
+          "OpFAdd": 8,
+          "OpFConvert": 7,
+          "OpFDiv": 3,
+          "OpFMul": 5,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpINotEqual": 1,
+          "OpImageFetch": 2,
+          "OpImageQuerySize": 1,
+          "OpImageSampleExplicitLod": 1,
+          "OpImageWrite": 3,
+          "OpLabel": 11,
+          "OpLoad": 11,
+          "OpMemberDecorate": 3,
+          "OpMemberName": 3,
+          "OpMemoryModel": 1,
+          "OpName": 18,
+          "OpPhi": 2,
+          "OpReturn": 1,
+          "OpSampledImage": 1,
+          "OpSelectionMerge": 4,
+          "OpSource": 1,
+          "OpSwitch": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 2,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 4,
+          "OpTypeInt": 2,
+          "OpTypePointer": 9,
+          "OpTypeSampledImage": 1,
+          "OpTypeSampler": 1,
+          "OpTypeStruct": 1,
+          "OpTypeVector": 7,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 9,
+          "OpVectorShuffle": 2,
+          "OpVectorTimesScalar": 6
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 34,
+        "image_sample_sites": 1,
+        "image_read_sites": 2,
+        "image_write_sites": 3,
+        "loop_sites": 0,
+        "capabilities": [
+          "Float16",
+          "ImageQuery",
+          "StorageImageExtendedFormats",
+          "Shader"
+        ]
+      },
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "apply_exposure",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\apply_exposure\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "apply_exposure",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\apply_exposure\\shader.spvasm"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+          "-api=Vulkan",
+          "-arch=a730",
+          "-cs",
+          "-entry_point_cs",
+          "apply_exposure",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\apply_exposure\\shader.spv",
+          "-dump=all"
+        ]
+      ],
+      "adreno_sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            65.0
+          ],
+          "ALU instruction count - 32 bit": [
+            0.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            3.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            7.0
+          ],
+          "Long latency sync instruction count": [
+            1.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            1.0
+          ],
+          "Memory write instruction count": [
+            8.0
+          ],
+          "Miscellaneous instruction count": [
+            44.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            198.0
+          ],
+          "ALU instruction count - 32 bit": [
+            70.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            8.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            6.0
+          ],
+          "Barrier and fence Instruction count": [
+            3.0
+          ],
+          "Short latency sync instruction count": [
+            7.0
+          ],
+          "Long latency sync instruction count": [
+            5.0
+          ],
+          "Texture read instruction count": [
+            3.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            3.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            93.0
+          ],
+          "Full precision register footprint per shader instance": [
+            4.0
+          ],
+          "Half precision register footprint per shader instance": [
+            2.0
+          ],
+          "Overall register footprint per shader instance": [
+            4.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            0.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            35.2
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            4.1
+          ],
+          "Cycles with long latency sync instructions": [
+            98.1
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            28.7
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            39.5
+          ],
+          "Cycles with Complex instructions": [
+            27.5
+          ],
+          "Cycles with Memory instructions": [
+            4.0
+          ],
+          "Cycles with Texture instructions": [
+            22.2
+          ]
+        }
+      },
+      "adreno": {
+        "Total instruction count": [
+          65.0,
+          198.0
+        ],
+        "ALU instruction count - 32 bit": [
+          0.0,
+          70.0
+        ],
+        "ALU instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Complex instruction count - 32 bit": [
+          3.0,
+          8.0
+        ],
+        "Complex instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Flow control instruction count": [
+          1.0,
+          6.0
+        ],
+        "Barrier and fence Instruction count": [
+          0.0,
+          3.0
+        ],
+        "Short latency sync instruction count": [
+          7.0,
+          7.0
+        ],
+        "Long latency sync instruction count": [
+          1.0,
+          5.0
+        ],
+        "Texture read instruction count": [
+          0.0,
+          3.0
+        ],
+        "Memory read instruction count": [
+          1.0,
+          0.0
+        ],
+        "Memory write instruction count": [
+          8.0,
+          3.0
+        ],
+        "Miscellaneous instruction count": [
+          44.0,
+          93.0
+        ],
+        "Ray intersection instruction count": [
+          0.0
+        ],
+        "Full precision register footprint per shader instance": [
+          4.0
+        ],
+        "Half precision register footprint per shader instance": [
+          2.0
+        ],
+        "Overall register footprint per shader instance": [
+          4.0
+        ],
+        "Scratch memory usage per shader instance": [
+          0.0
+        ],
+        "Loop count": [
+          0.0
+        ],
+        "Output component count": [
+          0.0
+        ],
+        "Input component count": [
+          0.0
+        ],
+        "ALU fiber occupancy percentage": [
+          100.0
+        ],
+        "Cycles with short latency sync instructions": [
+          35.2
+        ],
+        "Cycles with exposed short latency sync instructions": [
+          4.1
+        ],
+        "Cycles with long latency sync instructions": [
+          98.1
+        ],
+        "Cycles with exposed long latency sync instructions": [
+          28.7
+        ],
+        "Cycles with ALU instructions": [
+          39.5
+        ],
+        "Cycles with Complex instructions": [
+          27.5
+        ],
+        "Cycles with Memory instructions": [
+          4.0
+        ],
+        "Cycles with Texture instructions": [
+          22.2
+        ]
+      }
+    },
+    "setup_weights": {
+      "bytes": 4980,
+      "sha256": "7a1c70d2006d14b4ecab5ae5a195c410f760a49b276f82fc02dfd99c92d156c1",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 14,
+          "OpBranch": 10,
+          "OpBranchConditional": 5,
+          "OpCapability": 4,
+          "OpCompositeConstruct": 6,
+          "OpCompositeExtract": 22,
+          "OpConstant": 15,
+          "OpConstantComposite": 3,
+          "OpConstantTrue": 1,
+          "OpDecorate": 10,
+          "OpDot": 1,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 25,
+          "OpExtInstImport": 1,
+          "OpFAdd": 5,
+          "OpFDiv": 5,
+          "OpFMul": 9,
+          "OpFNegate": 1,
+          "OpFOrdGreaterThanEqual": 3,
+          "OpFSub": 3,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpImageFetch": 1,
+          "OpImageQuerySize": 1,
+          "OpImageWrite": 2,
+          "OpLabel": 20,
+          "OpLoad": 19,
+          "OpMemberDecorate": 10,
+          "OpMemberName": 10,
+          "OpMemoryModel": 1,
+          "OpName": 15,
+          "OpPhi": 4,
+          "OpReturn": 1,
+          "OpSelectionMerge": 9,
+          "OpSource": 1,
+          "OpSwitch": 4,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 1,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 2,
+          "OpTypeInt": 2,
+          "OpTypePointer": 6,
+          "OpTypeStruct": 1,
+          "OpTypeVector": 4,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 5,
+          "OpVectorShuffle": 2
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 49,
+        "image_sample_sites": 0,
+        "image_read_sites": 1,
+        "image_write_sites": 2,
+        "loop_sites": 0,
+        "capabilities": [
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "Shader"
+        ]
+      },
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\pyramid.slang",
+          "-entry",
+          "setup_weights",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\setup_weights\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\pyramid.slang",
+          "-entry",
+          "setup_weights",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\setup_weights\\shader.spvasm"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+          "-api=Vulkan",
+          "-arch=a730",
+          "-cs",
+          "-entry_point_cs",
+          "setup_weights",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\setup_weights\\shader.spv",
+          "-dump=all"
+        ]
+      ],
+      "adreno_sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            33.0
+          ],
+          "ALU instruction count - 32 bit": [
+            2.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            4.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            5.0
+          ],
+          "Long latency sync instruction count": [
+            1.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            1.0
+          ],
+          "Memory write instruction count": [
+            4.0
+          ],
+          "Miscellaneous instruction count": [
+            15.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            281.0
+          ],
+          "ALU instruction count - 32 bit": [
+            62.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            19.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            7.0
+          ],
+          "Barrier and fence Instruction count": [
+            2.0
+          ],
+          "Short latency sync instruction count": [
+            16.0
+          ],
+          "Long latency sync instruction count": [
+            3.0
+          ],
+          "Texture read instruction count": [
+            1.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            2.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            169.0
+          ],
+          "Full precision register footprint per shader instance": [
+            3.0
+          ],
+          "Half precision register footprint per shader instance": [
+            0.0
+          ],
+          "Overall register footprint per shader instance": [
+            3.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            0.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            61.3
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            0.7
+          ],
+          "Cycles with long latency sync instructions": [
+            95.0
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            20.8
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            53.0
+          ],
+          "Cycles with Complex instructions": [
+            62.4
+          ],
+          "Cycles with Memory instructions": [
+            3.8
+          ],
+          "Cycles with Texture instructions": [
+            10.4
+          ]
+        }
+      },
+      "adreno": {
+        "Total instruction count": [
+          33.0,
+          281.0
+        ],
+        "ALU instruction count - 32 bit": [
+          2.0,
+          62.0
+        ],
+        "ALU instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Complex instruction count - 32 bit": [
+          4.0,
+          19.0
+        ],
+        "Complex instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Flow control instruction count": [
+          1.0,
+          7.0
+        ],
+        "Barrier and fence Instruction count": [
+          0.0,
+          2.0
+        ],
+        "Short latency sync instruction count": [
+          5.0,
+          16.0
+        ],
+        "Long latency sync instruction count": [
+          1.0,
+          3.0
+        ],
+        "Texture read instruction count": [
+          0.0,
+          1.0
+        ],
+        "Memory read instruction count": [
+          1.0,
+          0.0
+        ],
+        "Memory write instruction count": [
+          4.0,
+          2.0
+        ],
+        "Miscellaneous instruction count": [
+          15.0,
+          169.0
+        ],
+        "Ray intersection instruction count": [
+          0.0
+        ],
+        "Full precision register footprint per shader instance": [
+          3.0
+        ],
+        "Half precision register footprint per shader instance": [
+          0.0
+        ],
+        "Overall register footprint per shader instance": [
+          3.0
+        ],
+        "Scratch memory usage per shader instance": [
+          0.0
+        ],
+        "Loop count": [
+          0.0
+        ],
+        "Output component count": [
+          0.0
+        ],
+        "Input component count": [
+          0.0
+        ],
+        "ALU fiber occupancy percentage": [
+          100.0
+        ],
+        "Cycles with short latency sync instructions": [
+          61.3
+        ],
+        "Cycles with exposed short latency sync instructions": [
+          0.7
+        ],
+        "Cycles with long latency sync instructions": [
+          95.0
+        ],
+        "Cycles with exposed long latency sync instructions": [
+          20.8
+        ],
+        "Cycles with ALU instructions": [
+          53.0
+        ],
+        "Cycles with Complex instructions": [
+          62.4
+        ],
+        "Cycles with Memory instructions": [
+          3.8
+        ],
+        "Cycles with Texture instructions": [
+          10.4
+        ]
+      }
+    },
+    "downsample": {
+      "bytes": 2404,
+      "sha256": "0f9140b80fd17d5c09bdb350496786d1cc3847dbece98730762a4e4cbccfc8ee",
+      "spirv": {
+        "opcodes": {
+          "OpBranch": 4,
+          "OpBranchConditional": 2,
+          "OpCapability": 4,
+          "OpCompositeConstruct": 2,
+          "OpCompositeExtract": 6,
+          "OpConstant": 7,
+          "OpConstantComposite": 5,
+          "OpConstantTrue": 1,
+          "OpConvertUToF": 5,
+          "OpDecorate": 7,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpFAdd": 8,
+          "OpFDiv": 5,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpImageQuerySize": 1,
+          "OpImageQuerySizeLod": 1,
+          "OpImageSampleExplicitLod": 4,
+          "OpImageWrite": 1,
+          "OpLabel": 8,
+          "OpLoad": 12,
+          "OpMemoryModel": 1,
+          "OpName": 19,
+          "OpPhi": 1,
+          "OpReturn": 1,
+          "OpSampledImage": 4,
+          "OpSelectionMerge": 3,
+          "OpSource": 1,
+          "OpSwitch": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 1,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 2,
+          "OpTypeInt": 2,
+          "OpTypePointer": 4,
+          "OpTypeSampledImage": 1,
+          "OpTypeSampler": 1,
+          "OpTypeVector": 4,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 4,
+          "OpVectorShuffle": 1,
+          "OpVectorTimesScalar": 1
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 14,
+        "image_sample_sites": 4,
+        "image_read_sites": 0,
+        "image_write_sites": 1,
+        "loop_sites": 0,
+        "capabilities": [
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "Shader"
+        ]
+      },
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\pyramid.slang",
+          "-entry",
+          "downsample",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\downsample\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\pyramid.slang",
+          "-entry",
+          "downsample",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\downsample\\shader.spvasm"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+          "-api=Vulkan",
+          "-arch=a730",
+          "-cs",
+          "-entry_point_cs",
+          "downsample",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\downsample\\shader.spv",
+          "-dump=all"
+        ]
+      ],
+      "adreno_sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            5.0
+          ],
+          "ALU instruction count - 32 bit": [
+            0.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            0.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            1.0
+          ],
+          "Long latency sync instruction count": [
+            0.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            1.0
+          ],
+          "Miscellaneous instruction count": [
+            2.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            101.0
+          ],
+          "ALU instruction count - 32 bit": [
+            26.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            6.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            4.0
+          ],
+          "Barrier and fence Instruction count": [
+            10.0
+          ],
+          "Short latency sync instruction count": [
+            3.0
+          ],
+          "Long latency sync instruction count": [
+            4.0
+          ],
+          "Texture read instruction count": [
+            5.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            1.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            42.0
+          ],
+          "Full precision register footprint per shader instance": [
+            5.0
+          ],
+          "Half precision register footprint per shader instance": [
+            1.0
+          ],
+          "Overall register footprint per shader instance": [
+            5.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            0.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            7.5
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            3.1
+          ],
+          "Cycles with long latency sync instructions": [
+            99.5
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            56.8
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            9.8
+          ],
+          "Cycles with Complex instructions": [
+            9.2
+          ],
+          "Cycles with Memory instructions": [
+            1.6
+          ],
+          "Cycles with Texture instructions": [
+            23.4
+          ]
+        }
+      },
+      "adreno": {
+        "Total instruction count": [
+          5.0,
+          101.0
+        ],
+        "ALU instruction count - 32 bit": [
+          0.0,
+          26.0
+        ],
+        "ALU instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Complex instruction count - 32 bit": [
+          0.0,
+          6.0
+        ],
+        "Complex instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Flow control instruction count": [
+          1.0,
+          4.0
+        ],
+        "Barrier and fence Instruction count": [
+          0.0,
+          10.0
+        ],
+        "Short latency sync instruction count": [
+          1.0,
+          3.0
+        ],
+        "Long latency sync instruction count": [
+          0.0,
+          4.0
+        ],
+        "Texture read instruction count": [
+          0.0,
+          5.0
+        ],
+        "Memory read instruction count": [
+          0.0,
+          0.0
+        ],
+        "Memory write instruction count": [
+          1.0,
+          1.0
+        ],
+        "Miscellaneous instruction count": [
+          2.0,
+          42.0
+        ],
+        "Ray intersection instruction count": [
+          0.0
+        ],
+        "Full precision register footprint per shader instance": [
+          5.0
+        ],
+        "Half precision register footprint per shader instance": [
+          1.0
+        ],
+        "Overall register footprint per shader instance": [
+          5.0
+        ],
+        "Scratch memory usage per shader instance": [
+          0.0
+        ],
+        "Loop count": [
+          0.0
+        ],
+        "Output component count": [
+          0.0
+        ],
+        "Input component count": [
+          0.0
+        ],
+        "ALU fiber occupancy percentage": [
+          100.0
+        ],
+        "Cycles with short latency sync instructions": [
+          7.5
+        ],
+        "Cycles with exposed short latency sync instructions": [
+          3.1
+        ],
+        "Cycles with long latency sync instructions": [
+          99.5
+        ],
+        "Cycles with exposed long latency sync instructions": [
+          56.8
+        ],
+        "Cycles with ALU instructions": [
+          9.8
+        ],
+        "Cycles with Complex instructions": [
+          9.2
+        ],
+        "Cycles with Memory instructions": [
+          1.6
+        ],
+        "Cycles with Texture instructions": [
+          23.4
+        ]
+      }
+    },
+    "reconstruct": {
+      "bytes": 3392,
+      "sha256": "e1ece163339468aaef46f6fb5bd07a117eb76928ad837bc765f52f0896973e96",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 1,
+          "OpBranch": 8,
+          "OpBranchConditional": 4,
+          "OpCapability": 4,
+          "OpCompositeConstruct": 3,
+          "OpCompositeExtract": 11,
+          "OpConstant": 6,
+          "OpConstantComposite": 1,
+          "OpConstantTrue": 1,
+          "OpConvertUToF": 3,
+          "OpDecorate": 16,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 1,
+          "OpExtInstImport": 1,
+          "OpFAdd": 6,
+          "OpFDiv": 2,
+          "OpFMul": 1,
+          "OpFSub": 1,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpIEqual": 1,
+          "OpImageFetch": 2,
+          "OpImageQuerySize": 1,
+          "OpImageSampleExplicitLod": 2,
+          "OpImageWrite": 1,
+          "OpLabel": 14,
+          "OpLoad": 10,
+          "OpMemberDecorate": 8,
+          "OpMemberName": 8,
+          "OpMemoryModel": 1,
+          "OpName": 24,
+          "OpPhi": 3,
+          "OpReturn": 1,
+          "OpSampledImage": 2,
+          "OpSelectionMerge": 5,
+          "OpSource": 1,
+          "OpSwitch": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 1,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 2,
+          "OpTypeInt": 2,
+          "OpTypePointer": 6,
+          "OpTypeSampledImage": 1,
+          "OpTypeSampler": 1,
+          "OpTypeStruct": 1,
+          "OpTypeVector": 5,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 8,
+          "OpVectorShuffle": 4
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 11,
+        "image_sample_sites": 2,
+        "image_read_sites": 2,
+        "image_write_sites": 1,
+        "loop_sites": 0,
+        "capabilities": [
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "Shader"
+        ]
+      },
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\fusion.slang",
+          "-entry",
+          "reconstruct",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\reconstruct\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\fusion.slang",
+          "-entry",
+          "reconstruct",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\reconstruct\\shader.spvasm"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+          "-api=Vulkan",
+          "-arch=a730",
+          "-cs",
+          "-entry_point_cs",
+          "reconstruct",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\reconstruct\\shader.spv",
+          "-dump=all"
+        ]
+      ],
+      "adreno_sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            35.0
+          ],
+          "ALU instruction count - 32 bit": [
+            0.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            2.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            5.0
+          ],
+          "Long latency sync instruction count": [
+            0.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            1.0
+          ],
+          "Memory write instruction count": [
+            4.0
+          ],
+          "Miscellaneous instruction count": [
+            22.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            89.0
+          ],
+          "ALU instruction count - 32 bit": [
+            20.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            1.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            6.0
+          ],
+          "Barrier and fence Instruction count": [
+            4.0
+          ],
+          "Short latency sync instruction count": [
+            2.0
+          ],
+          "Long latency sync instruction count": [
+            5.0
+          ],
+          "Texture read instruction count": [
+            4.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            1.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            46.0
+          ],
+          "Full precision register footprint per shader instance": [
+            4.0
+          ],
+          "Half precision register footprint per shader instance": [
+            0.0
+          ],
+          "Overall register footprint per shader instance": [
+            4.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            0.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            7.0
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            0.4
+          ],
+          "Cycles with long latency sync instructions": [
+            97.7
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            49.4
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            17.1
+          ],
+          "Cycles with Complex instructions": [
+            6.8
+          ],
+          "Cycles with Memory instructions": [
+            1.4
+          ],
+          "Cycles with Texture instructions": [
+            28.7
+          ]
+        }
+      },
+      "adreno": {
+        "Total instruction count": [
+          35.0,
+          89.0
+        ],
+        "ALU instruction count - 32 bit": [
+          0.0,
+          20.0
+        ],
+        "ALU instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Complex instruction count - 32 bit": [
+          2.0,
+          1.0
+        ],
+        "Complex instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Flow control instruction count": [
+          1.0,
+          6.0
+        ],
+        "Barrier and fence Instruction count": [
+          0.0,
+          4.0
+        ],
+        "Short latency sync instruction count": [
+          5.0,
+          2.0
+        ],
+        "Long latency sync instruction count": [
+          0.0,
+          5.0
+        ],
+        "Texture read instruction count": [
+          0.0,
+          4.0
+        ],
+        "Memory read instruction count": [
+          1.0,
+          0.0
+        ],
+        "Memory write instruction count": [
+          4.0,
+          1.0
+        ],
+        "Miscellaneous instruction count": [
+          22.0,
+          46.0
+        ],
+        "Ray intersection instruction count": [
+          0.0
+        ],
+        "Full precision register footprint per shader instance": [
+          4.0
+        ],
+        "Half precision register footprint per shader instance": [
+          0.0
+        ],
+        "Overall register footprint per shader instance": [
+          4.0
+        ],
+        "Scratch memory usage per shader instance": [
+          0.0
+        ],
+        "Loop count": [
+          0.0
+        ],
+        "Output component count": [
+          0.0
+        ],
+        "Input component count": [
+          0.0
+        ],
+        "ALU fiber occupancy percentage": [
+          100.0
+        ],
+        "Cycles with short latency sync instructions": [
+          7.0
+        ],
+        "Cycles with exposed short latency sync instructions": [
+          0.4
+        ],
+        "Cycles with long latency sync instructions": [
+          97.7
+        ],
+        "Cycles with exposed long latency sync instructions": [
+          49.4
+        ],
+        "Cycles with ALU instructions": [
+          17.1
+        ],
+        "Cycles with Complex instructions": [
+          6.8
+        ],
+        "Cycles with Memory instructions": [
+          1.4
+        ],
+        "Cycles with Texture instructions": [
+          28.7
+        ]
+      }
+    },
+    "convert_exposure": {
+      "bytes": 4572,
+      "sha256": "91109a06208493b976399c95eba805e20957daf1255b335a2f64324c6f40c759",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 7,
+          "OpBranch": 13,
+          "OpBranchConditional": 7,
+          "OpCapability": 5,
+          "OpCompositeConstruct": 1,
+          "OpCompositeExtract": 10,
+          "OpConstant": 21,
+          "OpConstantComposite": 2,
+          "OpConstantFalse": 1,
+          "OpConstantTrue": 1,
+          "OpConvertUToF": 2,
+          "OpDecorate": 14,
+          "OpDot": 1,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 16,
+          "OpExtInstImport": 1,
+          "OpFAdd": 5,
+          "OpFConvert": 2,
+          "OpFDiv": 6,
+          "OpFMul": 4,
+          "OpFOrdGreaterThan": 2,
+          "OpFOrdGreaterThanEqual": 2,
+          "OpFOrdLessThanEqual": 1,
+          "OpFSub": 2,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpISub": 1,
+          "OpImageFetch": 2,
+          "OpImageQuerySize": 1,
+          "OpImageSampleExplicitLod": 1,
+          "OpImageWrite": 1,
+          "OpLabel": 24,
+          "OpLoad": 14,
+          "OpMemberDecorate": 8,
+          "OpMemberName": 8,
+          "OpMemoryModel": 1,
+          "OpName": 14,
+          "OpPhi": 5,
+          "OpReturn": 1,
+          "OpSampledImage": 1,
+          "OpSelectionMerge": 10,
+          "OpSource": 1,
+          "OpSwitch": 3,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 2,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 3,
+          "OpTypeInt": 2,
+          "OpTypePointer": 9,
+          "OpTypeSampledImage": 1,
+          "OpTypeSampler": 1,
+          "OpTypeStruct": 1,
+          "OpTypeVector": 4,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 7,
+          "OpVectorShuffle": 2
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 34,
+        "image_sample_sites": 1,
+        "image_read_sites": 2,
+        "image_write_sites": 1,
+        "loop_sites": 0,
+        "capabilities": [
+          "Float16",
+          "StorageImageExtendedFormats",
+          "ImageQuery",
+          "Sampled1D",
+          "Shader"
+        ]
+      },
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\fusion.slang",
+          "-entry",
+          "convert_exposure",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\convert_exposure\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\fusion.slang",
+          "-entry",
+          "convert_exposure",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\convert_exposure\\shader.spvasm"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+          "-api=Vulkan",
+          "-arch=a730",
+          "-cs",
+          "-entry_point_cs",
+          "convert_exposure",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\convert_exposure\\shader.spv",
+          "-dump=all"
+        ]
+      ],
+      "adreno_sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            55.0
+          ],
+          "ALU instruction count - 32 bit": [
+            2.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            4.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            5.0
+          ],
+          "Long latency sync instruction count": [
+            1.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            1.0
+          ],
+          "Memory write instruction count": [
+            7.0
+          ],
+          "Miscellaneous instruction count": [
+            34.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            202.0
+          ],
+          "ALU instruction count - 32 bit": [
+            39.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            9.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            8.0
+          ],
+          "Barrier and fence Instruction count": [
+            4.0
+          ],
+          "Short latency sync instruction count": [
+            9.0
+          ],
+          "Long latency sync instruction count": [
+            4.0
+          ],
+          "Texture read instruction count": [
+            3.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            1.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            125.0
+          ],
+          "Full precision register footprint per shader instance": [
+            2.0
+          ],
+          "Half precision register footprint per shader instance": [
+            2.0
+          ],
+          "Overall register footprint per shader instance": [
+            2.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            0.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            48.3
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            0.9
+          ],
+          "Cycles with long latency sync instructions": [
+            97.7
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            21.2
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            40.9
+          ],
+          "Cycles with Complex instructions": [
+            50.4
+          ],
+          "Cycles with Memory instructions": [
+            1.7
+          ],
+          "Cycles with Texture instructions": [
+            25.7
+          ]
+        }
+      },
+      "adreno": {
+        "Total instruction count": [
+          55.0,
+          202.0
+        ],
+        "ALU instruction count - 32 bit": [
+          2.0,
+          39.0
+        ],
+        "ALU instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Complex instruction count - 32 bit": [
+          4.0,
+          9.0
+        ],
+        "Complex instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Flow control instruction count": [
+          1.0,
+          8.0
+        ],
+        "Barrier and fence Instruction count": [
+          0.0,
+          4.0
+        ],
+        "Short latency sync instruction count": [
+          5.0,
+          9.0
+        ],
+        "Long latency sync instruction count": [
+          1.0,
+          4.0
+        ],
+        "Texture read instruction count": [
+          0.0,
+          3.0
+        ],
+        "Memory read instruction count": [
+          1.0,
+          0.0
+        ],
+        "Memory write instruction count": [
+          7.0,
+          1.0
+        ],
+        "Miscellaneous instruction count": [
+          34.0,
+          125.0
+        ],
+        "Ray intersection instruction count": [
+          0.0
+        ],
+        "Full precision register footprint per shader instance": [
+          2.0
+        ],
+        "Half precision register footprint per shader instance": [
+          2.0
+        ],
+        "Overall register footprint per shader instance": [
+          2.0
+        ],
+        "Scratch memory usage per shader instance": [
+          0.0
+        ],
+        "Loop count": [
+          0.0
+        ],
+        "Output component count": [
+          0.0
+        ],
+        "Input component count": [
+          0.0
+        ],
+        "ALU fiber occupancy percentage": [
+          100.0
+        ],
+        "Cycles with short latency sync instructions": [
+          48.3
+        ],
+        "Cycles with exposed short latency sync instructions": [
+          0.9
+        ],
+        "Cycles with long latency sync instructions": [
+          97.7
+        ],
+        "Cycles with exposed long latency sync instructions": [
+          21.2
+        ],
+        "Cycles with ALU instructions": [
+          40.9
+        ],
+        "Cycles with Complex instructions": [
+          50.4
+        ],
+        "Cycles with Memory instructions": [
+          1.7
+        ],
+        "Cycles with Texture instructions": [
+          25.7
+        ]
+      }
+    },
+    "compute_main": {
+      "bytes": 4656,
+      "sha256": "5fde01a02610427dc56d2912cd9f3422340d6c8af9d8375165cb4aa6ec5aab0b",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 1,
+          "OpAny": 2,
+          "OpBranch": 18,
+          "OpBranchConditional": 10,
+          "OpCapability": 6,
+          "OpCompositeConstruct": 5,
+          "OpCompositeExtract": 11,
+          "OpConstant": 15,
+          "OpConstantComposite": 4,
+          "OpConstantFalse": 1,
+          "OpConstantTrue": 1,
+          "OpConvertUToF": 5,
+          "OpDecorate": 14,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 7,
+          "OpExtInstImport": 1,
+          "OpFAdd": 2,
+          "OpFConvert": 13,
+          "OpFDiv": 3,
+          "OpFMul": 7,
+          "OpFOrdGreaterThan": 1,
+          "OpFOrdLessThan": 2,
+          "OpFOrdLessThanEqual": 3,
+          "OpFSub": 5,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpIEqual": 2,
+          "OpImageQuerySize": 1,
+          "OpImageQuerySizeLod": 1,
+          "OpImageSampleExplicitLod": 3,
+          "OpImageWrite": 3,
+          "OpLabel": 30,
+          "OpLoad": 13,
+          "OpMemberDecorate": 1,
+          "OpMemberName": 1,
+          "OpMemoryModel": 1,
+          "OpName": 21,
+          "OpPhi": 7,
+          "OpReturn": 1,
+          "OpSampledImage": 3,
+          "OpSelectionMerge": 11,
+          "OpSource": 1,
+          "OpSwitch": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 2,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 3,
+          "OpTypeInt": 2,
+          "OpTypePointer": 7,
+          "OpTypeSampledImage": 2,
+          "OpTypeSampler": 1,
+          "OpTypeStruct": 1,
+          "OpTypeVector": 8,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 7,
+          "OpVectorShuffle": 3,
+          "OpVectorTimesScalar": 2
+        },
+        "float16_arithmetic_sites": 9,
+        "float32_arithmetic_sites": 17,
+        "image_sample_sites": 3,
+        "image_read_sites": 0,
+        "image_write_sites": 3,
+        "loop_sites": 0,
+        "capabilities": [
+          "Float16",
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "StorageImageExtendedFormats",
+          "Shader"
+        ]
+      },
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\tonemap.slang",
+          "-entry",
+          "compute_main",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\compute_main\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\tonemap.slang",
+          "-entry",
+          "compute_main",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\compute_main\\shader.spvasm"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+          "-api=Vulkan",
+          "-arch=a730",
+          "-cs",
+          "-entry_point_cs",
+          "compute_main",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a730-fit-tile\\compute_main\\shader.spv",
+          "-dump=all"
+        ]
+      ],
+      "adreno_sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            31.0
+          ],
+          "ALU instruction count - 32 bit": [
+            0.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            0.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            2.0
+          ],
+          "Long latency sync instruction count": [
+            0.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            1.0
+          ],
+          "Memory write instruction count": [
+            4.0
+          ],
+          "Miscellaneous instruction count": [
+            23.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            259.0
+          ],
+          "ALU instruction count - 32 bit": [
+            31.0
+          ],
+          "ALU instruction count - 16 bit": [
+            9.0
+          ],
+          "Complex instruction count - 32 bit": [
+            11.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            13.0
+          ],
+          "Barrier and fence Instruction count": [
+            9.0
+          ],
+          "Short latency sync instruction count": [
+            14.0
+          ],
+          "Long latency sync instruction count": [
+            6.0
+          ],
+          "Texture read instruction count": [
+            4.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            3.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            159.0
+          ],
+          "Full precision register footprint per shader instance": [
+            2.0
+          ],
+          "Half precision register footprint per shader instance": [
+            2.0
+          ],
+          "Overall register footprint per shader instance": [
+            2.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            0.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            49.4
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            3.2
+          ],
+          "Cycles with long latency sync instructions": [
+            98.5
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            21.6
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            38.1
+          ],
+          "Cycles with Complex instructions": [
+            39.9
+          ],
+          "Cycles with Memory instructions": [
+            3.1
+          ],
+          "Cycles with Texture instructions": [
+            23.6
+          ]
+        }
+      },
+      "adreno": {
+        "Total instruction count": [
+          31.0,
+          259.0
+        ],
+        "ALU instruction count - 32 bit": [
+          0.0,
+          31.0
+        ],
+        "ALU instruction count - 16 bit": [
+          0.0,
+          9.0
+        ],
+        "Complex instruction count - 32 bit": [
+          0.0,
+          11.0
+        ],
+        "Complex instruction count - 16 bit": [
+          0.0,
+          0.0
+        ],
+        "Flow control instruction count": [
+          1.0,
+          13.0
+        ],
+        "Barrier and fence Instruction count": [
+          0.0,
+          9.0
+        ],
+        "Short latency sync instruction count": [
+          2.0,
+          14.0
+        ],
+        "Long latency sync instruction count": [
+          0.0,
+          6.0
+        ],
+        "Texture read instruction count": [
+          0.0,
+          4.0
+        ],
+        "Memory read instruction count": [
+          1.0,
+          0.0
+        ],
+        "Memory write instruction count": [
+          4.0,
+          3.0
+        ],
+        "Miscellaneous instruction count": [
+          23.0,
+          159.0
+        ],
+        "Ray intersection instruction count": [
+          0.0
+        ],
+        "Full precision register footprint per shader instance": [
+          2.0
+        ],
+        "Half precision register footprint per shader instance": [
+          2.0
+        ],
+        "Overall register footprint per shader instance": [
+          2.0
+        ],
+        "Scratch memory usage per shader instance": [
+          0.0
+        ],
+        "Loop count": [
+          0.0
+        ],
+        "Output component count": [
+          0.0
+        ],
+        "Input component count": [
+          0.0
+        ],
+        "ALU fiber occupancy percentage": [
+          100.0
+        ],
+        "Cycles with short latency sync instructions": [
+          49.4
+        ],
+        "Cycles with exposed short latency sync instructions": [
+          3.2
+        ],
+        "Cycles with long latency sync instructions": [
+          98.5
+        ],
+        "Cycles with exposed long latency sync instructions": [
+          21.6
+        ],
+        "Cycles with ALU instructions": [
+          38.1
+        ],
+        "Cycles with Complex instructions": [
+          39.9
+        ],
+        "Cycles with Memory instructions": [
+          3.1
+        ],
+        "Cycles with Texture instructions": [
+          23.6
+        ]
+      }
+    }
+  }
+}

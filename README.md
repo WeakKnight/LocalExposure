@@ -87,6 +87,8 @@ Colors use RGBA16F and exposure maps use R16F. Guided sample products, regulariz
 
 ## References
 
+Mobile optimization targets **Snapdragon 8 Gen 1 / Adreno 730** by default ([baseline](docs/baselines/a730-aoc.md)), using AOC 7.0.15. Immortalis-G720 and Adreno 750 remain reference targets. See the [workflow](docs/mobile-profiling.md), [Mali baseline](docs/baselines/g720-no-spill.md), and [Adreno baseline](docs/baselines/a750-aoc.md). These are offline estimates, not measured phone timings.
+
 - [Bart Wronski — Exposure Fusion: local tonemapping for real-time rendering](https://bartwronski.com/2022/02/28/exposure-fusion-local-tonemapping-for-real-time-rendering/): synthetic exposures, multiscale fusion, and applications in real-time rendering.
 - [kbmajeed / exposure_fusion](https://github.com/kbmajeed/exposure_fusion): a reference implementation of Mertens et al.'s Exposure Fusion method, including weights and pyramid blending.
 - **Unreal Engine source:** `Engine/Shaders/Private/PostProcessLocalExposure.usf`, used to compare Fusion parameter semantics and downsampling (requires access to the engine source).

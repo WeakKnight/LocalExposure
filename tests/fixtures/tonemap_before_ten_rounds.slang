@@ -37,11 +37,8 @@ void compute_main(uint3 tid : SV_DispatchThreadID)
         output[tid.xy] = float4(float3(saturate(0.5 + ev / 12.0)), 1.0);
         return;
     }
-    // Do not fetch the hidden final image on the baseline half of compare view.
-    half3 mapped;
+    half3 mapped = half3(finalColor.SampleLevel(linearSampler, uv, 0).rgb);
     if (viewMode == 1 && uv.x < 0.5)
         mapped = half3(source.SampleLevel(linearSampler, uv, 0).rgb);
-    else
-        mapped = half3(finalColor.SampleLevel(linearSampler, uv, 0).rgb);
     output[tid.xy] = float4(toSRGB(mapped.r), toSRGB(mapped.g), toSRGB(mapped.b), 1.0);
 }

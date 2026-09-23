@@ -121,7 +121,8 @@ class ToneMapper:
         elif self._reduced_source_key != source:
             self.guided_kernels["reduce_source"].dispatch(
                 thread_count=[self.work_source.width, self.work_source.height, 1],
-                vars={"fullSource": source, "reducedOutput": self.work_source, "linearSampler": self.sampler},
+                vars={"fullSource": source, "reducedOutput": self.work_source,
+                      "linearSampler": self.sampler, "reductionRows": 4},
                 command_encoder=encoder)
             self._reduced_source_key = source
         work = self.work_source

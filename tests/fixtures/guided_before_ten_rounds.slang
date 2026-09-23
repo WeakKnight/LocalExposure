@@ -37,9 +37,7 @@ void reduce_source(uint3 tid : SV_DispatchThreadID)
 Texture2D<float4> reducedSource;
 Texture2D<half> lowExposure;
 RWTexture2D<float2> coefficientOutput;
-// 12 populated columns with pitch 13: same samples, lower A730 address-code
-// instruction count. Keep guide FP32 and EV half-rounded as before.
-groupshared float2 fitTile[156];
+groupshared float2 fitTile[144]; // Full-precision guide, half-rounded exposure EV.
 
 // Fast guided filter: fit EV = a * log-luminance + b in a 5x5 low-res window.
 // Guide was averaged in log space separately from linear HDR downsampling.
@@ -57,11 +55,11 @@ void fit_coefficients(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_GroupT
                        int2(0), int2(w-1, h-1));
         // Preserve the original half rounding before reusing the EV. Float
         // shared storage represents every resulting half value exactly.
-        fitTile[(i / 12) * 13 + i % 12] = float2(reducedSource[p].a, float(half(log2(max(lowExposure[p], 1e-20)))));
+        fitTile[i] = float2(reducedSource[p].a, float(half(log2(max(lowExposure[p], 1e-20)))));
     }
     GroupMemoryBarrierWithGroupSync();
     if (tid.x >= w || tid.y >= h) return;
-    float center = fitTile[(localID.y + 2) * 13 + localID.x + 2].x;
+    float center = fitTile[(localID.y + 2) * 12 + localID.x + 2].x;
     // Only per-sample centered values/products use half. Accumulate all 25
     // samples and solve covariance/variance in float to avoid cancellation.
     // Form the cancellation-sensitive differences in float before narrowing.
@@ -70,7 +68,7 @@ void fit_coefficients(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_GroupT
     for (int y = -2; y <= 2; ++y)
         for (int x = -2; x <= 2; ++x)
         {
-            uint index = (localID.y + y + 2) * 13 + localID.x + x + 2;
+            uint index = (localID.y + y + 2) * 12 + localID.x + x + 2;
             // Subtract in float before narrowing: small guide differences
             // would disappear if the two absolute log values were half.
             float2 cached = fitTile[index];

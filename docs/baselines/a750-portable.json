@@ -1,0 +1,1336 @@
+{
+  "schema": 1,
+  "status": "portable-only; AOC unavailable",
+  "config": {
+    "target": "a750",
+    "size": [
+      1920,
+      1080
+    ],
+    "fusion_scale": 4,
+    "max_levels": 16,
+    "flags": [
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name"
+    ],
+    "uniform_specialization": false
+  },
+  "compiler": {
+    "version": "2026.12",
+    "sha256": "f5413f54845abd4bdf349ffd410c0131adac92cc2e5d6ed6449512537bae059c",
+    "url": "https://github.com/shader-slang/slang/releases/download/v2026.12/slang-2026.12-windows-x86_64.zip",
+    "archive_sha256": "6a2f63174bac4edb994b196f18024c27c4900395fd955b876ecd7a0492347dec"
+  },
+  "aoc": null,
+  "source_sha256": {
+    "shaders\\aces.slang": "926b65c08bd1cd46e13ce28eb82cba9ce6428b74a32ea5743ae7e3b8ac0d006f",
+    "shaders\\fusion.slang": "e80f9f6338164842fa8c518c5b0f4f5812647ea7476c61b7a2e35a78f1f7fd8d",
+    "shaders\\guided.slang": "c7c547d17cbc8b968ae5faff478b0d18c804cfc8dfbb821f6124996b917c9a75",
+    "shaders\\pyramid.slang": "e0f570d5dc49d77c8cf505e09fa035c33a9e9c19ff47fa7ad6d2166fa312753d",
+    "shaders\\tone_operator.slang": "5ddc7bf52dabba3427fb4d87d95fac268142101b9301f1d660aa82799891fb72",
+    "shaders\\tonemap.slang": "170675b49e606eba660e08caa70a01c321afe7249723f412384c8a1f31377493",
+    "shaders\\zcurve.slang": "94aeed77fb2843675a1104be81e076b7476c7430ce0c8b1bbaa53f225c39cc76",
+    "shaders\\zcurve_calibrate.slang": "36010790bb5cee42e4501e0cd8cc883631fe128a8be2211340914ed74537928a"
+  },
+  "workload": {
+    "low_size": [
+      480,
+      270
+    ],
+    "mip_sizes": [
+      [
+        480,
+        270
+      ],
+      [
+        240,
+        135
+      ],
+      [
+        120,
+        67
+      ],
+      [
+        60,
+        33
+      ],
+      [
+        30,
+        16
+      ],
+      [
+        15,
+        8
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "dispatches": [
+      {
+        "entry": "reduce_source",
+        "size": [
+          480,
+          270
+        ],
+        "useful_threads": 129600,
+        "launched_threads": 130560
+      },
+      {
+        "entry": "setup_weights",
+        "size": [
+          480,
+          270
+        ],
+        "useful_threads": 129600,
+        "launched_threads": 130560
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          240,
+          135
+        ],
+        "useful_threads": 32400,
+        "launched_threads": 32640
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          120,
+          67
+        ],
+        "useful_threads": 8040,
+        "launched_threads": 8640
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          60,
+          33
+        ],
+        "useful_threads": 1980,
+        "launched_threads": 2560
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          30,
+          16
+        ],
+        "useful_threads": 480,
+        "launched_threads": 512
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          15,
+          8
+        ],
+        "useful_threads": 120,
+        "launched_threads": 128
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          7,
+          4
+        ],
+        "useful_threads": 28,
+        "launched_threads": 64
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          3,
+          2
+        ],
+        "useful_threads": 6,
+        "launched_threads": 64
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          1,
+          1
+        ],
+        "useful_threads": 1,
+        "launched_threads": 64
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          240,
+          135
+        ],
+        "useful_threads": 32400,
+        "launched_threads": 32640
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          120,
+          67
+        ],
+        "useful_threads": 8040,
+        "launched_threads": 8640
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          60,
+          33
+        ],
+        "useful_threads": 1980,
+        "launched_threads": 2560
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          30,
+          16
+        ],
+        "useful_threads": 480,
+        "launched_threads": 512
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          15,
+          8
+        ],
+        "useful_threads": 120,
+        "launched_threads": 128
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          7,
+          4
+        ],
+        "useful_threads": 28,
+        "launched_threads": 64
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          3,
+          2
+        ],
+        "useful_threads": 6,
+        "launched_threads": 64
+      },
+      {
+        "entry": "downsample",
+        "size": [
+          1,
+          1
+        ],
+        "useful_threads": 1,
+        "launched_threads": 64
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          1,
+          1
+        ],
+        "useful_threads": 1,
+        "launched_threads": 64
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          3,
+          2
+        ],
+        "useful_threads": 6,
+        "launched_threads": 64
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          7,
+          4
+        ],
+        "useful_threads": 28,
+        "launched_threads": 64
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          15,
+          8
+        ],
+        "useful_threads": 120,
+        "launched_threads": 128
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          30,
+          16
+        ],
+        "useful_threads": 480,
+        "launched_threads": 512
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          60,
+          33
+        ],
+        "useful_threads": 1980,
+        "launched_threads": 2560
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          120,
+          67
+        ],
+        "useful_threads": 8040,
+        "launched_threads": 8640
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          240,
+          135
+        ],
+        "useful_threads": 32400,
+        "launched_threads": 32640
+      },
+      {
+        "entry": "reconstruct",
+        "size": [
+          480,
+          270
+        ],
+        "useful_threads": 129600,
+        "launched_threads": 130560
+      },
+      {
+        "entry": "convert_exposure",
+        "size": [
+          480,
+          270
+        ],
+        "useful_threads": 129600,
+        "launched_threads": 130560
+      },
+      {
+        "entry": "fit_coefficients",
+        "size": [
+          480,
+          270
+        ],
+        "useful_threads": 129600,
+        "launched_threads": 130560
+      },
+      {
+        "entry": "average_coefficients",
+        "size": [
+          480,
+          270
+        ],
+        "useful_threads": 129600,
+        "launched_threads": 130560
+      },
+      {
+        "entry": "apply_exposure",
+        "size": [
+          1920,
+          1080
+        ],
+        "useful_threads": 2073600,
+        "launched_threads": 2073600
+      },
+      {
+        "entry": "compute_main",
+        "size": [
+          1920,
+          1080
+        ],
+        "useful_threads": 2073600,
+        "launched_threads": 2073600
+      }
+    ],
+    "texture_payload_bytes": 89420828,
+    "inverse_lut_bytes": 2048
+  },
+  "passes": {
+    "reduce_source": {
+      "bytes": 2596,
+      "sha256": "3143f9c88392751a34ecaf6505d370024602f20022611b3424ce3217079efe54",
+      "spirv": {
+        "opcodes": {
+          "OpBranch": 12,
+          "OpBranchConditional": 4,
+          "OpCapability": 4,
+          "OpCompositeConstruct": 3,
+          "OpCompositeExtract": 4,
+          "OpConstant": 11,
+          "OpConstantComposite": 7,
+          "OpConstantTrue": 1,
+          "OpConvertUToF": 5,
+          "OpDecorate": 7,
+          "OpDot": 1,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 4,
+          "OpExtInstImport": 1,
+          "OpFAdd": 3,
+          "OpFDiv": 1,
+          "OpFMul": 2,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpIAdd": 2,
+          "OpImageQuerySize": 1,
+          "OpImageSampleExplicitLod": 1,
+          "OpImageWrite": 1,
+          "OpLabel": 18,
+          "OpLoad": 5,
+          "OpLoopMerge": 2,
+          "OpMemoryModel": 1,
+          "OpName": 12,
+          "OpPhi": 5,
+          "OpReturn": 1,
+          "OpSampledImage": 1,
+          "OpSelectionMerge": 5,
+          "OpSource": 1,
+          "OpSwitch": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 1,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 2,
+          "OpTypeInt": 1,
+          "OpTypePointer": 4,
+          "OpTypeSampledImage": 1,
+          "OpTypeSampler": 1,
+          "OpTypeVector": 5,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpULessThan": 2,
+          "OpVariable": 4,
+          "OpVectorShuffle": 3
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 11,
+        "image_sample_sites": 1,
+        "image_read_sites": 0,
+        "image_write_sites": 1,
+        "loop_sites": 2,
+        "capabilities": [
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "Shader"
+        ]
+      },
+      "adreno": null,
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "reduce_source",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\reduce_source\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "reduce_source",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\reduce_source\\shader.spvasm"
+        ]
+      ]
+    },
+    "fit_coefficients": {
+      "bytes": 3460,
+      "sha256": "d2a8346d3126992ac896993dedec6eb71f8f7a168cb3ea28844d3787b2f68e77",
+      "spirv": {
+        "opcodes": {
+          "OpBitcast": 4,
+          "OpBranch": 12,
+          "OpBranchConditional": 4,
+          "OpCapability": 6,
+          "OpCompositeConstruct": 3,
+          "OpCompositeExtract": 7,
+          "OpConstant": 10,
+          "OpConstantComposite": 1,
+          "OpConstantTrue": 1,
+          "OpDecorate": 7,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 4,
+          "OpExtInstImport": 1,
+          "OpFAdd": 6,
+          "OpFConvert": 11,
+          "OpFDiv": 1,
+          "OpFMul": 11,
+          "OpFSub": 4,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpIAdd": 3,
+          "OpISub": 2,
+          "OpImageFetch": 3,
+          "OpImageQuerySize": 1,
+          "OpImageWrite": 1,
+          "OpLabel": 18,
+          "OpLoad": 6,
+          "OpLoopMerge": 2,
+          "OpMemoryModel": 1,
+          "OpName": 26,
+          "OpPhi": 11,
+          "OpReturn": 1,
+          "OpSLessThanEqual": 2,
+          "OpSelectionMerge": 5,
+          "OpSource": 1,
+          "OpSwitch": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 2,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 3,
+          "OpTypeInt": 2,
+          "OpTypePointer": 4,
+          "OpTypeVector": 5,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 4,
+          "OpVectorShuffle": 1
+        },
+        "float16_arithmetic_sites": 3,
+        "float32_arithmetic_sites": 22,
+        "image_sample_sites": 0,
+        "image_read_sites": 3,
+        "image_write_sites": 1,
+        "loop_sites": 2,
+        "capabilities": [
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "Float16",
+          "StorageImageExtendedFormats",
+          "Shader"
+        ]
+      },
+      "adreno": null,
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "fit_coefficients",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\fit_coefficients\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "fit_coefficients",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\fit_coefficients\\shader.spvasm"
+        ]
+      ]
+    },
+    "average_coefficients": {
+      "bytes": 2236,
+      "sha256": "f08d8d79e4a1acdfe79d8ffc6849d408080818714b5ad73ef4beaf6654f2cb96",
+      "spirv": {
+        "opcodes": {
+          "OpBitcast": 4,
+          "OpBranch": 12,
+          "OpBranchConditional": 4,
+          "OpCapability": 4,
+          "OpCompositeConstruct": 3,
+          "OpCompositeExtract": 6,
+          "OpConstant": 8,
+          "OpConstantComposite": 3,
+          "OpConstantTrue": 1,
+          "OpDecorate": 5,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 1,
+          "OpExtInstImport": 1,
+          "OpFAdd": 1,
+          "OpFMul": 1,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpIAdd": 3,
+          "OpISub": 2,
+          "OpImageFetch": 1,
+          "OpImageQuerySize": 1,
+          "OpImageWrite": 1,
+          "OpLabel": 18,
+          "OpLoad": 4,
+          "OpLoopMerge": 2,
+          "OpMemoryModel": 1,
+          "OpName": 10,
+          "OpPhi": 5,
+          "OpReturn": 1,
+          "OpSLessThanEqual": 2,
+          "OpSelectionMerge": 5,
+          "OpSource": 1,
+          "OpSwitch": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 1,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 2,
+          "OpTypeInt": 2,
+          "OpTypePointer": 3,
+          "OpTypeVector": 5,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpUndef": 1,
+          "OpVariable": 3,
+          "OpVectorShuffle": 3
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 2,
+        "image_sample_sites": 0,
+        "image_read_sites": 1,
+        "image_write_sites": 1,
+        "loop_sites": 2,
+        "capabilities": [
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "Shader"
+        ]
+      },
+      "adreno": null,
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "average_coefficients",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\average_coefficients\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "average_coefficients",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\average_coefficients\\shader.spvasm"
+        ]
+      ]
+    },
+    "apply_exposure": {
+      "bytes": 4108,
+      "sha256": "1c2d97b3a42158559427ea87afcb09ffed730252678445c2f742d3b35c3a77c6",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 2,
+          "OpBranch": 6,
+          "OpBranchConditional": 3,
+          "OpCapability": 4,
+          "OpCompositeConstruct": 4,
+          "OpCompositeExtract": 7,
+          "OpConstant": 19,
+          "OpConstantComposite": 11,
+          "OpConstantTrue": 1,
+          "OpConvertUToF": 3,
+          "OpDecorate": 18,
+          "OpDot": 1,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 11,
+          "OpExtInstImport": 1,
+          "OpFAdd": 8,
+          "OpFConvert": 7,
+          "OpFDiv": 3,
+          "OpFMul": 5,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpINotEqual": 1,
+          "OpImageFetch": 2,
+          "OpImageQuerySize": 1,
+          "OpImageSampleExplicitLod": 1,
+          "OpImageWrite": 3,
+          "OpLabel": 11,
+          "OpLoad": 11,
+          "OpMemberDecorate": 2,
+          "OpMemberName": 2,
+          "OpMemoryModel": 1,
+          "OpName": 18,
+          "OpPhi": 2,
+          "OpReturn": 1,
+          "OpSampledImage": 1,
+          "OpSelectionMerge": 4,
+          "OpSource": 1,
+          "OpSwitch": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 2,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 4,
+          "OpTypeInt": 2,
+          "OpTypePointer": 9,
+          "OpTypeSampledImage": 1,
+          "OpTypeSampler": 1,
+          "OpTypeStruct": 1,
+          "OpTypeVector": 7,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 9,
+          "OpVectorShuffle": 2,
+          "OpVectorTimesScalar": 6
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 34,
+        "image_sample_sites": 1,
+        "image_read_sites": 2,
+        "image_write_sites": 3,
+        "loop_sites": 0,
+        "capabilities": [
+          "Float16",
+          "ImageQuery",
+          "StorageImageExtendedFormats",
+          "Shader"
+        ]
+      },
+      "adreno": null,
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "apply_exposure",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\apply_exposure\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+          "-entry",
+          "apply_exposure",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\apply_exposure\\shader.spvasm"
+        ]
+      ]
+    },
+    "setup_weights": {
+      "bytes": 4980,
+      "sha256": "7a1c70d2006d14b4ecab5ae5a195c410f760a49b276f82fc02dfd99c92d156c1",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 14,
+          "OpBranch": 10,
+          "OpBranchConditional": 5,
+          "OpCapability": 4,
+          "OpCompositeConstruct": 6,
+          "OpCompositeExtract": 22,
+          "OpConstant": 15,
+          "OpConstantComposite": 3,
+          "OpConstantTrue": 1,
+          "OpDecorate": 10,
+          "OpDot": 1,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 25,
+          "OpExtInstImport": 1,
+          "OpFAdd": 5,
+          "OpFDiv": 5,
+          "OpFMul": 9,
+          "OpFNegate": 1,
+          "OpFOrdGreaterThanEqual": 3,
+          "OpFSub": 3,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpImageFetch": 1,
+          "OpImageQuerySize": 1,
+          "OpImageWrite": 2,
+          "OpLabel": 20,
+          "OpLoad": 19,
+          "OpMemberDecorate": 10,
+          "OpMemberName": 10,
+          "OpMemoryModel": 1,
+          "OpName": 15,
+          "OpPhi": 4,
+          "OpReturn": 1,
+          "OpSelectionMerge": 9,
+          "OpSource": 1,
+          "OpSwitch": 4,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 1,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 2,
+          "OpTypeInt": 2,
+          "OpTypePointer": 6,
+          "OpTypeStruct": 1,
+          "OpTypeVector": 4,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 5,
+          "OpVectorShuffle": 2
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 49,
+        "image_sample_sites": 0,
+        "image_read_sites": 1,
+        "image_write_sites": 2,
+        "loop_sites": 0,
+        "capabilities": [
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "Shader"
+        ]
+      },
+      "adreno": null,
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\pyramid.slang",
+          "-entry",
+          "setup_weights",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\setup_weights\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\pyramid.slang",
+          "-entry",
+          "setup_weights",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\setup_weights\\shader.spvasm"
+        ]
+      ]
+    },
+    "downsample": {
+      "bytes": 2404,
+      "sha256": "0f9140b80fd17d5c09bdb350496786d1cc3847dbece98730762a4e4cbccfc8ee",
+      "spirv": {
+        "opcodes": {
+          "OpBranch": 4,
+          "OpBranchConditional": 2,
+          "OpCapability": 4,
+          "OpCompositeConstruct": 2,
+          "OpCompositeExtract": 6,
+          "OpConstant": 7,
+          "OpConstantComposite": 5,
+          "OpConstantTrue": 1,
+          "OpConvertUToF": 5,
+          "OpDecorate": 7,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpFAdd": 8,
+          "OpFDiv": 5,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpImageQuerySize": 1,
+          "OpImageQuerySizeLod": 1,
+          "OpImageSampleExplicitLod": 4,
+          "OpImageWrite": 1,
+          "OpLabel": 8,
+          "OpLoad": 12,
+          "OpMemoryModel": 1,
+          "OpName": 19,
+          "OpPhi": 1,
+          "OpReturn": 1,
+          "OpSampledImage": 4,
+          "OpSelectionMerge": 3,
+          "OpSource": 1,
+          "OpSwitch": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 1,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 2,
+          "OpTypeInt": 2,
+          "OpTypePointer": 4,
+          "OpTypeSampledImage": 1,
+          "OpTypeSampler": 1,
+          "OpTypeVector": 4,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 4,
+          "OpVectorShuffle": 1,
+          "OpVectorTimesScalar": 1
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 14,
+        "image_sample_sites": 4,
+        "image_read_sites": 0,
+        "image_write_sites": 1,
+        "loop_sites": 0,
+        "capabilities": [
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "Shader"
+        ]
+      },
+      "adreno": null,
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\pyramid.slang",
+          "-entry",
+          "downsample",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\downsample\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\pyramid.slang",
+          "-entry",
+          "downsample",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\downsample\\shader.spvasm"
+        ]
+      ]
+    },
+    "reconstruct": {
+      "bytes": 3392,
+      "sha256": "e1ece163339468aaef46f6fb5bd07a117eb76928ad837bc765f52f0896973e96",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 1,
+          "OpBranch": 8,
+          "OpBranchConditional": 4,
+          "OpCapability": 4,
+          "OpCompositeConstruct": 3,
+          "OpCompositeExtract": 11,
+          "OpConstant": 6,
+          "OpConstantComposite": 1,
+          "OpConstantTrue": 1,
+          "OpConvertUToF": 3,
+          "OpDecorate": 16,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 1,
+          "OpExtInstImport": 1,
+          "OpFAdd": 6,
+          "OpFDiv": 2,
+          "OpFMul": 1,
+          "OpFSub": 1,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpIEqual": 1,
+          "OpImageFetch": 2,
+          "OpImageQuerySize": 1,
+          "OpImageSampleExplicitLod": 2,
+          "OpImageWrite": 1,
+          "OpLabel": 14,
+          "OpLoad": 10,
+          "OpMemberDecorate": 8,
+          "OpMemberName": 8,
+          "OpMemoryModel": 1,
+          "OpName": 24,
+          "OpPhi": 3,
+          "OpReturn": 1,
+          "OpSampledImage": 2,
+          "OpSelectionMerge": 5,
+          "OpSource": 1,
+          "OpSwitch": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 1,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 2,
+          "OpTypeInt": 2,
+          "OpTypePointer": 6,
+          "OpTypeSampledImage": 1,
+          "OpTypeSampler": 1,
+          "OpTypeStruct": 1,
+          "OpTypeVector": 5,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 8,
+          "OpVectorShuffle": 4
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 11,
+        "image_sample_sites": 2,
+        "image_read_sites": 2,
+        "image_write_sites": 1,
+        "loop_sites": 0,
+        "capabilities": [
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "Shader"
+        ]
+      },
+      "adreno": null,
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\fusion.slang",
+          "-entry",
+          "reconstruct",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\reconstruct\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\fusion.slang",
+          "-entry",
+          "reconstruct",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\reconstruct\\shader.spvasm"
+        ]
+      ]
+    },
+    "convert_exposure": {
+      "bytes": 4572,
+      "sha256": "91109a06208493b976399c95eba805e20957daf1255b335a2f64324c6f40c759",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 7,
+          "OpBranch": 13,
+          "OpBranchConditional": 7,
+          "OpCapability": 5,
+          "OpCompositeConstruct": 1,
+          "OpCompositeExtract": 10,
+          "OpConstant": 21,
+          "OpConstantComposite": 2,
+          "OpConstantFalse": 1,
+          "OpConstantTrue": 1,
+          "OpConvertUToF": 2,
+          "OpDecorate": 14,
+          "OpDot": 1,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 16,
+          "OpExtInstImport": 1,
+          "OpFAdd": 5,
+          "OpFConvert": 2,
+          "OpFDiv": 6,
+          "OpFMul": 4,
+          "OpFOrdGreaterThan": 2,
+          "OpFOrdGreaterThanEqual": 2,
+          "OpFOrdLessThanEqual": 1,
+          "OpFSub": 2,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpISub": 1,
+          "OpImageFetch": 2,
+          "OpImageQuerySize": 1,
+          "OpImageSampleExplicitLod": 1,
+          "OpImageWrite": 1,
+          "OpLabel": 24,
+          "OpLoad": 14,
+          "OpMemberDecorate": 8,
+          "OpMemberName": 8,
+          "OpMemoryModel": 1,
+          "OpName": 14,
+          "OpPhi": 5,
+          "OpReturn": 1,
+          "OpSampledImage": 1,
+          "OpSelectionMerge": 10,
+          "OpSource": 1,
+          "OpSwitch": 3,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 2,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 3,
+          "OpTypeInt": 2,
+          "OpTypePointer": 9,
+          "OpTypeSampledImage": 1,
+          "OpTypeSampler": 1,
+          "OpTypeStruct": 1,
+          "OpTypeVector": 4,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 7,
+          "OpVectorShuffle": 2
+        },
+        "float16_arithmetic_sites": 0,
+        "float32_arithmetic_sites": 34,
+        "image_sample_sites": 1,
+        "image_read_sites": 2,
+        "image_write_sites": 1,
+        "loop_sites": 0,
+        "capabilities": [
+          "Float16",
+          "StorageImageExtendedFormats",
+          "ImageQuery",
+          "Sampled1D",
+          "Shader"
+        ]
+      },
+      "adreno": null,
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\fusion.slang",
+          "-entry",
+          "convert_exposure",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\convert_exposure\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\fusion.slang",
+          "-entry",
+          "convert_exposure",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\convert_exposure\\shader.spvasm"
+        ]
+      ]
+    },
+    "compute_main": {
+      "bytes": 4656,
+      "sha256": "5fde01a02610427dc56d2912cd9f3422340d6c8af9d8375165cb4aa6ec5aab0b",
+      "spirv": {
+        "opcodes": {
+          "OpAccessChain": 1,
+          "OpAny": 2,
+          "OpBranch": 18,
+          "OpBranchConditional": 10,
+          "OpCapability": 6,
+          "OpCompositeConstruct": 5,
+          "OpCompositeExtract": 11,
+          "OpConstant": 15,
+          "OpConstantComposite": 4,
+          "OpConstantFalse": 1,
+          "OpConstantTrue": 1,
+          "OpConvertUToF": 5,
+          "OpDecorate": 14,
+          "OpEntryPoint": 1,
+          "OpExecutionMode": 1,
+          "OpExtInst": 7,
+          "OpExtInstImport": 1,
+          "OpFAdd": 2,
+          "OpFConvert": 13,
+          "OpFDiv": 3,
+          "OpFMul": 7,
+          "OpFOrdGreaterThan": 1,
+          "OpFOrdLessThan": 2,
+          "OpFOrdLessThanEqual": 3,
+          "OpFSub": 5,
+          "OpFunction": 1,
+          "OpFunctionEnd": 1,
+          "OpIEqual": 2,
+          "OpImageQuerySize": 1,
+          "OpImageQuerySizeLod": 1,
+          "OpImageSampleExplicitLod": 3,
+          "OpImageWrite": 3,
+          "OpLabel": 30,
+          "OpLoad": 13,
+          "OpMemberDecorate": 1,
+          "OpMemberName": 1,
+          "OpMemoryModel": 1,
+          "OpName": 21,
+          "OpPhi": 7,
+          "OpReturn": 1,
+          "OpSampledImage": 3,
+          "OpSelectionMerge": 11,
+          "OpSource": 1,
+          "OpSwitch": 1,
+          "OpTypeBool": 1,
+          "OpTypeFloat": 2,
+          "OpTypeFunction": 1,
+          "OpTypeImage": 3,
+          "OpTypeInt": 2,
+          "OpTypePointer": 7,
+          "OpTypeSampledImage": 2,
+          "OpTypeSampler": 1,
+          "OpTypeStruct": 1,
+          "OpTypeVector": 8,
+          "OpTypeVoid": 1,
+          "OpUGreaterThanEqual": 2,
+          "OpVariable": 7,
+          "OpVectorShuffle": 3,
+          "OpVectorTimesScalar": 2
+        },
+        "float16_arithmetic_sites": 9,
+        "float32_arithmetic_sites": 17,
+        "image_sample_sites": 3,
+        "image_read_sites": 0,
+        "image_write_sites": 3,
+        "loop_sites": 0,
+        "capabilities": [
+          "Float16",
+          "StorageImageReadWithoutFormat",
+          "StorageImageWriteWithoutFormat",
+          "ImageQuery",
+          "StorageImageExtendedFormats",
+          "Shader"
+        ]
+      },
+      "adreno": null,
+      "commands": [
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\tonemap.slang",
+          "-entry",
+          "compute_main",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\compute_main\\shader.spv"
+        ],
+        [
+          "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+          "D:\\Github\\LocalExposure\\shaders\\tonemap.slang",
+          "-entry",
+          "compute_main",
+          "-stage",
+          "compute",
+          "-profile",
+          "spirv_1_3",
+          "-O3",
+          "-fvk-use-entrypoint-name",
+          "-target",
+          "spirv-asm",
+          "-o",
+          "D:\\Github\\LocalExposure\\outputs\\mobile\\a750\\compute_main\\shader.spvasm"
+        ]
+      ]
+    }
+  }
+}

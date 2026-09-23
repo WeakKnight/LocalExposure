@@ -3,3 +3,4 @@ __pycache__/
 *.py[cod]
 outputs/
 .pytest_cache/
+.tools/

@@ -1,5 +1,7 @@
 # Mobile shader analysis
 
+**On-device measurements:** [Android production benchmark](android.md), with an [initial Adreno 830 snapshot](baselines/adreno830-device.md). This is separate from the historical offline reports below. The attached phone is not Adreno 730.
+
 ## Scope: production runtime only
 
 Optimization targets the actual Fusion Local Exposure runtime. Viewer presentation, comparison images, and visualization/debug outputs are excluded from production cost and claimed benefits. Removing those features is not an algorithm optimization.

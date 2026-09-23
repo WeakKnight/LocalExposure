@@ -8,6 +8,7 @@ These are optional; launch the application with `run.ps1` from the repository ro
 | `profiling/mobile_profile.py` | Export SPIR-V and run AOC; defaults to Adreno 730 |
 | `profiling/mali_profile.py` | Run Mali Offline Compiler; defaults to Immortalis-G720 |
 | `profiling/install_mali.ps1` | Download and extract the pinned Arm toolchain |
+| `profiling/android/` | Deploy the production Vulkan benchmark and measure an attached phone; see the [workflow](../docs/performance/android.md) |
 | `experiments/ten_rounds.py` | Replay historical optimization candidates; not part of the application |
 
 Run from the repository root, for example:

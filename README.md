@@ -100,6 +100,8 @@ Colors use RGBA16F and exposure maps use R16F. Guided sample products, regulariz
 
 ## References
 
+For real phone timings, use the [Android production benchmark](docs/performance/android.md). The first [Adreno 830 measurement](docs/performance/baselines/adreno830-device.md) excludes visualization and records whole-chain/pass GPU timestamps, thermal snapshots and numerical validation.
+
 Mobile optimization targets **Snapdragon 8 Gen 1 / Adreno 730** by default ([baseline](docs/performance/baselines/archive/a730-aoc.md)), using AOC 7.0.15. Immortalis-G720 and Adreno 750 remain reference targets. See the [workflow](docs/performance/README.md), [Mali baseline](docs/performance/baselines/archive/g720-no-spill.md), and [Adreno baseline](docs/performance/baselines/a750-aoc.md). These are offline estimates, not measured phone timings.
 
 - [Bart Wronski — Exposure Fusion: local tonemapping for real-time rendering](https://bartwronski.com/2022/02/28/exposure-fusion-local-tonemapping-for-real-time-rendering/): synthetic exposures, multiscale fusion, and applications in real-time rendering.

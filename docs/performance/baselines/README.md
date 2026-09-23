@@ -1,5 +1,7 @@
 # Performance baselines
 
+Device measurements: [Adreno 830 production runtime](adreno830-device.md), with raw samples and numerical-validation caveats. This phone is separate from the Adreno 730 optimization target.
+
 Current implementation snapshots:
 
 - [Adreno 730](a730-ten-rounds.md): primary optimization target (Snapdragon 8 Gen 1).

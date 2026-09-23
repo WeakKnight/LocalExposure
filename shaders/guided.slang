@@ -124,8 +124,49 @@ RWTexture2D<half4> colorOutput;
 float globalEV;
 bool guided;
 
-// Full resolution only applies exposure and tone mapping, never runs Fusion
-// or inverse LUT lookup. Full-res reference bypasses guided filtering.
+// Shared by the production entry and the viewer's diagnostic wrapper.
+half exposureMultiplier(uint2 pixel, uint2 size, float3 hdr)
+{
+    // 2^-12 .. 2^12 is entirely within half's normal finite range. Round
+    // explicitly so the HDR multiplication and saved exposure use one value.
+    half multiplier;
+    if (guided)
+    {
+        float2 uv = (float2(pixel) + 0.5) / float2(size);
+        float2 ab = averagedCoefficients.SampleLevel(linearSampler, uv, 0);
+        multiplier = half(exp2(clamp(ab.x*logGuide(hdr) + ab.y, -12.0, 12.0)));
+    }
+    else multiplier = half(lowExposure[pixel]);
+    return multiplier;
+}
+
+// Production: one final linear SDR output, no comparison/EV debug outputs.
+[shader("compute")]
+[numthreads(8, 8, 1)]
+void apply_exposure_production(uint3 tid : SV_DispatchThreadID)
+{
+    uint w, h;
+    colorOutput.GetDimensions(w, h);
+    if (tid.x >= w || tid.y >= h) return;
+    float3 hdr = max(fullSource[tid.xy].rgb, 0.0);
+    half multiplier = exposureMultiplier(tid.xy, uint2(w, h), hdr);
+    float3 color = hdr * exp2(globalEV);
+    colorOutput[tid.xy] = half4(half3(toneOperator(color * float(multiplier))), half(1.0));
+}
+
+// Matched full-resolution baseline for measuring local-exposure overhead.
+[shader("compute")]
+[numthreads(8, 8, 1)]
+void tonemap_baseline(uint3 tid : SV_DispatchThreadID)
+{
+    uint w, h;
+    colorOutput.GetDimensions(w, h);
+    if (tid.x >= w || tid.y >= h) return;
+    float3 color = max(fullSource[tid.xy].rgb, 0.0) * exp2(globalEV);
+    colorOutput[tid.xy] = half4(half3(toneOperator(color)), half(1.0));
+}
+
+// Viewer only: additionally writes the comparison color and exposure map.
 [shader("compute")]
 [numthreads(8, 8, 1)]
 void apply_exposure(uint3 tid : SV_DispatchThreadID)
@@ -134,16 +175,7 @@ void apply_exposure(uint3 tid : SV_DispatchThreadID)
     colorOutput.GetDimensions(w, h);
     if (tid.x >= w || tid.y >= h) return;
     float3 hdr = max(fullSource[tid.xy].rgb, 0.0);
-    // 2^-12 .. 2^12 is entirely within half's normal finite range. Round
-    // explicitly so the HDR multiplication and saved exposure use one value.
-    half multiplier;
-    if (guided)
-    {
-        float2 uv = (float2(tid.xy) + 0.5) / float2(w, h);
-        float2 ab = averagedCoefficients.SampleLevel(linearSampler, uv, 0);
-        multiplier = half(exp2(clamp(ab.x*logGuide(hdr) + ab.y, -12.0, 12.0)));
-    }
-    else multiplier = half(lowExposure[tid.xy]);
+    half multiplier = exposureMultiplier(tid.xy, uint2(w, h), hdr);
     float3 color = hdr * exp2(globalEV);
     fullExposureOutput[tid.xy] = multiplier;
     baseOutput[tid.xy] = half4(half3(toneOperator(color)), half(1.0));

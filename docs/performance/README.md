@@ -1,5 +1,11 @@
 # Mobile shader analysis
 
+## Scope: production runtime only
+
+Optimization targets the actual Fusion Local Exposure runtime. Viewer presentation, comparison images, and visualization/debug outputs are excluded from production cost and claimed benefits. Removing those features is not an algorithm optimization.
+
+The existing reports compile viewer-derived entrypoints: `compute_main` is presentation-only, and `apply_exposure` mixes production exposure application with baseline-color and full-resolution exposure-map outputs used by the viewer. Their complete instruction counts and output traffic must not be treated as isolated production cost. Likewise, the recorded 32 dispatches and texture payload include viewer work. These historical reports remain compiler evidence, not a production-path timing baseline. A production-only workload must be defined before making quantitative runtime rankings.
+
 Latest work: [ten lossless optimization experiments](experiments/ten-rounds.md), with two retained changes and eight rejected/deferred/reverted candidates. Current snapshots: [Adreno 730](baselines/a730-ten-rounds.md) and [G720 cross-check](baselines/g720-ten-rounds.md). These are compile-time findings and source-work reductions, not measured phone speedups.
 
 Primary optimization target: **Snapdragon 8 Gen 1 / Adreno 730**. The default CLI target is now `a730`; see [the A730 baseline](baselines/archive/a730-aoc.md). Run `python tools/profiling/mobile_profile.py --require-aoc` to regenerate it. Use `--arch a750` explicitly for the retained Adreno 750 reference. Cross-target baseline comparisons are rejected.

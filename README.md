@@ -79,7 +79,7 @@ The adapter must return finite linear Rec.709 SDR RGB in [0, 1]. Validation chec
 
 Open `outputs/lut/report.html` for validation errors. `validation.json` and `samples.npz` contain metrics and measured responses. The report tool also accepts `--size 33` or `--size 129` to compare precision; the viewer uses 16 cubed. On the current ACES validation set, maximum RGB error is approximately **0.02424**, and RGB RMSE is **0.00715**. Exposure is still one scalar multiplier shared by RGB, solved with 10 LUT-based bisection iterations within +/-12 EV.
 
-Precision: final/base colors use RGBA16F, and the ten-step search interval uses native half arithmetic. Sensitive Fusion and guided-filter stages remain float. See the [precision review](docs/precision.md) for the rejected half-weight experiment and reproducible comparisons.
+Precision: final/base colors use RGBA16F. The search interval, guided-filter per-sample products, and sRGB multiply/add operations use native half arithmetic. Sensitive Fusion calculations and guided accumulation/solving remain float. See the [precision review](docs/precision.md) for error measurements and rejected candidates.
 
 ## References
 

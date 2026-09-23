@@ -63,9 +63,11 @@ class GuidedTests(unittest.TestCase):
         mean_g, mean_e = box5(g), box5(e)
         a = (box5(g*e)-mean_g*mean_e)/(np.maximum(box5(g*g)-mean_g**2,0)+.04)
         b = mean_e-a*mean_g
-        np.testing.assert_allclose(self.mapper.coefficients.to_numpy(), np.stack([a,b],axis=-1), atol=1e-5)
+        # Compare against the original float CPU regression, allowing bounded
+        # FP16 per-sample product error. Final EV is checked independently below.
+        np.testing.assert_allclose(self.mapper.coefficients.to_numpy(), np.stack([a,b],axis=-1), atol=.001)
         expected_ab = np.stack([box5(a),box5(b)],axis=-1)
-        np.testing.assert_allclose(self.mapper.averaged_coefficients.to_numpy(), expected_ab, atol=1e-5)
+        np.testing.assert_allclose(self.mapper.averaged_coefficients.to_numpy(), expected_ab, atol=.001)
         yy,xx = np.mgrid[:32,:48]
         ab = sample_bilinear(expected_ab,(xx+.5)/48,(yy+.5)/32)
         expected_ev = np.clip(ab[...,0]*full_guide+ab[...,1],-12,12)

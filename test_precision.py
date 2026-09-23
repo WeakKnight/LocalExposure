@@ -6,6 +6,7 @@ import slangpy as spy
 
 from tone_mapper import ToneMapper, create_hdr_texture
 from test_pyramid import aces
+from test_guided import box5
 
 
 class PrecisionTests(unittest.TestCase):
@@ -73,6 +74,77 @@ class PrecisionTests(unittest.TestCase):
                 self.assertEqual(float(half_mid), mid)
                 children.extend([(lo, mid), (mid, hi)])
             intervals = children
+
+    def test_display_dense_sdr_ramps(self):
+        # Include dark/subnormal inputs, the sRGB junction, and every binary16
+        # value in [0,1], plus dense float samples between representable values.
+        values = np.concatenate((np.linspace(0, 1, 65536),
+                                 np.geomspace(1e-12, .01, 32768),
+                                 np.linspace(.00312, .00314, 16384),
+                                 np.arange(0x3c01, dtype=np.uint16).view(np.float16)))
+        values = np.sort(np.pad(values, (0, (-len(values)) % 512), constant_values=1))
+        gray = values.reshape(-1, 512).astype(np.float32)
+        rgba = np.ones((*gray.shape, 4), np.float32)
+        rgba[..., :3] = gray[..., None]
+        source = create_hdr_texture(self.device, rgba)
+        output = self.mixed.create_output(source.width, source.height)
+        exposure = self.mixed.create_texture(source.width, source.height, spy.Format.r32_float)
+        self.mixed.kernel.dispatch(thread_count=[source.width, source.height, 1],
+            vars={'source': source, 'finalColor': source, 'localExposure': exposure,
+                  'output': output, 'linearSampler': self.mixed.sampler, 'viewMode': 0})
+        actual = output.to_numpy()[..., 0].astype(int)
+        expected = np.rint(np.where(gray <= .0031308, 12.92*gray,
+                                    1.055*np.power(gray.astype(float), 1/2.4)-.055)*255)
+        self.assertLessEqual(float(np.abs(actual-expected).max()), 1)
+        self.assertTrue((np.diff(actual.ravel()) >= 0).all())
+        self.assertEqual(actual.flat[0], 0)
+        self.assertEqual(actual.flat[-1], 255)
+
+    def test_guided_products_extreme_windows(self):
+        # Prescribed low-res guidance and search EV isolate regression error
+        # from Fusion. CPU uses double precision and no half quantization.
+        rng = np.random.default_rng(1701)
+        h, w = 32, 64
+        mapper = self.mixed
+        coefficients = mapper.create_texture(w, h, spy.Format.rg32_float)
+        averaged = mapper.create_texture(w, h, spy.Format.rg32_float)
+        for case in range(12):
+            g = rng.uniform(-19.9, 16, (h, w)).astype(np.float32)
+            if case % 4 == 0:
+                g = np.where(g > 0, 16., -19.9).astype(np.float32)
+            elif case % 4 == 1:
+                g[:] = rng.uniform(-19, 15)
+                g += rng.uniform(-.002, .002, (h, w)).astype(np.float32)
+                g[h//2, w//2] = 16
+            e = (rng.integers(0, 1024, (h, w))*24/1024-12+12/1024).astype(np.float32)
+            if case % 3 == 0:
+                e[:] = 11.98828125
+            rgba = np.ones((h, w, 4), np.float32)
+            rgba[..., 3] = g
+            guide = create_hdr_texture(self.device, rgba)
+            exposure = self.device.create_texture(width=w, height=h, format=spy.Format.r32_float,
+                usage=spy.TextureUsage.shader_resource, data=np.exp2(e))
+            encoder = self.device.create_command_encoder()
+            mapper.guided_kernels['fit_coefficients'].dispatch(thread_count=[w, h, 1],
+                vars={'reducedSource': guide, 'lowExposure': exposure, 'coefficientOutput': coefficients},
+                command_encoder=encoder)
+            mapper.guided_kernels['average_coefficients'].dispatch(thread_count=[w, h, 1],
+                vars={'coefficients': coefficients, 'averagedOutput': averaged}, command_encoder=encoder)
+            self.device.submit_command_buffer(encoder.finish())
+            ab = averaged.to_numpy()
+            gf, ef = g.astype(float), e.astype(float)
+            mean_g, mean_e = box5(gf), box5(ef)
+            a = (box5(gf*ef)-mean_g*mean_e)/(np.maximum(box5(gf*gf)-mean_g**2, 0)+.04)
+            a, b = box5(a), box5(mean_e-a*mean_g)
+            for offset in (-8, 0, 8):
+                full_g = np.clip(gf+offset, -19.9, 16)
+                expected_ev = np.clip(a*full_g+b, -12, 12)
+                actual_ev = np.clip(ab[..., 0]*full_g+ab[..., 1], -12, 12)
+                # Less than the half-width of one 10-step search interval.
+                np.testing.assert_allclose(actual_ev, expected_ev, atol=12/1024)
+                actual_rgb = aces(np.exp2(full_g+actual_ev))
+                expected_rgb = aces(np.exp2(full_g+expected_ev))
+                np.testing.assert_allclose(actual_rgb, expected_rgb, atol=.002)
 
 
 if __name__ == '__main__':

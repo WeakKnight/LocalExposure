@@ -1,7 +1,9 @@
 // Display only. Tone mapping is evaluated at source resolution before filtering.
-float toSRGB(float x)
+// SDR arithmetic may round at half precision: the destination is 8-bit UNORM.
+// Keep pow's exponent/evaluation float; this does not feed Fusion or the LUT.
+half toSRGB(half x)
 {
-    return x <= 0.0031308 ? 12.92 * x : 1.055 * pow(x, 1.0 / 2.4) - 0.055;
+    return x <= half(0.0031308) ? half(12.92) * x : half(1.055) * half(pow(float(x), 1.0 / 2.4)) - half(0.055);
 }
 
 Texture2D<float4> source;
@@ -35,8 +37,8 @@ void compute_main(uint3 tid : SV_DispatchThreadID)
         output[tid.xy] = float4(float3(saturate(0.5 + ev / 12.0)), 1.0);
         return;
     }
-    float3 mapped = finalColor.SampleLevel(linearSampler, uv, 0).rgb;
+    half3 mapped = half3(finalColor.SampleLevel(linearSampler, uv, 0).rgb);
     if (viewMode == 1 && uv.x < 0.5)
-        mapped = source.SampleLevel(linearSampler, uv, 0).rgb;
+        mapped = half3(source.SampleLevel(linearSampler, uv, 0).rgb);
     output[tid.xy] = float4(toSRGB(mapped.r), toSRGB(mapped.g), toSRGB(mapped.b), 1.0);
 }

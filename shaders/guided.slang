@@ -44,16 +44,19 @@ void fit_coefficients(uint3 tid : SV_DispatchThreadID)
     coefficientOutput.GetDimensions(w, h);
     if (tid.x >= w || tid.y >= h) return;
     float center = reducedSource[tid.xy].a;
-    // Keep moments and covariance in float: nearly flat windows subtract
-    // almost equal values. Half also loses accuracy in a*guide+b downstream.
+    // Only per-sample centered values/products use half. Accumulate all 25
+    // samples and solve covariance/variance in float to avoid cancellation.
+    // Keep a,b and the final a*guide+b float as well.
     float meanG = 0, meanE = 0, meanGG = 0, meanGE = 0;
     for (int y = -2; y <= 2; ++y)
         for (int x = -2; x <= 2; ++x)
         {
             int2 p = clamp(int2(tid.xy) + int2(x, y), int2(0), int2(w-1, h-1));
-            float g = reducedSource[p].a - center;
-            float e = log2(max(lowExposure[p], 1e-20));
-            meanG += g; meanE += e; meanGG += g*g; meanGE += g*e;
+            // Subtract in float before narrowing: small guide differences
+            // would disappear if the two absolute log values were half.
+            half g = half(reducedSource[p].a - center);
+            half e = half(log2(max(lowExposure[p], 1e-20)));
+            meanG += g; meanE += e; meanGG += float(g*g); meanGE += float(g*e);
         }
     meanG /= 25; meanE /= 25; meanGG /= 25; meanGE /= 25;
     float variance = max(meanGG - meanG*meanG, 0.0);

@@ -11,10 +11,12 @@ Precision is fixed per stage. Safe operations directly use `half`; there is no f
 | Lightness, Gaussian weights and both pyramids | Float arithmetic and storage | Small sigma magnifies errors; subsequent inversion can strongly amplify even small bounded weight errors. See rejected experiment below. |
 | Laplacian and reconstruction | Float | Signed small differences and accumulation across levels; preserve zero-bracket identity. |
 | Inversion target, luminance and multiplier | Float | Flat/clipped tone responses are ill-conditioned. HDR multiplication must not overflow. |
-| Guided moments, coefficients, averaging and evaluation | Float | Covariance subtracts nearly equal quantities; `a * guide + b` can also suffer cancellation. |
-| Pixel/UV coordinates and display transfer | Float | Preserve texel positions at 4K and dark sRGB values. |
+| Guided per-sample centered guide, EV, `g*g`, `g*e` | Half | Narrow after float guide subtraction and float log2. With guidance in [-20,16] and EV in [-12,12], these products fit comfortably in half. Validated against float GPU and double CPU references. |
+| Guided moment accumulation, coefficients, averaging and evaluation | Float | Accumulate 25 samples in float. Covariance subtracts nearly equal quantities; `a * guide + b` can also suffer cancellation. |
+| Pixel/UV coordinates | Float | Preserve texel positions at 4K. |
+| Display sampled RGB and sRGB multiply/add | Half | Final output is 8-bit UNORM. Keep pow evaluation/exponent float; display changes never feed Fusion. Dense ramps remain monotone and differ by at most one output code. |
 
-At 4096x2048, the two color textures together decrease from 256 MiB to 128 MiB, excluding allocation overhead. This is a storage reduction, not a measured GPU-time improvement. The expensive HDR, LUT lookup and guided-filter arithmetic remains FP32.
+At 4096x2048, the two color textures together decrease from 256 MiB to 128 MiB, excluding allocation overhead. This is a storage reduction, not a measured GPU-time improvement. HDR, LUT lookup and guided-filter accumulation/solving remain FP32.
 
 ## Rejected half-weight experiment
 
@@ -22,13 +24,23 @@ RGBA16F weight mips with native half four-tap accumulation passed ordinary cases
 
 Using half weights safely would require a separate change to stabilize inversion near plateaus, with an explicit visual tradeoff. This precision change preserves current behavior instead.
 
+## Second review: partial Guided Filter and display arithmetic
+
+Keep the guide subtraction in float **before** casting its result to half. Quantizing the two absolute log-luminance values first would erase small local differences. Compute each `g*g` and `g*e` in half, then promote to float before accumulation. Coefficient textures remain RG32F; no formats or precision switches were added.
+
+Compared with the first review's implementation, all four 4K assets at EV -1 and default Fusion settings showed maximum linear RGB change of 0.00048828125, maximum local EV change below 0.000874, and at most one display code difference at 1600x800. Synthetic ramps, tiny guide variations, hard edges and prescribed extreme exposure fields additionally exercise cases absent from the assets. An 80-case window experiment (including guide evaluation offsets of +/-8 stops) measured maximum EV error 0.009676 and linear RGB error 0.001264. These are measured bounds for those cases, not a guarantee for every image or arbitrary tone operator.
+
+Quantizing averaged `a,b` to half was also tried and rejected: the preliminary ramp tests already reached 0.021385 EV error, exceeding half of the exposure search's final interval (0.01171875 EV). Retaining only the per-sample half products avoids that coefficient cancellation error.
+
+Experiment metrics, comparison images and native DXIL dumps are in `outputs/precision-round2/`. DXIL confirms native half multiplies for both guided products, float accumulation, and half multiply/add operations in the sRGB path. No phone performance claim is implied.
+
 ## Verification
 
 ```powershell
 .venv/Scripts/python.exe -m unittest test_pyramid test_guided test_lut test_precision
 ```
 
-The 19 tests include CPU numerical reference checks, mixed-precision guided filtering, all 1,023 possible ten-step search midpoints, odd/tiny images, black, 65535, global EV +/-16, zero-bracket identity, sharp weights, and both Fusion resolutions. Final RGB permits one FP16 ULP below 1: typed UAV writes on the tested backend truncate rather than round to nearest.
+The 21 tests include CPU numerical reference checks, mixed-precision guided filtering, all 1,023 possible ten-step search midpoints, odd/tiny images, black, 65535, global EV +/-16, zero-bracket identity, sharp weights, and both Fusion resolutions. New tests cover dense linear/dark/sRGB-junction ramps, every half value in [0,1], monotonic display output, and extreme guided windows against a double-precision CPU solve. Guided EV error is limited to half of the final search interval in that test. Final RGB storage permits one FP16 ULP below 1: typed UAV writes on the tested backend truncate rather than round to nearest.
 
 During the original review, before removing the temporary FP32 comparison path, on all four repository 4K HDR assets at global EV -1, default brackets and quarter resolution: exposure fields were identical, maximum linear RGB error was 0.000488222, and the 1600x800 8-bit display differed by at most one code value. The original comparison images and metrics are in `outputs/precision/`.
 

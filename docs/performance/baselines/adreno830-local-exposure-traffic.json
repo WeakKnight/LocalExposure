@@ -1,0 +1,207 @@
+{
+  "width": 1920,
+  "height": 1080,
+  "fps": 45,
+  "rows": [
+    {
+      "pass_name": "reduce_source",
+      "read_sweep_bytes": 8294400,
+      "write_bytes": 2073600,
+      "expanded_read_bytes": 33177600
+    },
+    {
+      "pass_name": "setup_weights",
+      "read_sweep_bytes": 2073600,
+      "write_bytes": 4147200,
+      "expanded_read_bytes": 2073600
+    },
+    {
+      "pass_name": "luminance_mip1",
+      "read_sweep_bytes": 2073600,
+      "write_bytes": 518400,
+      "expanded_read_bytes": 8294400
+    },
+    {
+      "pass_name": "luminance_mip2",
+      "read_sweep_bytes": 518400,
+      "write_bytes": 128640,
+      "expanded_read_bytes": 2058240
+    },
+    {
+      "pass_name": "luminance_mip3",
+      "read_sweep_bytes": 128640,
+      "write_bytes": 31680,
+      "expanded_read_bytes": 506880
+    },
+    {
+      "pass_name": "luminance_mip4",
+      "read_sweep_bytes": 31680,
+      "write_bytes": 7680,
+      "expanded_read_bytes": 122880
+    },
+    {
+      "pass_name": "luminance_mip5",
+      "read_sweep_bytes": 7680,
+      "write_bytes": 1920,
+      "expanded_read_bytes": 30720
+    },
+    {
+      "pass_name": "luminance_mip6",
+      "read_sweep_bytes": 1920,
+      "write_bytes": 448,
+      "expanded_read_bytes": 7168
+    },
+    {
+      "pass_name": "luminance_mip7",
+      "read_sweep_bytes": 448,
+      "write_bytes": 96,
+      "expanded_read_bytes": 1536
+    },
+    {
+      "pass_name": "luminance_mip8",
+      "read_sweep_bytes": 96,
+      "write_bytes": 16,
+      "expanded_read_bytes": 256
+    },
+    {
+      "pass_name": "weights_mip1",
+      "read_sweep_bytes": 2073600,
+      "write_bytes": 518400,
+      "expanded_read_bytes": 8294400
+    },
+    {
+      "pass_name": "weights_mip2",
+      "read_sweep_bytes": 518400,
+      "write_bytes": 128640,
+      "expanded_read_bytes": 2058240
+    },
+    {
+      "pass_name": "weights_mip3",
+      "read_sweep_bytes": 128640,
+      "write_bytes": 31680,
+      "expanded_read_bytes": 506880
+    },
+    {
+      "pass_name": "weights_mip4",
+      "read_sweep_bytes": 31680,
+      "write_bytes": 7680,
+      "expanded_read_bytes": 122880
+    },
+    {
+      "pass_name": "weights_mip5",
+      "read_sweep_bytes": 7680,
+      "write_bytes": 1920,
+      "expanded_read_bytes": 30720
+    },
+    {
+      "pass_name": "weights_mip6",
+      "read_sweep_bytes": 1920,
+      "write_bytes": 448,
+      "expanded_read_bytes": 7168
+    },
+    {
+      "pass_name": "weights_mip7",
+      "read_sweep_bytes": 448,
+      "write_bytes": 96,
+      "expanded_read_bytes": 1536
+    },
+    {
+      "pass_name": "weights_mip8",
+      "read_sweep_bytes": 96,
+      "write_bytes": 16,
+      "expanded_read_bytes": 256
+    },
+    {
+      "pass_name": "reconstruct_mip8",
+      "read_sweep_bytes": 32,
+      "write_bytes": 4,
+      "expanded_read_bytes": 32
+    },
+    {
+      "pass_name": "reconstruct_mip7",
+      "read_sweep_bytes": 212,
+      "write_bytes": 24,
+      "expanded_read_bytes": 672
+    },
+    {
+      "pass_name": "reconstruct_mip6",
+      "read_sweep_bytes": 1016,
+      "write_bytes": 112,
+      "expanded_read_bytes": 3136
+    },
+    {
+      "pass_name": "reconstruct_mip5",
+      "read_sweep_bytes": 4400,
+      "write_bytes": 480,
+      "expanded_read_bytes": 13440
+    },
+    {
+      "pass_name": "reconstruct_mip4",
+      "read_sweep_bytes": 17760,
+      "write_bytes": 1920,
+      "expanded_read_bytes": 53760
+    },
+    {
+      "pass_name": "reconstruct_mip3",
+      "read_sweep_bytes": 72960,
+      "write_bytes": 7920,
+      "expanded_read_bytes": 221760
+    },
+    {
+      "pass_name": "reconstruct_mip2",
+      "read_sweep_bytes": 296880,
+      "write_bytes": 32160,
+      "expanded_read_bytes": 900480
+    },
+    {
+      "pass_name": "reconstruct_mip1",
+      "read_sweep_bytes": 1197600,
+      "write_bytes": 129600,
+      "expanded_read_bytes": 3628800
+    },
+    {
+      "pass_name": "reconstruct_mip0",
+      "read_sweep_bytes": 4795200,
+      "write_bytes": 518400,
+      "expanded_read_bytes": 14515200
+    },
+    {
+      "pass_name": "convert_exposure",
+      "read_sweep_bytes": 2594048,
+      "write_bytes": 259200,
+      "expanded_read_bytes": 3110400
+    },
+    {
+      "pass_name": "fit_coefficients",
+      "read_sweep_bytes": 2332800,
+      "write_bytes": 1036800,
+      "expanded_read_bytes": 5287680
+    },
+    {
+      "pass_name": "average_coefficients",
+      "read_sweep_bytes": 1036800,
+      "write_bytes": 1036800,
+      "expanded_read_bytes": 2350080
+    },
+    {
+      "pass_name": "apply_exposure_production",
+      "read_sweep_bytes": 1036800,
+      "write_bytes": 0,
+      "expanded_read_bytes": 66355200
+    }
+  ],
+  "baseline_bytes": 16588800,
+  "incremental_sweep_bytes": 39901416,
+  "incremental_sweep_gbps": 1.79556372,
+  "incremental_expanded_bytes": 164357980,
+  "incremental_expanded_gbps": 7.3961091,
+  "assumptions": [
+    "Increment over matched tonemap: final source read and output write cancel; all other production passes remain.",
+    "Sweep model charges every bound input mip once per pass, and every output once. Assumes within-pass reuse; ignores cross-pass reuse. Not a DRAM lower bound.",
+    "Expanded model includes zero-weight/duplicate texel slots even for aligned reduction samples. It charges each issued load and four texels per bilinear 2D sample (two for 1D), including duplicate/clamped taps. Not a DRAM upper bound.",
+    "Reduction uses 16 samples; guided tiles load 144 entries per 8x8 group, including partial groups. Shared-memory accesses excluded.",
+    "Whole stored texel bytes charged even for RGB/alpha-only reads. Inverse LUT assumed queried at every low-res pixel; actual branch can skip.",
+    "No compression, cache-line transactions, write allocation, uniforms, instructions, metadata or unrelated GPU traffic modeled.",
+    "Calibration, uploads, viewer/debug resources and presentation excluded."
+  ]
+}

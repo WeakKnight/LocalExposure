@@ -9,6 +9,8 @@ These are optional; launch the application with `run.ps1` from the repository ro
 | `profiling/mali_profile.py` | Run Mali Offline Compiler; defaults to Immortalis-G720 |
 | `profiling/install_mali.ps1` | Download and extract the pinned Arm toolchain |
 | `profiling/android/` | Deploy the production Vulkan benchmark and measure an attached phone; see the [workflow](../docs/performance/android.md) |
+| `profiling/android/activity.py` | Foreground graphics-produced HDR, joint submissions and sustained AB/BA timing |
+| `profiling/android/quality_sweep.py` | Same-backend spatial and temporal stress; presets live in `variants.py` |
 | `experiments/ten_rounds.py` | Replay historical optimization candidates; not part of the application |
 
 Run from the repository root, for example:

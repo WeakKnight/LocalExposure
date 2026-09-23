@@ -1,0 +1,878 @@
+{
+  "target": "Adreno 730 / Snapdragon 8 Gen 1",
+  "aoc_sha256": "100eebaddfb0f125ee7a7e1e621d56f32ecba7a15f80c2e45461ca5a941f5648",
+  "note": "Static compiler statistics only; measured phone is Adreno 830.",
+  "passes": {
+    "reduce_setup_gather": {
+      "command": [
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+        "-api=Vulkan",
+        "-arch=a730",
+        "-cs",
+        "-entry_point_cs",
+        "reduce_setup_gather",
+        "D:\\Github\\LocalExposure\\outputs\\android\\twohour\\gather-reduction\\bundle\\reduce_setup_gather.spv",
+        "-dump=all"
+      ],
+      "spirv_sha256": "e6fc398ea4d24fa6ea30703d8ae461e8ec026f329c5466349ad22f59d8234803",
+      "sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            95.0
+          ],
+          "ALU instruction count - 32 bit": [
+            4.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            6.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            9.0
+          ],
+          "Long latency sync instruction count": [
+            1.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            1.0
+          ],
+          "Memory write instruction count": [
+            12.0
+          ],
+          "Miscellaneous instruction count": [
+            61.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            1001.0
+          ],
+          "ALU instruction count - 32 bit": [
+            348.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            60.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            14.0
+          ],
+          "Barrier and fence Instruction count": [
+            20.0
+          ],
+          "Short latency sync instruction count": [
+            44.0
+          ],
+          "Long latency sync instruction count": [
+            5.0
+          ],
+          "Texture read instruction count": [
+            17.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            8.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            485.0
+          ],
+          "Full precision register footprint per shader instance": [
+            13.0
+          ],
+          "Half precision register footprint per shader instance": [
+            1.0
+          ],
+          "Overall register footprint per shader instance": [
+            13.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            1.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            87.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            41.2
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            3.4
+          ],
+          "Cycles with long latency sync instructions": [
+            52.7
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            18.3
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            35.0
+          ],
+          "Cycles with Complex instructions": [
+            40.3
+          ],
+          "Cycles with Memory instructions": [
+            1.8
+          ],
+          "Cycles with Texture instructions": [
+            21.1
+          ]
+        }
+      }
+    },
+    "downsample_compact": {
+      "command": [
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+        "-api=Vulkan",
+        "-arch=a730",
+        "-cs",
+        "-entry_point_cs",
+        "downsample_compact",
+        "D:\\Github\\LocalExposure\\outputs\\android\\twohour\\gather-reduction\\bundle\\downsample_compact.spv",
+        "-dump=all"
+      ],
+      "spirv_sha256": "8bd242be6e765e21bcbd883aabec83392f7cc04dfb17c85d5451e77720908b88",
+      "sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            11.0
+          ],
+          "ALU instruction count - 32 bit": [
+            0.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            0.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            0.0
+          ],
+          "Long latency sync instruction count": [
+            0.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            1.0
+          ],
+          "Miscellaneous instruction count": [
+            9.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            133.0
+          ],
+          "ALU instruction count - 32 bit": [
+            34.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            6.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            4.0
+          ],
+          "Barrier and fence Instruction count": [
+            17.0
+          ],
+          "Short latency sync instruction count": [
+            3.0
+          ],
+          "Long latency sync instruction count": [
+            5.0
+          ],
+          "Texture read instruction count": [
+            9.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            2.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            53.0
+          ],
+          "Full precision register footprint per shader instance": [
+            6.0
+          ],
+          "Half precision register footprint per shader instance": [
+            1.0
+          ],
+          "Overall register footprint per shader instance": [
+            6.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            0.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            5.0
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            0.7
+          ],
+          "Cycles with long latency sync instructions": [
+            94.4
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            56.1
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            8.0
+          ],
+          "Cycles with Complex instructions": [
+            6.4
+          ],
+          "Cycles with Memory instructions": [
+            1.6
+          ],
+          "Cycles with Texture instructions": [
+            28.4
+          ]
+        }
+      }
+    },
+    "reconstruct_compact": {
+      "command": [
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+        "-api=Vulkan",
+        "-arch=a730",
+        "-cs",
+        "-entry_point_cs",
+        "reconstruct_compact",
+        "D:\\Github\\LocalExposure\\outputs\\android\\twohour\\gather-reduction\\bundle\\reconstruct_compact.spv",
+        "-dump=all"
+      ],
+      "spirv_sha256": "2fa2dc61d16bc901fc7922452ade0c2502f4050f9632547ef525e7b83ee1d99f",
+      "sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            35.0
+          ],
+          "ALU instruction count - 32 bit": [
+            0.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            2.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            5.0
+          ],
+          "Long latency sync instruction count": [
+            0.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            1.0
+          ],
+          "Memory write instruction count": [
+            4.0
+          ],
+          "Miscellaneous instruction count": [
+            22.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            94.0
+          ],
+          "ALU instruction count - 32 bit": [
+            20.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            1.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            6.0
+          ],
+          "Barrier and fence Instruction count": [
+            4.0
+          ],
+          "Short latency sync instruction count": [
+            2.0
+          ],
+          "Long latency sync instruction count": [
+            5.0
+          ],
+          "Texture read instruction count": [
+            4.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            1.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            51.0
+          ],
+          "Full precision register footprint per shader instance": [
+            3.0
+          ],
+          "Half precision register footprint per shader instance": [
+            0.0
+          ],
+          "Overall register footprint per shader instance": [
+            3.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            0.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            7.8
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            0.5
+          ],
+          "Cycles with long latency sync instructions": [
+            97.7
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            40.3
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            21.2
+          ],
+          "Cycles with Complex instructions": [
+            7.6
+          ],
+          "Cycles with Memory instructions": [
+            1.5
+          ],
+          "Cycles with Texture instructions": [
+            32.1
+          ]
+        }
+      }
+    },
+    "reconstruct_ev": {
+      "command": [
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+        "-api=Vulkan",
+        "-arch=a730",
+        "-cs",
+        "-entry_point_cs",
+        "reconstruct_ev",
+        "D:\\Github\\LocalExposure\\outputs\\android\\twohour\\gather-reduction\\bundle\\reconstruct_ev.spv",
+        "-dump=all"
+      ],
+      "spirv_sha256": "8122ad489de6e0c63179b08dbc3d835075b2579eabc4edeb9370ae320659f8f9",
+      "sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            63.0
+          ],
+          "ALU instruction count - 32 bit": [
+            2.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            6.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            6.0
+          ],
+          "Long latency sync instruction count": [
+            1.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            1.0
+          ],
+          "Memory write instruction count": [
+            8.0
+          ],
+          "Miscellaneous instruction count": [
+            38.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            196.0
+          ],
+          "ALU instruction count - 32 bit": [
+            40.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            3.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            9.0
+          ],
+          "Barrier and fence Instruction count": [
+            6.0
+          ],
+          "Short latency sync instruction count": [
+            4.0
+          ],
+          "Long latency sync instruction count": [
+            6.0
+          ],
+          "Texture read instruction count": [
+            7.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            1.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            120.0
+          ],
+          "Full precision register footprint per shader instance": [
+            4.0
+          ],
+          "Half precision register footprint per shader instance": [
+            2.0
+          ],
+          "Overall register footprint per shader instance": [
+            4.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            0.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            14.8
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            0.3
+          ],
+          "Cycles with long latency sync instructions": [
+            97.7
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            27.1
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            30.5
+          ],
+          "Cycles with Complex instructions": [
+            15.2
+          ],
+          "Cycles with Memory instructions": [
+            1.1
+          ],
+          "Cycles with Texture instructions": [
+            38.4
+          ]
+        }
+      }
+    },
+    "reconstruct_guided": {
+      "command": [
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+        "-api=Vulkan",
+        "-arch=a730",
+        "-cs",
+        "-entry_point_cs",
+        "reconstruct_guided",
+        "D:\\Github\\LocalExposure\\outputs\\android\\twohour\\gather-reduction\\bundle\\reconstruct_guided.spv",
+        "-dump=all"
+      ],
+      "spirv_sha256": "e9be9bff0b2dd30219a7240b5b63b8f88c073e83459ec5d0467e955c9a841f45",
+      "sections": {
+        "Main Shader Stats": {
+          "Total instruction count": [
+            523.0
+          ],
+          "ALU instruction count - 32 bit": [
+            180.0
+          ],
+          "ALU instruction count - 16 bit": [
+            30.0
+          ],
+          "Complex instruction count - 32 bit": [
+            1.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            6.0
+          ],
+          "Barrier and fence Instruction count": [
+            13.0
+          ],
+          "Short latency sync instruction count": [
+            25.0
+          ],
+          "Long latency sync instruction count": [
+            7.0
+          ],
+          "Texture read instruction count": [
+            3.0
+          ],
+          "Memory read instruction count": [
+            19.0
+          ],
+          "Memory write instruction count": [
+            7.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            232.0
+          ],
+          "Full precision register footprint per shader instance": [
+            10.0
+          ],
+          "Half precision register footprint per shader instance": [
+            18.0
+          ],
+          "Overall register footprint per shader instance": [
+            10.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            3.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            75.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            46.2
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            34.8
+          ],
+          "Cycles with long latency sync instructions": [
+            96.0
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            58.2
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            25.9
+          ],
+          "Cycles with Complex instructions": [
+            2.2
+          ],
+          "Cycles with Memory instructions": [
+            5.8
+          ],
+          "Cycles with Texture instructions": [
+            7.0
+          ]
+        }
+      }
+    },
+    "apply_srgb_compute": {
+      "command": [
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+        "-api=Vulkan",
+        "-arch=a730",
+        "-cs",
+        "-entry_point_cs",
+        "apply_srgb_compute",
+        "D:\\Github\\LocalExposure\\outputs\\android\\twohour\\gather-reduction\\bundle\\apply_srgb_compute.spv",
+        "-dump=all"
+      ],
+      "spirv_sha256": "dbb70387c0cc4fa0a9a7b7925bc34dac796ebabd556955929cf52d873cfab859",
+      "sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            83.0
+          ],
+          "ALU instruction count - 32 bit": [
+            0.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            3.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            9.0
+          ],
+          "Long latency sync instruction count": [
+            1.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            1.0
+          ],
+          "Memory write instruction count": [
+            9.0
+          ],
+          "Miscellaneous instruction count": [
+            59.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            209.0
+          ],
+          "ALU instruction count - 32 bit": [
+            65.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            11.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            6.0
+          ],
+          "Barrier and fence Instruction count": [
+            3.0
+          ],
+          "Short latency sync instruction count": [
+            8.0
+          ],
+          "Long latency sync instruction count": [
+            5.0
+          ],
+          "Texture read instruction count": [
+            3.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            1.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            107.0
+          ],
+          "Full precision register footprint per shader instance": [
+            3.0
+          ],
+          "Half precision register footprint per shader instance": [
+            3.0
+          ],
+          "Overall register footprint per shader instance": [
+            3.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            0.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            100.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            39.3
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            2.8
+          ],
+          "Cycles with long latency sync instructions": [
+            97.7
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            24.4
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            42.9
+          ],
+          "Cycles with Complex instructions": [
+            46.1
+          ],
+          "Cycles with Memory instructions": [
+            1.5
+          ],
+          "Cycles with Texture instructions": [
+            21.7
+          ]
+        }
+      }
+    }
+  }
+}

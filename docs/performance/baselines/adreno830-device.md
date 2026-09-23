@@ -1,5 +1,7 @@
 # Adreno 830: first device benchmark
 
+Follow-up: [controlled tonemap diagnosis](../tonemap-diagnosis.md) found nearly equal copy/tonemap costs and strong pacing sensitivity. The original numbers below remain valid for their stated paced setup; they are not fixed or peak GPU throughput.
+
 Measured on the attached **NX789J / SM8750 / Adreno (TM) 830**, Android 15. **This is not an 8 Gen 1 / Adreno 730 result.** [Workflow](../android.md) · [Raw samples, source hashes and validation](adreno830-device.json).
 
 Input: `veranda_4k.exr`, resized to 1920×1080 RGBA32F before upload. Fusion is 480×270 with nine pyramid levels and 31 production dispatches. Global EV 0, contrast scales 0.8 (±1.2 EV brackets), sigma 0.2, fitted Z curve and 1024-entry R16F inverse LUT. No viewer work is measured.

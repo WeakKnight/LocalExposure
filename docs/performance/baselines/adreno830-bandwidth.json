@@ -1,0 +1,308 @@
+{
+  "schema": 1,
+  "metric": "effective logical read+write GB/s, decimal units; NOT hardware DRAM counter bandwidth",
+  "pattern": "Three disjoint pairs by default, deterministic hashed uint4 input, full output verification after every block",
+  "commands": [
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\android\\android-ndk-r30\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe",
+      "--target=aarch64-linux-android29",
+      "-std=c++17",
+      "-O2",
+      "-static-libstdc++",
+      "-I",
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\android",
+      "D:\\Github\\LocalExposure\\tools\\profiling\\android\\bandwidth.cpp",
+      "-lvulkan",
+      "-o",
+      "outputs\\android\\bandwidth-streaming-first\\deploy\\bandwidth"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\tools\\profiling\\android\\bandwidth.slang",
+      "-entry",
+      "initialize",
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "outputs\\android\\bandwidth-streaming-first\\deploy\\initialize.spv",
+      "-reflection-json",
+      "outputs\\android\\bandwidth-streaming-first\\deploy\\initialize.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\tools\\profiling\\android\\bandwidth.slang",
+      "-entry",
+      "stream_copy",
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "outputs\\android\\bandwidth-streaming-first\\deploy\\stream_copy.spv",
+      "-reflection-json",
+      "outputs\\android\\bandwidth-streaming-first\\deploy\\stream_copy.json"
+    ]
+  ],
+  "files": {
+    "bandwidth": "a3dc4987e49970f03ef95554c975bf9e63b3781ea38fb68107d98c295a6dcf3c",
+    "initialize.json": "621c73a0c48b2a232f050ded99fd41c1562e9a1e06e390b59ef472c6b70eb6f9",
+    "initialize.spv": "bc9c14db03adf507ab7c545c090dfd3b82d5cfa0a2e211c6f9bf362409f9b935",
+    "stream_copy.json": "4cc499b878d57314f711b26ebcd0d5586c94214347cd888638f78683eb3a3d0c",
+    "stream_copy.spv": "83a848e37632299aa38d9df1c31c7273f95489818ddbaa008efbcc5caa7216ae"
+  },
+  "runner_sha256": "a169a8a3c1ff60c4a90bda68a20cc3aa595d72aab0ea15bafd19a1aabef22113",
+  "native_source_sha256": "e69542a6314c6532af2f7cf39ebc97e1fcb80b3fd0c0d2137271649cb5ab367a",
+  "shader_source_sha256": "54644390ff1725d761d9862b8d586eb95d7e0717cc94739ae49ef405dcf1321a",
+  "cases": [
+    {
+      "size_mib": 1,
+      "working_set_bytes": 6291456,
+      "payload_bytes_per_sample": 6291456,
+      "gpu": "Adreno (TM) 830",
+      "driver_version": 2150760488,
+      "interval_ms": 0,
+      "performance_query_extensions": [],
+      "modes": {
+        "compute_copy": {
+          "samples": 192,
+          "median_gbps": 68.47843432489799,
+          "p05_gbps": 60.09749161647765,
+          "p95_gbps": 86.46197081509494,
+          "median_ms": 0.09242187274360657
+        },
+        "transfer_copy": {
+          "samples": 192,
+          "median_gbps": 59.2312924265772,
+          "p05_gbps": 56.82110381832334,
+          "p95_gbps": 69.3752101797441,
+          "median_ms": 0.10627603907203675
+        }
+      },
+      "validated": true,
+      "blocks": [
+        {
+          "mode": "compute_copy",
+          "samples": 96,
+          "median_gbps": 75.90070378381718,
+          "p05_gbps": 74.4275774178189,
+          "p95_gbps": 86.79430202727886,
+          "median_ms": 0.08289062297630309
+        },
+        {
+          "mode": "transfer_copy",
+          "samples": 96,
+          "median_gbps": 61.34888682027429,
+          "p05_gbps": 60.877391407447504,
+          "p95_gbps": 69.63306855602362,
+          "median_ms": 0.10255208082962036
+        },
+        {
+          "mode": "transfer_copy",
+          "samples": 96,
+          "median_gbps": 57.30358545973438,
+          "p05_gbps": 55.33487591561067,
+          "p95_gbps": 57.74875741691547,
+          "median_ms": 0.10979166398620606
+        },
+        {
+          "mode": "compute_copy",
+          "samples": 96,
+          "median_gbps": 61.88319152232313,
+          "p05_gbps": 59.73351288822518,
+          "p95_gbps": 62.88181059298286,
+          "median_ms": 0.10166666418457032
+        }
+      ]
+    },
+    {
+      "size_mib": 8,
+      "working_set_bytes": 50331648,
+      "payload_bytes_per_sample": 50331648,
+      "gpu": "Adreno (TM) 830",
+      "driver_version": 2150760488,
+      "interval_ms": 0,
+      "performance_query_extensions": [],
+      "modes": {
+        "compute_copy": {
+          "samples": 192,
+          "median_gbps": 55.49985683951415,
+          "p05_gbps": 41.954148754494014,
+          "p95_gbps": 69.86463744888378,
+          "median_ms": 0.9218489358272552
+        },
+        "transfer_copy": {
+          "samples": 192,
+          "median_gbps": 53.51021157472296,
+          "p05_gbps": 52.935844688059696,
+          "p95_gbps": 53.634798622993955,
+          "median_ms": 0.9405989353694916
+        }
+      },
+      "validated": true,
+      "blocks": [
+        {
+          "mode": "compute_copy",
+          "samples": 96,
+          "median_gbps": 69.54536838862809,
+          "p05_gbps": 62.62508361045691,
+          "p95_gbps": 69.89495735289577,
+          "median_ms": 0.7237239406642915
+        },
+        {
+          "mode": "transfer_copy",
+          "samples": 96,
+          "median_gbps": 53.52354849944243,
+          "p05_gbps": 53.351423170619,
+          "p95_gbps": 53.64909110221511,
+          "median_ms": 0.9403645603752137
+        },
+        {
+          "mode": "transfer_copy",
+          "samples": 96,
+          "median_gbps": 53.47172034486895,
+          "p05_gbps": 51.2903715535523,
+          "p95_gbps": 53.60668248698955,
+          "median_ms": 0.9412760186862945
+        },
+        {
+          "mode": "compute_copy",
+          "samples": 96,
+          "median_gbps": 42.04157596767426,
+          "p05_gbps": 41.85402855008708,
+          "p95_gbps": 48.38127892224695,
+          "median_ms": 1.1971874707717896
+        }
+      ]
+    },
+    {
+      "size_mib": 32,
+      "working_set_bytes": 201326592,
+      "payload_bytes_per_sample": 201326592,
+      "gpu": "Adreno (TM) 830",
+      "driver_version": 2150760488,
+      "interval_ms": 0,
+      "performance_query_extensions": [],
+      "modes": {
+        "compute_copy": {
+          "samples": 192,
+          "median_gbps": 68.91304750716398,
+          "p05_gbps": 68.82979053602614,
+          "p95_gbps": 69.04315290990665,
+          "median_ms": 2.921458262008667
+        },
+        "transfer_copy": {
+          "samples": 192,
+          "median_gbps": 65.64551771671682,
+          "p05_gbps": 65.22410418124576,
+          "p95_gbps": 65.87951523333484,
+          "median_ms": 3.0668749251251217
+        }
+      },
+      "validated": true,
+      "blocks": [
+        {
+          "mode": "compute_copy",
+          "samples": 96,
+          "median_gbps": 68.9099762639097,
+          "p05_gbps": 68.80755266898547,
+          "p95_gbps": 69.05092284336982,
+          "median_ms": 2.9215884703388215
+        },
+        {
+          "mode": "transfer_copy",
+          "samples": 96,
+          "median_gbps": 65.6577833406783,
+          "p05_gbps": 65.43244406533795,
+          "p95_gbps": 65.86924330723937,
+          "median_ms": 3.0663020084724426
+        },
+        {
+          "mode": "transfer_copy",
+          "samples": 96,
+          "median_gbps": 65.63325750726975,
+          "p05_gbps": 64.8590672531349,
+          "p95_gbps": 65.89591198628072,
+          "median_ms": 3.0674478417778017
+        },
+        {
+          "mode": "compute_copy",
+          "samples": 96,
+          "median_gbps": 68.9167334415045,
+          "p05_gbps": 68.84186401513475,
+          "p95_gbps": 69.02903539071539,
+          "median_ms": 2.9213020120124815
+        }
+      ]
+    },
+    {
+      "size_mib": 128,
+      "working_set_bytes": 805306368,
+      "payload_bytes_per_sample": 805306368,
+      "gpu": "Adreno (TM) 830",
+      "driver_version": 2150760488,
+      "interval_ms": 0,
+      "performance_query_extensions": [],
+      "modes": {
+        "compute_copy": {
+          "samples": 192,
+          "median_gbps": 67.64393977168073,
+          "p05_gbps": 67.45202523339432,
+          "p95_gbps": 67.67169501078291,
+          "median_ms": 11.905077834348678
+        },
+        "transfer_copy": {
+          "samples": 192,
+          "median_gbps": 63.83971264542623,
+          "p05_gbps": 62.90596539834985,
+          "p95_gbps": 64.01714856188858,
+          "median_ms": 12.614504900362014
+        }
+      },
+      "validated": true,
+      "blocks": [
+        {
+          "mode": "compute_copy",
+          "samples": 96,
+          "median_gbps": 67.63920516084971,
+          "p05_gbps": 67.26894779179479,
+          "p95_gbps": 67.67125076917205,
+          "median_ms": 11.905911167661667
+        },
+        {
+          "mode": "transfer_copy",
+          "samples": 96,
+          "median_gbps": 63.872941549136456,
+          "p05_gbps": 62.827968601791696,
+          "p95_gbps": 64.02953233706441,
+          "median_ms": 12.607942400522232
+        },
+        {
+          "mode": "transfer_copy",
+          "samples": 96,
+          "median_gbps": 63.82403323787528,
+          "p05_gbps": 62.961123987898176,
+          "p95_gbps": 64.00858857890371,
+          "median_ms": 12.61760385861969
+        },
+        {
+          "mode": "compute_copy",
+          "samples": 96,
+          "median_gbps": 67.64630733213866,
+          "p05_gbps": 67.58783280592937,
+          "p95_gbps": 67.67139883285735,
+          "median_ms": 11.904661167692185
+        }
+      ]
+    }
+  ]
+}

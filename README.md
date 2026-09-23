@@ -41,6 +41,8 @@ The View menu offers **Fusion Result / Original Comparison / Local Exposure EV**
 | `--levels` | 16 | Maximum pyramid levels, capped by the shorter working-image dimension |
 | `--fusion-scale` | 4 | Resolution divisor per axis: 4 for guided quarter resolution, 1 for full reference |
 
+Mobile profiling: [Android workflow](docs/performance/android.md) · [Latest optimization and image comparisons](docs/performance/twohour-optimization.md). Results identify the measured device and output path.
+
 ## Implementation
 
 Start with the core files below. Tests, profiling tools, and historical experiments are kept outside the main reading path.
@@ -55,6 +57,8 @@ Start with the core files below. Tests, profiling tools, and historical experime
 | [main.py](main.py) | Interactive viewer and command-line entry point |
 
 Supporting material: [documentation](docs/README.md), [tests](tests/README.md), and [developer tools](tools/README.md). Profiling is optional; it is not needed to run the viewer.
+
+The optimized mobile production graph is in [shaders/fusion_compact.slang](shaders/fusion_compact.slang), driven by the Android benchmark. The files above remain the readable, independent viewer reference.
 
 `HDR → Three-exposure lightness and weights → Multiscale pyramids → Weighted Laplacian blending and coarse-to-fine reconstruction → Local exposure multiplier → HDR × Exposure → ACES → sRGB`
 
@@ -101,6 +105,8 @@ Colors use RGBA16F and exposure maps use R16F. Guided sample products, regulariz
 ## References
 
 For real phone timings, use the [Android production benchmark](docs/performance/android.md). The first [Adreno 830 measurement](docs/performance/baselines/adreno830-device.md) excludes visualization and records whole-chain/pass GPU timestamps, thermal snapshots and numerical validation.
+
+The [two-hour mobile optimization](docs/performance/twohour-optimization.md) retains a residual pyramid and Gather reduction at **0.863 GB/s nominal incremental traffic** (1080p, 45 FPS). It includes independent image comparisons and foreground graphics-context measurements; the **1.5 ms GPU increment target remains unmet**. Compute-only headless timings must not be extrapolated to game performance.
 
 Mobile optimization targets **Snapdragon 8 Gen 1 / Adreno 730** by default ([baseline](docs/performance/baselines/archive/a730-aoc.md)), using AOC 7.0.15. Immortalis-G720 and Adreno 750 remain reference targets. See the [workflow](docs/performance/README.md), [Mali baseline](docs/performance/baselines/archive/g720-no-spill.md), and [Adreno baseline](docs/performance/baselines/a750-aoc.md). These are offline estimates, not measured phone timings.
 

@@ -1,0 +1,135 @@
+{
+  "width": 1920,
+  "height": 1080,
+  "fps": 45,
+  "rows": [
+    {
+      "pass_name": "reduce_setup",
+      "read_sweep_bytes": 8294400,
+      "write_bytes": 4147200,
+      "expanded_read_bytes": 33177600
+    },
+    {
+      "pass_name": "pyramids_mip1",
+      "read_sweep_bytes": 3110400,
+      "write_bytes": 777600,
+      "expanded_read_bytes": 12441600
+    },
+    {
+      "pass_name": "pyramids_mip2",
+      "read_sweep_bytes": 777600,
+      "write_bytes": 192960,
+      "expanded_read_bytes": 3087360
+    },
+    {
+      "pass_name": "pyramids_mip3",
+      "read_sweep_bytes": 192960,
+      "write_bytes": 47520,
+      "expanded_read_bytes": 760320
+    },
+    {
+      "pass_name": "pyramids_mip4",
+      "read_sweep_bytes": 47520,
+      "write_bytes": 11520,
+      "expanded_read_bytes": 184320
+    },
+    {
+      "pass_name": "pyramids_mip5",
+      "read_sweep_bytes": 11520,
+      "write_bytes": 2880,
+      "expanded_read_bytes": 46080
+    },
+    {
+      "pass_name": "pyramids_mip6",
+      "read_sweep_bytes": 2880,
+      "write_bytes": 672,
+      "expanded_read_bytes": 10752
+    },
+    {
+      "pass_name": "pyramids_mip7",
+      "read_sweep_bytes": 672,
+      "write_bytes": 144,
+      "expanded_read_bytes": 2304
+    },
+    {
+      "pass_name": "pyramids_mip8",
+      "read_sweep_bytes": 144,
+      "write_bytes": 24,
+      "expanded_read_bytes": 384
+    },
+    {
+      "pass_name": "reconstruct_mip8",
+      "read_sweep_bytes": 24,
+      "write_bytes": 4,
+      "expanded_read_bytes": 24
+    },
+    {
+      "pass_name": "reconstruct_mip7",
+      "read_sweep_bytes": 164,
+      "write_bytes": 24,
+      "expanded_read_bytes": 624
+    },
+    {
+      "pass_name": "reconstruct_mip6",
+      "read_sweep_bytes": 792,
+      "write_bytes": 112,
+      "expanded_read_bytes": 2912
+    },
+    {
+      "pass_name": "reconstruct_mip5",
+      "read_sweep_bytes": 3440,
+      "write_bytes": 480,
+      "expanded_read_bytes": 12480
+    },
+    {
+      "pass_name": "reconstruct_mip4",
+      "read_sweep_bytes": 13920,
+      "write_bytes": 1920,
+      "expanded_read_bytes": 49920
+    },
+    {
+      "pass_name": "reconstruct_mip3",
+      "read_sweep_bytes": 57120,
+      "write_bytes": 7920,
+      "expanded_read_bytes": 205920
+    },
+    {
+      "pass_name": "reconstruct_mip2",
+      "read_sweep_bytes": 232560,
+      "write_bytes": 32160,
+      "expanded_read_bytes": 836160
+    },
+    {
+      "pass_name": "reconstruct_mip1",
+      "read_sweep_bytes": 938400,
+      "write_bytes": 129600,
+      "expanded_read_bytes": 3369600
+    },
+    {
+      "pass_name": "reconstruct_guided",
+      "read_sweep_bytes": 4797248,
+      "write_bytes": 1036800,
+      "expanded_read_bytes": 34076160
+    },
+    {
+      "pass_name": "apply_exposure_production",
+      "read_sweep_bytes": 1036800,
+      "write_bytes": 0,
+      "expanded_read_bytes": 66355200
+    }
+  ],
+  "baseline_bytes": 16588800,
+  "incremental_sweep_bytes": 25908104,
+  "incremental_sweep_gbps": 1.16586468,
+  "incremental_expanded_bytes": 161009260,
+  "incremental_expanded_gbps": 7.2454167,
+  "assumptions": [
+    "Increment over matched tonemap: final source read and output write cancel; all other production passes remain.",
+    "Sweep model charges every bound input mip once per pass, and every output once. Assumes within-pass reuse; ignores cross-pass reuse. Not a DRAM lower bound.",
+    "Expanded model includes zero-weight/duplicate texel slots even for aligned reduction samples. It charges each issued load and four texels per bilinear 2D sample (two for 1D), including duplicate/clamped taps. Not a DRAM upper bound.",
+    "Reduction uses 16 samples. Separate guided stages load 144 entries per 8x8 group; Fused reconstruction/guided uses (group width + 8) x (group height + 8) input entries and a two-pixel coefficient halo. Partial groups included; shared-memory accesses excluded.",
+    "Whole stored texel bytes charged even for RGB/alpha-only reads. Inverse LUT assumed queried at every low-res pixel; actual branch can skip.",
+    "No compression, cache-line transactions, write allocation, uniforms, instructions, metadata or unrelated GPU traffic modeled.",
+    "Calibration, uploads, viewer/debug resources and presentation excluded."
+  ]
+}

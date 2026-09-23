@@ -41,26 +41,8 @@ RWTexture2D<float2> coefficientOutput;
 // instruction count. Keep guide FP32 and EV half-rounded as before.
 groupshared float2 fitTile[156];
 
-// Fast guided filter: fit EV = a * log-luminance + b in a 5x5 low-res window.
-// Guide was averaged in log space separately from linear HDR downsampling.
-[shader("compute")]
-[numthreads(8, 8, 1)]
-void fit_coefficients(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_GroupThreadID,
-                      uint3 groupID : SV_GroupID)
+float2 solveFit(uint3 localID)
 {
-    uint w, h;
-    coefficientOutput.GetDimensions(w, h);
-    uint lane = localID.y * 8 + localID.x;
-    for (uint i = lane; i < 144; i += 64)
-    {
-        int2 p = clamp(int2(groupID.xy * 8) + int2(i % 12, i / 12) - 2,
-                       int2(0), int2(w-1, h-1));
-        // Preserve the original half rounding before reusing the EV. Float
-        // shared storage represents every resulting half value exactly.
-        fitTile[(i / 12) * 13 + i % 12] = float2(reducedSource[p].a, float(half(log2(max(lowExposure[p], 1e-20)))));
-    }
-    GroupMemoryBarrierWithGroupSync();
-    if (tid.x >= w || tid.y >= h) return;
     float center = fitTile[(localID.y + 2) * 13 + localID.x + 2].x;
     // Only per-sample centered values/products use half. Accumulate all 25
     // samples and solve covariance/variance in float to avoid cancellation.
@@ -85,7 +67,30 @@ void fit_coefficients(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_GroupT
     half covariance = half(meanGE - meanG*meanE);
     half denominator = half(variance + 0.04); // epsilon: EV^2
     half a = covariance / denominator;
-    coefficientOutput[tid.xy] = float2(float(a), meanE - float(a)*(meanG + center));
+    return float2(float(a), meanE - float(a)*(meanG + center));
+}
+
+// Fast guided filter: fit EV = a * log-luminance + b in a 5x5 low-res window.
+// Guide was averaged in log space separately from linear HDR downsampling.
+[shader("compute")]
+[numthreads(8, 8, 1)]
+void fit_coefficients(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_GroupThreadID,
+                      uint3 groupID : SV_GroupID)
+{
+    uint w, h;
+    coefficientOutput.GetDimensions(w, h);
+    uint lane = localID.y * 8 + localID.x;
+    for (uint i = lane; i < 144; i += 64)
+    {
+        int2 p = clamp(int2(groupID.xy * 8) + int2(i % 12, i / 12) - 2,
+                       int2(0), int2(w-1, h-1));
+        // Preserve the original half rounding before reusing the EV. Float
+        // shared storage represents every resulting half value exactly.
+        fitTile[(i / 12) * 13 + i % 12] = float2(reducedSource[p].a, float(half(log2(max(lowExposure[p], 1e-20)))));
+    }
+    GroupMemoryBarrierWithGroupSync();
+    if (tid.x >= w || tid.y >= h) return;
+    coefficientOutput[tid.xy] = solveFit(localID);
 }
 
 Texture2D<float2> coefficients;

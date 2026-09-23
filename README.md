@@ -20,12 +20,12 @@ Exposure fusion supplies the foundation. Our work focuses on turning it into a p
 
 ## Try it
 
-Python 3.12 · Windows or macOS
+Windows or macOS
 
 **Windows** (D3D12 or Vulkan)
 
 ```powershell
-py -3.12 -m venv .venv
+python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 .\run.ps1 --view compare
 ```
@@ -33,7 +33,7 @@ py -3.12 -m venv .venv
 **macOS**
 
 ```bash
-python3.12 -m venv .venv
+python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 .venv/bin/python main.py --view compare
 ```

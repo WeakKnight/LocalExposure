@@ -22,12 +22,29 @@ Exposure fusion supplies the foundation. Our work focuses on turning it into a p
 
 **Full reference · Optimized default · Error**
 
-![Deck: full reference, optimized result, and error](docs/images/comparison/sundowner_deck-comparison.png)
-![Veranda: full reference, optimized result, and error](docs/images/comparison/veranda-comparison.png)
+Each scene covers four parameter presets, top to bottom: default, darker global exposure with stronger shadow lift, brighter global exposure with stronger highlight protection, and stronger balanced local exposure.
 
-Both paths use the same HDR input, default ±1.2 EV brackets, complete pyramid, and quarter-resolution Fusion with Guided upsampling. The reference runs the independent, unfused pipeline. Error colors show the largest RGB difference in sRGB8 code values on a fixed 0–12 scale; black means identical. Previews preserve peak errors rather than averaging them away.
+**Abandoned Tiled Room**
 
-[Full-size images, settings, and regeneration](docs/image-comparison.md)
+![Abandoned Tiled Room: four presets, reference, optimized result, and error](docs/images/parameter-matrix/abandoned_tiled_room_4k.png)
+
+**Qwantani Patio**
+
+![Qwantani Patio: four presets, reference, optimized result, and error](docs/images/parameter-matrix/qwantani_patio_4k.png)
+
+**Sundowner Deck**
+
+![Sundowner Deck: four presets, reference, optimized result, and error](docs/images/parameter-matrix/sundowner_deck_4k.png)
+
+**Veranda**
+
+![Veranda: four presets, reference, optimized result, and error](docs/images/parameter-matrix/veranda_4k.png)
+
+Both paths use the same HDR input, complete pyramid, and quarter-width/height Fusion with Guided upsampling. The reference runs the independent, unfused pipeline. Error colors show the largest RGB difference in sRGB8 code values on a fixed 0–12 scale; black means identical. Previews preserve peak errors rather than averaging them away.
+
+Desktop validation passes 15 of 16 cases. Veranda's stronger balanced preset has two pixels at 13 codes, exceeding the unchanged 12-code limit.
+
+[All settings and error metrics](docs/images/parameter-matrix/README.md) · [Full-size images and regeneration](docs/image-comparison.md)
 
 ## Try it
 

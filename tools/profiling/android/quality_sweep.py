@@ -21,7 +21,10 @@ class Candidate:
         session=device.create_slang_session(compiler_options={'include_paths':[ROOT/'shaders'],'defines':defines})
         self.kernels={name:device.create_compute_kernel(session.load_program('fusion_compact.slang',[name])) for name in ['reconstruct_ev_fused','reduce_setup_gather','guided_moments','reduce_horizontal','reduce_setup_vertical','reduce_setup_cooperative','tail_reconstruct','reconstruct_ev','reduce_setup','downsample_compact','reconstruct_compact','reconstruct_guided']}
         self.final=device.create_compute_kernel(session.load_program(str(Path(__file__).with_name('joint.slang')) if self.config.get('joint_upsample') else 'guided.slang',['apply_joint_linear' if self.config.get('joint_upsample') else 'apply_exposure_production']))
-    def render(self,source,ev,bracket=1.2,sigma=.2):
+    def render(self,source,ev,bracket=1.2,sigma=.2,*,highlight_ev=None,shadow_ev=None):
+        # Keep symmetric callers compatible; asymmetric brackets match the viewer UI.
+        highlight_ev = bracket if highlight_ev is None else highlight_ev
+        shadow_ev = bracket if shadow_ev is None else shadow_ev
         m=self.mapper;w,h=m.work_source.width,m.work_source.height;levels=m.reconstructed.mip_count
         compact=m.create_texture(w,h,spy.Format.rg16_float if self.config.get('half_compact') else spy.Format.rg32_float)
         lum=m.create_texture(w,h,spy.Format.rgba16_snorm if self.config.get('packed_snorm') else spy.Format.rgba16_float if self.config.get('packed_residual') else spy.Format.rg32_float if self.config.get('residual_float') else spy.Format.rg16_float if self.config.get('residual_pyramid') else spy.Format.rgba32_float,levels=levels)
@@ -42,9 +45,9 @@ class Candidate:
         if self.config.get('separable_reduction'):
             horizontal=m.create_texture(w,h*4,spy.Format.rg32_float)
             dispatch('reduce_horizontal',w,h*4,fullSource=source,horizontalOutput=horizontal,linearSampler=m.sampler)
-            dispatch('reduce_setup_vertical',w,h,horizontalSource=horizontal,compactOutput=compact,lightnessOutput=view(lum),weightsOutput=view(weights),baseLightnessOutput=base_lightness,linearSampler=m.sampler,globalEV=ev,highlightEV=bracket,shadowEV=bracket,sigma=sigma,**m.curve.bindings())
+            dispatch('reduce_setup_vertical',w,h,horizontalSource=horizontal,compactOutput=compact,lightnessOutput=view(lum),weightsOutput=view(weights),baseLightnessOutput=base_lightness,linearSampler=m.sampler,globalEV=ev,highlightEV=highlight_ev,shadowEV=shadow_ev,sigma=sigma,**m.curve.bindings())
         else:
-            dispatch('reduce_setup_cooperative' if self.config.get('cooperative_reduction') else ('reduce_setup_gather' if self.config.get('gather_reduction') else 'reduce_setup'),((w+7)//8)*32 if self.config.get('cooperative_reduction') else w,((h+7)//8)*8 if self.config.get('cooperative_reduction') else h,fullSource=source,compactOutput=compact,lightnessOutput=view(lum),weightsOutput=view(weights),linearSampler=m.sampler,reductionRows=4,globalEV=ev,highlightEV=bracket,shadowEV=bracket,sigma=sigma,**m.curve.bindings(),**(dict(baseLightnessOutput=base_lightness) if self.config.get('residual_pyramid') else {}))
+            dispatch('reduce_setup_cooperative' if self.config.get('cooperative_reduction') else ('reduce_setup_gather' if self.config.get('gather_reduction') else 'reduce_setup'),((w+7)//8)*32 if self.config.get('cooperative_reduction') else w,((h+7)//8)*8 if self.config.get('cooperative_reduction') else h,fullSource=source,compactOutput=compact,lightnessOutput=view(lum),weightsOutput=view(weights),linearSampler=m.sampler,reductionRows=4,globalEV=ev,highlightEV=highlight_ev,shadowEV=shadow_ev,sigma=sigma,**m.curve.bindings(),**(dict(baseLightnessOutput=base_lightness) if self.config.get('residual_pyramid') else {}))
         tail_mip=1
         while tail_mip<levels-1 and (max(1,w>>tail_mip)>self.config.get('tail_max_width',32) or max(1,h>>tail_mip)>self.config.get('tail_max_height',16)):tail_mip+=1
         use_tail=self.config.get('tail_fusion') and tail_mip<levels-1

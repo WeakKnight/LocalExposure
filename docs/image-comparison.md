@@ -22,6 +22,13 @@ optimized preset, numerical metrics, and SHA-256 hashes of inputs, code and imag
 Numerical gates supplement visual inspection; these two scenes do not replace the
 HDR/edge/parameter stress checks used for optimization.
 
+The [all-asset parameter matrix](images/parameter-matrix/README.md) adds three typical
+presets to the default: −2 EV with stronger shadow lift, +2 EV with stronger highlight
+protection, and symmetric 0.5 contrast scales. All four EXRs are tested at 1080p,
+including asymmetric highlight/shadow settings. It records failures as well as passes.
+Run `python tools/validate_asset_matrix.py` after optimization changes, then
+`python tools/validate_asset_matrix.py --check` to verify freshness and gate status.
+
 ## Maintain the comparison
 
 From the repository root, using the Python environment from the README:

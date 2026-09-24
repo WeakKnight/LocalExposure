@@ -52,6 +52,14 @@ def estimate(manifest, fps=45):
             if 'momentSource' in descriptors:
                 coefficient_loads=((p['width']+gx-1)//gx)*((p['height']+gy-1)//gy)*(gx+2*radius)*(gy+2*radius)
                 read('momentSource',coefficient_loads*3,True);write('averagedOutput')
+            elif config.get('guided_gather_rows'):
+                # Two rows per task: four component gathers for columns 0..3,
+                # two point reads for column 4, plus each thread's tile anchor.
+                groups=((p['width']+gx-1)//gx)*((p['height']+gy-1)//gy)
+                tasks=groups*(gx+2*radius)*((gy+4*radius)//2)
+                read('compactSource',tasks*4,True)
+                read('compactSource',tasks*2+groups*threads)
+                write('averagedOutput')
             elif manifest['config'].get('variant_settings',{}).get('precomputed_ev'):
                 read('compactSource',loads);write('averagedOutput')
             else:

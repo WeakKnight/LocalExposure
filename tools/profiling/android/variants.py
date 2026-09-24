@@ -95,6 +95,7 @@ VARIANTS["guided-direct-tail"] = {**VARIANTS["guided-direct-single-moment"], "gu
 
 VARIANTS["guided-fused-reconstruction"] = {**VARIANTS["guided-direct-tail"],
     "fused_fine_reconstruction": True, "half_guide": True, "half_compact": True,
-    "half_row_coefficients": True}
+    "half_row_coefficients": True, "reuse_moment_storage": True,
+    "guided_threads_y": 16, "guided_gather_rows": True, "direct_residual_weights": True, "gather_x": 4, "gather_y": 8}
 
 DEFAULT_VARIANT = "guided-fused-reconstruction"

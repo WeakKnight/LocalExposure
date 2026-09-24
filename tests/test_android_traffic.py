@@ -67,3 +67,10 @@ class TrafficTests(unittest.TestCase):
         single=estimate(m)['rows'][0]
         self.assertEqual(single['expanded_read_bytes'],4*(20*24*5+512)*8)
         self.assertEqual(single['read_sweep_bytes'],before['read_sweep_bytes'])
+
+        m['config']['variant_settings'].update(guided_gather_rows=True,guided_threads_y=16)
+        m['passes'][0]['group_size']=[16,16,1]
+        gather=estimate(m)['rows'][0]
+        self.assertEqual(gather['expanded_read_bytes'],4*(20*12*(4*4+2)+256)*8)
+        self.assertEqual(gather['read_sweep_bytes'],before['read_sweep_bytes'])
+        self.assertEqual(gather['write_bytes'],before['write_bytes'])

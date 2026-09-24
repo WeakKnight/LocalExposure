@@ -1,0 +1,1535 @@
+{
+  "schema": 1,
+  "date": "2026-09-24",
+  "status": "target-met",
+  "target_increment_ms": 1.48,
+  "device": "NX789J / SM8750 / Adreno 830",
+  "driver": "Process-local Qualcomm 512.842.6; Vulkan 1.4.295",
+  "workload": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 45,
+    "hdr": "R11G11B10_FLOAT",
+    "output": "RGBA8_SRGB via UNORM compute view",
+    "graphics_hdr_producer": true,
+    "joint_submission": true,
+    "tile_memory": false,
+    "presentation_and_visualization_excluded": true,
+    "frames_per_block": 600,
+    "warmup_per_block": 60,
+    "rounds": 3
+  },
+  "variant": "guided-fused-reconstruction",
+  "settings": {
+    "half_aux": true,
+    "compute_srgb": true,
+    "cached_baseline": true,
+    "log_exposure": true,
+    "separable_guided": true,
+    "precomputed_ev": true,
+    "residual_pyramid": true,
+    "gather_reduction": true,
+    "guided_vertical": 2,
+    "guided_threads_y": 16,
+    "guided_static_windows": true,
+    "guided_batch": 2,
+    "guided_direct_moments": true,
+    "direct_batch": 1,
+    "tail_fusion": true,
+    "tail_max_width": 16,
+    "tail_max_height": 8,
+    "tail_x": 16,
+    "fused_fine_reconstruction": true,
+    "half_guide": true,
+    "half_compact": true,
+    "half_row_coefficients": true,
+    "reuse_moment_storage": true,
+    "guided_gather_rows": true,
+    "direct_residual_weights": true,
+    "gather_x": 4,
+    "gather_y": 8
+  },
+  "changes": [
+    "HDR reduction/exposure setup uses4x8threads instead of8x8. Same pixels, samples, arithmetic and textures; no additional approximation in this scheduling change.",
+    "Retain prior256-thread two-row Gather Guided, shared moment-storage reuse and direct residual pair weights."
+  ],
+  "guided_shared_bytes": {
+    "before": 12160,
+    "after": 10880
+  },
+  "guided_barriers": {
+    "before": 3,
+    "after": 3
+  },
+  "production_dispatches": 12,
+  "control": {
+    "artifact": "outputs\\android\\goal148\\norm-production-hdrlong-1",
+    "samples_per_path": 1800,
+    "fusion_ms": 3.9641665698852537,
+    "baseline_ms": 2.441979107048035,
+    "increment_ms": 1.522187462837219,
+    "same_output_as_headless": true,
+    "round_increments_ms": [
+      1.5218749628448487,
+      1.5230989211483004,
+      1.521770796180725
+    ]
+  },
+  "repeats": [
+    {
+      "artifact": "outputs\\android\\goal148\\norm-hdr4x8-hdrlong-0",
+      "samples_per_path": 1800,
+      "fusion_ms": 3.7563540749588014,
+      "baseline_ms": 2.4428124403610227,
+      "increment_ms": 1.3135416345977786,
+      "same_output_as_headless": true,
+      "round_increments_ms": [
+        1.3127083012847902,
+        1.3145572595729829,
+        1.3129947596111293
+      ]
+    },
+    {
+      "artifact": "outputs\\android\\goal148\\norm-hdr4x8-hdrlong-2",
+      "samples_per_path": 1800,
+      "fusion_ms": 3.7536197000255584,
+      "baseline_ms": 2.441979107048035,
+      "increment_ms": 1.3116405929775237,
+      "same_output_as_headless": true,
+      "round_increments_ms": [
+        1.3108072596645353,
+        1.3117187179756162,
+        1.3123697596263884
+      ]
+    }
+  ],
+  "improvement_percent": 13.769417641825754,
+  "remaining_to_target_ms": 0,
+  "traffic": {
+    "bytes_per_frame": 16616528,
+    "gbps_45": 0.74774376,
+    "unchanged": true,
+    "expanded_bytes_per_frame": 83355840,
+    "note": "Sweep estimate unchanged, not DRAM counters. Expanded-tap model charges full stored texels for component gathers and therefore increases; fewer sampler instructions do not prove lower DRAM traffic."
+  },
+  "quality": {
+    "phone_scenes": [
+      {
+        "scene": "veranda",
+        "byte_identical_to_previous_default": true,
+        "reference": {
+          "finite": true,
+          "rmse_codes": 0.22399933230812452,
+          "p99_codes": 1.0,
+          "max_codes": 8.0,
+          "fraction_pixels_over4": 1.0609567901234568e-05,
+          "thresholds": {
+            "rmse_codes": 0.75,
+            "p99_codes": 3,
+            "max_codes": 12,
+            "fraction_pixels_over4": 0.001
+          },
+          "accepted": true,
+          "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+        }
+      },
+      {
+        "scene": "abandoned_tiled_room",
+        "byte_identical_to_previous_default": true,
+        "reference": {
+          "finite": true,
+          "rmse_codes": 0.21913766355060865,
+          "p99_codes": 1.0,
+          "max_codes": 6.0,
+          "fraction_pixels_over4": 1.6878858024691356e-05,
+          "thresholds": {
+            "rmse_codes": 0.75,
+            "p99_codes": 3,
+            "max_codes": 12,
+            "fraction_pixels_over4": 0.001
+          },
+          "accepted": true,
+          "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+        }
+      },
+      {
+        "scene": "qwantani_patio",
+        "byte_identical_to_previous_default": true,
+        "reference": {
+          "finite": true,
+          "rmse_codes": 0.22840290798167523,
+          "p99_codes": 1.0,
+          "max_codes": 5.0,
+          "fraction_pixels_over4": 9.645061728395062e-07,
+          "thresholds": {
+            "rmse_codes": 0.75,
+            "p99_codes": 3,
+            "max_codes": 12,
+            "fraction_pixels_over4": 0.001
+          },
+          "accepted": true,
+          "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+        }
+      },
+      {
+        "scene": "sundowner_deck",
+        "byte_identical_to_previous_default": true,
+        "reference": {
+          "finite": true,
+          "rmse_codes": 0.22364920885484746,
+          "p99_codes": 1.0,
+          "max_codes": 8.0,
+          "fraction_pixels_over4": 1.0609567901234568e-05,
+          "thresholds": {
+            "rmse_codes": 0.75,
+            "p99_codes": 3,
+            "max_codes": 12,
+            "fraction_pixels_over4": 0.001
+          },
+          "accepted": true,
+          "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+        }
+      }
+    ],
+    "stress": [
+      {
+        "artifact": "outputs\\android\\goal148\\quality-hdr4x8-odd.json",
+        "accepted": true
+      },
+      {
+        "artifact": "outputs\\android\\goal148\\quality-hdr4x8-even.json",
+        "accepted": true
+      }
+    ],
+    "manifest": "docs/images/comparison/manifest.json",
+    "note": "Current README sheets regenerated and visually inspected; independent reference unchanged. Existing extreme1080p random-HDR+4EV limitation remains documented."
+  },
+  "offline": {
+    "target": "Adreno 730",
+    "tool": "AOC 7.0.15",
+    "entry": "reconstruct_guided",
+    "registers": 9.0,
+    "scratch": 0.0,
+    "note": "Offline projections, not 8 Gen 1 timings. Invalid occupancy above 100% excluded."
+  },
+  "experiments": {
+    "screen_summaries": [
+      {
+        "name": "alias-half256-phone",
+        "increment_ms": 1.661067667779923,
+        "fusion_ms": 4.104869691450119,
+        "baseline_ms": 2.4438020236701963
+      },
+      {
+        "name": "alias-vector-half256-phone",
+        "increment_ms": 1.5673957950668327,
+        "fusion_ms": 4.009635318775176,
+        "baseline_ms": 2.4422395237083436
+      },
+      {
+        "name": "alias-vector-half320-phone",
+        "increment_ms": 1.5552082953643804,
+        "fusion_ms": 3.998489485713959,
+        "baseline_ms": 2.4432811903495786
+      },
+      {
+        "name": "alias-vector256-phone",
+        "increment_ms": 1.5595051702594755,
+        "fusion_ms": 4.001796777299881,
+        "baseline_ms": 2.4422916070404055
+      },
+      {
+        "name": "alias-vector320-phone",
+        "increment_ms": 1.5471614205608373,
+        "fusion_ms": 3.990833235900879,
+        "baseline_ms": 2.443671815340042
+      },
+      {
+        "name": "alias-vector384-phone",
+        "increment_ms": 1.5500260038242342,
+        "fusion_ms": 3.992864485851288,
+        "baseline_ms": 2.442838482027054
+      },
+      {
+        "name": "alias256-phone",
+        "increment_ms": 1.64919266806984,
+        "fusion_ms": 4.091692608438493,
+        "baseline_ms": 2.4424999403686525
+      },
+      {
+        "name": "alias384-phone",
+        "increment_ms": 1.6461197514781958,
+        "fusion_ms": 4.089010316837311,
+        "baseline_ms": 2.4428905653591153
+      },
+      {
+        "name": "alias512-phone",
+        "increment_ms": 1.7018749584503166,
+        "fusion_ms": 4.144322815486907,
+        "baseline_ms": 2.4424478570365906
+      },
+      {
+        "name": "centered-moments-phone",
+        "increment_ms": 1.6762239174098967,
+        "fusion_ms": 4.118567607782364,
+        "baseline_ms": 2.442343690372467
+      },
+      {
+        "name": "curve-factored-phone",
+        "increment_ms": 1.5462499622497559,
+        "fusion_ms": 3.988775944284439,
+        "baseline_ms": 2.442525982034683
+      },
+      {
+        "name": "curve-log-phone",
+        "increment_ms": 1.5841405863246916,
+        "fusion_ms": 4.026588443361282,
+        "baseline_ms": 2.4424478570365906
+      },
+      {
+        "name": "curve-reciprocal-phone",
+        "increment_ms": 1.5842187113227837,
+        "fusion_ms": 4.026119693372726,
+        "baseline_ms": 2.441900982049942
+      },
+      {
+        "name": "direct128-phone",
+        "increment_ms": 1.6143489189205171,
+        "fusion_ms": 4.0573176092777254,
+        "baseline_ms": 2.4429686903572083
+      },
+      {
+        "name": "direct256-phone",
+        "increment_ms": 1.5686457950363155,
+        "fusion_ms": 4.011666568725586,
+        "baseline_ms": 2.44302077368927
+      },
+      {
+        "name": "direct256batch1-phone",
+        "increment_ms": 1.566171836763382,
+        "fusion_ms": 4.007447818828583,
+        "baseline_ms": 2.441275982065201
+      },
+      {
+        "name": "direct256batch4-phone",
+        "increment_ms": 1.6194791271286006,
+        "fusion_ms": 4.061458234176635,
+        "baseline_ms": 2.441979107048035
+      },
+      {
+        "name": "direct320-phone",
+        "increment_ms": 1.5585155869503016,
+        "fusion_ms": 4.00119781898117,
+        "baseline_ms": 2.4426822320308688
+      },
+      {
+        "name": "direct32x8-phone",
+        "increment_ms": 1.7069009999942777,
+        "fusion_ms": 4.148932190374374,
+        "baseline_ms": 2.4420311903800966
+      },
+      {
+        "name": "direct384-phone",
+        "increment_ms": 1.5597135035877225,
+        "fusion_ms": 4.001692610635757,
+        "baseline_ms": 2.441979107048035
+      },
+      {
+        "name": "direct448-phone",
+        "increment_ms": 1.580885378070831,
+        "fusion_ms": 4.022890526784897,
+        "baseline_ms": 2.442005148714066
+      },
+      {
+        "name": "direct480-phone",
+        "increment_ms": 1.6028124608688348,
+        "fusion_ms": 4.04627594288063,
+        "baseline_ms": 2.4434634820117953
+      },
+      {
+        "name": "direct512batch4-phone",
+        "increment_ms": 1.6435676682071687,
+        "fusion_ms": 4.0857551085834505,
+        "baseline_ms": 2.4421874403762818
+      },
+      {
+        "name": "direct8x16-phone",
+        "increment_ms": 1.628411418577194,
+        "fusion_ms": 4.069036358991623,
+        "baseline_ms": 2.4406249404144287
+      },
+      {
+        "name": "guide-poly-phone",
+        "increment_ms": 1.5480468372058866,
+        "fusion_ms": 3.9902863609142303,
+        "baseline_ms": 2.4422395237083436
+      },
+      {
+        "name": "guide-poly3-phone",
+        "increment_ms": 1.5458072539272307,
+        "fusion_ms": 3.9885936526222228,
+        "baseline_ms": 2.442786398694992
+      },
+      {
+        "name": "half-moments-phone",
+        "increment_ms": 1.552031212108612,
+        "fusion_ms": 3.994765527471542,
+        "baseline_ms": 2.44273431536293
+      },
+      {
+        "name": "packed-compact-phone",
+        "increment_ms": 1.601302044239044,
+        "fusion_ms": 4.043124901290893,
+        "baseline_ms": 2.441822857051849
+      },
+      {
+        "name": "packed-gather-phone",
+        "increment_ms": 1.5955207943801875,
+        "fusion_ms": 4.60229155430603,
+        "baseline_ms": 3.006770759925842
+      },
+      {
+        "name": "pad1-phone",
+        "increment_ms": 1.562890586843491,
+        "fusion_ms": 4.00645823551941,
+        "baseline_ms": 2.4435676486759186
+      },
+      {
+        "name": "pad3-phone",
+        "increment_ms": 1.560703086896897,
+        "fusion_ms": 4.002395735618592,
+        "baseline_ms": 2.441692648721695
+      },
+      {
+        "name": "pad4-phone",
+        "increment_ms": 1.6012499609069821,
+        "fusion_ms": 4.043385317951202,
+        "baseline_ms": 2.44213535704422
+      },
+      {
+        "name": "point-reduce-phone",
+        "increment_ms": 3.403645750236512,
+        "fusion_ms": 5.847161315580369,
+        "baseline_ms": 2.4435155653438567
+      },
+      {
+        "name": "point-reduce32-phone",
+        "increment_ms": 3.478541581741333,
+        "fusion_ms": 5.921145688774109,
+        "baseline_ms": 2.4426041070327758
+      },
+      {
+        "name": "point-unroll-phone",
+        "increment_ms": 1.7805207898635862,
+        "fusion_ms": 4.222630105241775,
+        "baseline_ms": 2.4421093153781888
+      },
+      {
+        "name": "pyramid-pair-phone",
+        "increment_ms": 1.7131249581756594,
+        "fusion_ms": 4.15408844024849,
+        "baseline_ms": 2.4409634820728305
+      },
+      {
+        "name": "pyramid16x16-phone",
+        "increment_ms": 1.6107812106742863,
+        "fusion_ms": 4.052890526052475,
+        "baseline_ms": 2.4421093153781888
+      },
+      {
+        "name": "pyramid16x8-phone",
+        "increment_ms": 1.6078124607467656,
+        "fusion_ms": 4.050624901107788,
+        "baseline_ms": 2.4428124403610227
+      },
+      {
+        "name": "pyramid32x4-phone",
+        "increment_ms": 1.602916627532959,
+        "fusion_ms": 4.044270734596252,
+        "baseline_ms": 2.4413541070632934
+      },
+      {
+        "name": "quad-gather-phone",
+        "increment_ms": 1.7219009996280668,
+        "fusion_ms": 4.16414052333641,
+        "baseline_ms": 2.4422395237083436
+      },
+      {
+        "name": "triplet1024-phone",
+        "increment_ms": 1.6014582942352291,
+        "fusion_ms": 4.042968651294708,
+        "baseline_ms": 2.441510357059479
+      },
+      {
+        "name": "triplet2048-phone",
+        "increment_ms": 1.6031770441932673,
+        "fusion_ms": 4.045208234573364,
+        "baseline_ms": 2.4420311903800966
+      },
+      {
+        "name": "unsigned-gather-phone",
+        "increment_ms": 1.5843749613189706,
+        "fusion_ms": 4.027265526678086,
+        "baseline_ms": 2.4428905653591153
+      },
+      {
+        "name": "wave-packed512-phone",
+        "increment_ms": 1.7885416230010986,
+        "fusion_ms": 4.231041563369751,
+        "baseline_ms": 2.4424999403686525
+      },
+      {
+        "name": "wave-packed768-phone",
+        "increment_ms": 1.8605207879104615,
+        "fusion_ms": 4.301406144985199,
+        "baseline_ms": 2.4408853570747375
+      },
+      {
+        "name": "wave768-phone",
+        "increment_ms": 1.945312452507019,
+        "fusion_ms": 4.387135309558868,
+        "baseline_ms": 2.441822857051849
+      },
+      {
+        "name": "zero-anchor-phone",
+        "increment_ms": 1.5672655867366787,
+        "fusion_ms": 4.011015527074814,
+        "baseline_ms": 2.443749940338135
+      }
+    ],
+    "rejected_quality": [
+      "Half moment storage failed moving-edge stress.",
+      "Four bilinear guide samples failed checker, HDR and motion stress.",
+      "First-two-level pyramid fusion failed phone reference gate and was slower."
+    ],
+    "rejected_performance": [
+      "Curve reformulation and forward LUTs; extra Guided batching and Wave/Quad exchange; larger pyramid groups.",
+      "Mutable R32_UINT HDR Gather alias regressed both baseline and complete-chain times; support reverted.",
+      "Packed log/guide/base RG32_UINT texture did not improve time; experimental runner unfiltered-format support reverted.",
+      "Flat uint moment-storage alias was slower; retaining vector moment access performed better.",
+      "Removing the guide anchor gave no additional speedup."
+    ],
+    "native_half_rounding_fix": "The retained code uses asuint16(half(value)); all measured retained runs use the corrected integrated shader."
+  },
+  "validation": {
+    "unit_tests": 16,
+    "all_production_spirv_byte_identical_to_measured_candidate": {
+      "reconstruct_ev_fused.spv": true,
+      "tail_reconstruct.spv": true,
+      "baseline_srgb_compute.spv": true,
+      "reconstruct_guided.spv": true,
+      "reconstruct_compact.spv": true,
+      "reduce_setup_gather.spv": true,
+      "downsample_compact.spv": true,
+      "apply_srgb_compute.spv": true
+    },
+    "workload_audit": {
+      "control_dispatched_threads": 130560,
+      "candidate_dispatched_threads": 130560,
+      "valid_pixels": 129600,
+      "same_source": true,
+      "same_inverse": true,
+      "same_production_uniforms": true,
+      "pass_counts": [
+        13,
+        13
+      ]
+    },
+    "readme_check": true,
+    "matched_environment_all_three_runs": true
+  },
+  "limits": [
+    "Target 1.48 ms has not been achieved. The smaller verified gain is retained.",
+    "Single-device Adreno 830 measurements, not Adreno 730 measurements.",
+    "Existing RG16F limits at narrow sigma / wider exposure brackets remain; see goal159.json.",
+    "Byte identity is verified for these captures and coefficient tests, not a universal cross-GPU guarantee."
+  ],
+  "raw_artifacts": "outputs/android/goal148/hdr-production and norm-hdr4x8-hdrlong-{0,2}",
+  "continuation_screen": {
+    "retained_default_changed": false,
+    "candidates": [
+      "pad1",
+      "pad3",
+      "pad4",
+      "guide-poly",
+      "guide-poly3",
+      "curve-factored",
+      "point-reduce",
+      "point-reduce32",
+      "point-unroll"
+    ],
+    "findings": [
+      "Shared row padding regressed on the retained 320-thread configuration.",
+      "Guide polynomial approximations and factoring common powers across exposure brackets passed their initial desktop gates, but short-run gains were only about 0.002-0.004 ms; not promoted without stronger evidence.",
+      "Explicit RGB texel loads regressed; unrolling improved that candidate substantially but it remained slower than Gather.",
+      "Omitting the finest residual Laplacian failed colored-edge, HDR and motion gates; rejected."
+    ],
+    "counter_probe": "perfetto --query exposes android.gpu.memory but no gpu.counters data source on this device; no hardware busy/bandwidth measurements obtained.",
+    "next_direction": "Wave-local coarse pyramid tail: the first coarse level of a 16x8 tail has at most 32 pixels. Investigate keeping those levels in registers and reducing workgroup rendezvous, with subgroup mapping guards and the existing fallback."
+  },
+  "wave_tail_screen": {
+    "retained_default_changed": false,
+    "screen": [
+      {
+        "name": "wave-tail",
+        "increment_ms": 1.5525520454292296,
+        "quality_accepted": true
+      },
+      {
+        "name": "tail-wave32",
+        "increment_ms": 1.5586718369464876,
+        "quality_accepted": true
+      }
+    ],
+    "findings": [
+      "A register/shuffle coarse tail passed the initial desktop and phone image gates but gave no full-chain speedup.",
+      "A 32-thread legacy tail was slower than the retained tail.",
+      "Shared-memory tail rewrites produced non-finite intermediates on the phone; full-workgroup control variants also failed, so subgroup synchronization has not been isolated as the cause. They are rejected and their timings are not performance evidence.",
+      "A wrapper-only legacy control remained correct. The rewrite issue remains confined to ignored experimental shaders."
+    ],
+    "raw_diagnostics": "outputs/android/goal148/tail-micro",
+    "next_direction": "Evaluate emitting FP32 guide/EV moments directly from fused reconstruction and consuming them with bilinear 5x5 integration in Guided. Validate numerical stability and account for the additional intermediate bandwidth; keep the current path as control."
+  },
+  "raw_moment_screen": {
+    "status": "rejected",
+    "increment_ms": 2.888359304483414,
+    "frames_per_block": 120,
+    "rounds": 2,
+    "method": "Same Adreno 830 custom 842.6 driver, graphics HDR joint submission, 1080p at 45 FPS. Short screening only.",
+    "change": "Write half-rounded guide/EV raw FP32 moments in fused reconstruction; fit 5x5 moments with nine bilinear samples; two Guided group barriers instead of three.",
+    "quality": "Desktop fixed spatial/temporal gates passed at default and 3 EV brackets; phone independent reference gate passed.",
+    "a730_offline_scratch_bytes": 0,
+    "modeled_sweep_gbps": 0.88771176,
+    "traffic_note": "Same sweep accounting: 12 additional stored bytes per low-resolution texel for one write and one read. Not measured DRAM traffic.",
+    "reason": "Large measured regression from retained 1.550 ms and increased modeled bandwidth. Default unchanged."
+  },
+  "arithmetic_screen": {
+    "method": "Same phone/driver/workload; 2 x 120 measured frames/path. Short screens are not evidence of a stable improvement.",
+    "rows": [
+      {
+        "name": "gather-product",
+        "increment_ms": 1.5475780872173313,
+        "complete_chain_ms": 3.9907290692367554,
+        "baseline_ms": 2.443150982019424,
+        "promoted": false
+      },
+      {
+        "name": "gather-product1",
+        "increment_ms": 1.54992183716011,
+        "complete_chain_ms": 3.9921613608684536,
+        "baseline_ms": 2.4422395237083436,
+        "promoted": false
+      },
+      {
+        "name": "no-renorm",
+        "increment_ms": 1.5438541289749148,
+        "complete_chain_ms": 3.985937402687073,
+        "baseline_ms": 2.442083273712158,
+        "promoted": false
+      }
+    ],
+    "default_changed": false,
+    "bandwidth_change": 0,
+    "findings": [
+      "Gather mantissa-product reductions replace sixteen log2 evaluations with four or one; initial desktop and phone gates passed, no useful short-screen gain.",
+      "Skipping fine reconstruction weight renormalization passed initial desktop and phone gates; roughly 0.006 ms short-screen gain requires confirmation and is not promoted."
+    ],
+    "extended_1080p_quality": {
+      "control_failures": [
+        {
+          "scene": "random-hdr",
+          "ev": 4,
+          "variant": "guided-fused-reconstruction",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1396391771468118,
+            "p99_codes": 1.0,
+            "max_codes": 17.0,
+            "fraction_pixels_over4": 6.221064814814815e-05,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": false,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        }
+      ],
+      "one_log_candidate_failures": [
+        {
+          "scene": "random-hdr",
+          "ev": 4,
+          "variant": "guided-fused-reconstruction",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1396380259534668,
+            "p99_codes": 1.0,
+            "max_codes": 17.0,
+            "fraction_pixels_over4": 6.221064814814815e-05,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": false,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        }
+      ],
+      "note": "Both control and candidate fail the same random-HDR +4 EV 1080p stress case, max 17 codes. Existing extreme-scene limitation, not evidence of a new candidate regression. Fixed gates remain unchanged."
+    }
+  },
+  "shared_sum_screen": {
+    "method": "Same phone/driver/graphics HDR joint workload, 2 x 120 measured frames/path. Short screening; no default changes.",
+    "rows": [
+      {
+        "name": "shared-sums",
+        "increment_ms": 1.5478645455436704,
+        "complete_chain_ms": 3.9897915692596433,
+        "baseline_ms": 2.441927023715973
+      },
+      {
+        "name": "shared-sums-direct2",
+        "increment_ms": 1.5577603786354066,
+        "complete_chain_ms": 3.9994530273571014,
+        "baseline_ms": 2.441692648721695
+      },
+      {
+        "name": "shared-sums256",
+        "increment_ms": 1.545130170610428,
+        "complete_chain_ms": 3.986588444337845,
+        "baseline_ms": 2.441458273727417
+      },
+      {
+        "name": "shared-sums128",
+        "increment_ms": 1.6142707939224246,
+        "complete_chain_ms": 4.0554946926555635,
+        "baseline_ms": 2.441223898733139
+      },
+      {
+        "name": "shared-wide",
+        "increment_ms": 1.7344530826549525,
+        "complete_chain_ms": 4.177812398002624,
+        "baseline_ms": 2.4433593153476716
+      }
+    ],
+    "change": "Reuse common four-tap sums across adjacent five-tap windows in vertical moments and horizontal/vertical coefficients. Filter support, storage precision and barrier count unchanged; FP32 arithmetic regrouped.",
+    "quality": "Initial desktop fixed spatial/temporal checks and independent phone quality gates passed.",
+    "a730_offline": "320-thread candidate uses 7 register footprint vs retained 9, zero scratch. This is not an Adreno 830 occupancy measurement.",
+    "status": "Not promoted: no sufficient measured improvement; 32x16 output tile regressed to 1.734 ms despite 6-register A730 footprint and zero scratch."
+  },
+  "guided_gather_screen": {
+    "method": "Same phone/driver/graphics HDR joint workload, 2 x 120 measured frames/path. Short screens only, not promoted.",
+    "rows": [
+      {
+        "name": "guided-gather",
+        "increment_ms": 1.539661420743942,
+        "chain_ms": 3.9815624027938843,
+        "baseline_ms": 2.441900982049942
+      },
+      {
+        "name": "guided-gather-hybrid",
+        "increment_ms": 1.535494754179001,
+        "chain_ms": 3.9776040695571897,
+        "baseline_ms": 2.4421093153781888
+      },
+      {
+        "name": "guided-gather-quad",
+        "increment_ms": 1.5551301703662874,
+        "chain_ms": 3.9972915690765385,
+        "baseline_ms": 2.442161398710251
+      },
+      {
+        "name": "guided-hybrid256",
+        "increment_ms": 1.5313801709461212,
+        "chain_ms": 3.974192611307144,
+        "baseline_ms": 2.4428124403610227
+      },
+      {
+        "name": "guided-quad256",
+        "increment_ms": 1.549791628829956,
+        "chain_ms": 3.991953027540207,
+        "baseline_ms": 2.442161398710251
+      }
+    ],
+    "description": "Replace row-moment point reads with two-row Gather operations. Hybrid uses Gather for four columns plus point reads for the fifth; quad shares six columns across two adjacent windows. FP32 moments, radius and barriers preserved.",
+    "quality": "Initial desktop and independent phone gates passed. A730 offline scratch zero for all three; register footprint 9.",
+    "next": "Promoted after matched long repeats, four phone scene gates, regression tests and README regeneration.",
+    "long_repeats": [
+      {
+        "name": "candidate-first",
+        "increment_ms": 1.5338020458869934,
+        "complete_chain_ms": 3.9767707362442017,
+        "baseline_ms": 2.4429686903572083,
+        "frames_per_path": 1800
+      },
+      {
+        "name": "retained-control",
+        "increment_ms": 1.5509374621353151,
+        "complete_chain_ms": 3.9922394858665466,
+        "baseline_ms": 2.4413020237312315,
+        "frames_per_path": 1800
+      }
+    ],
+    "coefficient_check": {
+      "backend": "D3D12",
+      "width": 480,
+      "height": 270,
+      "random_guide": true,
+      "mismatched_components": 20,
+      "components": 259200,
+      "max_abs_difference": 7.814169e-05,
+      "note": "Not bit-exact. Initial spatial and temporal image gates still passed. Do not claim lossless."
+    },
+    "integration": "Default enabled. All eight production SPIR-V files freshly prepared and byte-identical to measured candidate."
+  },
+  "storage_stage_history": {
+    "control": {
+      "artifact": "outputs\\android\\goal148\\control-long",
+      "samples_per_path": 1800,
+      "fusion_ms": 4.03005198494339,
+      "baseline_ms": 2.442083273712158,
+      "increment_ms": 1.5879687112312322,
+      "same_output_as_headless": true,
+      "round_increments_ms": [
+        1.5872655862483978,
+        1.5884374612197876,
+        1.5881510028934476
+      ]
+    },
+    "repeats": [
+      {
+        "artifact": "outputs\\android\\goal148\\retained-long",
+        "samples_per_path": 1800,
+        "fusion_ms": 3.992812402519226,
+        "baseline_ms": 2.4429686903572083,
+        "increment_ms": 1.5498437121620179,
+        "same_output_as_headless": true,
+        "round_increments_ms": [
+          1.5495051705036165,
+          1.5501301704883574,
+          1.5498437121620179
+        ]
+      },
+      {
+        "artifact": "outputs\\android\\goal148\\retained-repeat",
+        "samples_per_path": 1800,
+        "fusion_ms": 3.992864485851288,
+        "baseline_ms": 2.442525982034683,
+        "increment_ms": 1.5503385038166049,
+        "same_output_as_headless": true,
+        "round_increments_ms": [
+          1.5498957954940797,
+          1.5500520454902649,
+          1.5508593371372226
+        ]
+      }
+    ],
+    "changes": [
+      "320 threads per 16x16 Guided output tile instead of 512.",
+      "Reuse dead float4 moment storage for half2 horizontal coefficient sums after the existing coefficient barrier. Preserve native half conversion and pack its bits; no additional precision reduction or barrier."
+    ],
+    "improvement_percent": 2.3852864967693455,
+    "quality": {
+      "phone_scenes": [
+        {
+          "scene": "veranda",
+          "byte_identical_to_previous_default": true,
+          "reference": {
+            "finite": true,
+            "rmse_codes": 0.22399933230812452,
+            "p99_codes": 1.0,
+            "max_codes": 8.0,
+            "fraction_pixels_over4": 1.0609567901234568e-05,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+          }
+        },
+        {
+          "scene": "abandoned_tiled_room",
+          "byte_identical_to_previous_default": true,
+          "reference": {
+            "finite": true,
+            "rmse_codes": 0.21913766355060865,
+            "p99_codes": 1.0,
+            "max_codes": 6.0,
+            "fraction_pixels_over4": 1.6878858024691356e-05,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+          }
+        },
+        {
+          "scene": "qwantani_patio",
+          "byte_identical_to_previous_default": true,
+          "reference": {
+            "finite": true,
+            "rmse_codes": 0.22840290798167523,
+            "p99_codes": 1.0,
+            "max_codes": 5.0,
+            "fraction_pixels_over4": 9.645061728395062e-07,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+          }
+        },
+        {
+          "scene": "sundowner_deck",
+          "byte_identical_to_previous_default": true,
+          "reference": {
+            "finite": true,
+            "rmse_codes": 0.22364920885484746,
+            "p99_codes": 1.0,
+            "max_codes": 8.0,
+            "fraction_pixels_over4": 1.0609567901234568e-05,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+          }
+        }
+      ],
+      "stress": [
+        {
+          "artifact": "outputs\\android\\goal148\\retained-odd.json",
+          "accepted": true,
+          "cases": 43,
+          "settings": {
+            "width": 513,
+            "height": 289,
+            "game_format": true,
+            "bracket_ev": 1.2,
+            "sigma": 0.2,
+            "variants": [
+              "guided-fused-reconstruction"
+            ]
+          },
+          "max_temporal_delta_codes": 2.0
+        },
+        {
+          "artifact": "outputs\\android\\goal148\\retained-even.json",
+          "accepted": true,
+          "cases": 43,
+          "settings": {
+            "width": 512,
+            "height": 288,
+            "game_format": true,
+            "bracket_ev": 1.2,
+            "sigma": 0.2,
+            "variants": [
+              "guided-fused-reconstruction"
+            ]
+          },
+          "max_temporal_delta_codes": 2.0
+        },
+        {
+          "artifact": "outputs\\android\\goal148\\retained-bracket3.json",
+          "accepted": true,
+          "cases": 43,
+          "settings": {
+            "width": 513,
+            "height": 289,
+            "game_format": true,
+            "bracket_ev": 3.0,
+            "sigma": 0.2,
+            "variants": [
+              "guided-fused-reconstruction"
+            ]
+          },
+          "max_temporal_delta_codes": 2.0
+        }
+      ],
+      "readme_artifacts_identical_to_previous_default": true,
+      "manifest": "docs/images/comparison/manifest.json",
+      "note": "Added an exact coefficient regression over thin, tiny and odd sizes with random and low-variance guides. D3D12 f32tof16 packing differed from native half conversion and was replaced by a half conversion followed by a bitcast."
+    },
+    "validation": {
+      "unit_tests": 15,
+      "clean_rebuild": {
+        "apply_srgb_compute": true,
+        "baseline_srgb_compute": true,
+        "downsample_compact": true,
+        "reconstruct_compact": true,
+        "reconstruct_ev_fused": true,
+        "reconstruct_guided": true,
+        "reduce_setup_gather": true,
+        "tail_reconstruct": true
+      },
+      "production_spirv_sha256": {
+        "apply_srgb_compute": "dbb70387c0cc4fa0a9a7b7925bc34dac796ebabd556955929cf52d873cfab859",
+        "baseline_srgb_compute": "eddb4100384f6a89e05124f05fdeb9cff58c55c4a67ad1e6d662341a67f96acd",
+        "downsample_compact": "8bd242be6e765e21bcbd883aabec83392f7cc04dfb17c85d5451e77720908b88",
+        "reconstruct_compact": "2fa2dc61d16bc901fc7922452ade0c2502f4050f9632547ef525e7b83ee1d99f",
+        "reconstruct_ev_fused": "0c90a9702dade84056da59488782123fe730b4a55bfd6dfd549beada788f4acd",
+        "reconstruct_guided": "12de76bb6429459211051df6e633d8fdb9528007ae55c2e9c20991575735e8b3",
+        "reduce_setup_gather": "e6fc398ea4d24fa6ea30703d8ae461e8ec026f329c5466349ad22f59d8234803",
+        "tail_reconstruct": "1cbf09739b2a0e45a7e1575d374b90c0f8f23f52fafdea80402efbbad22831e1"
+      },
+      "source_sha256": {
+        "shaders/fusion_compact.slang": "e71c1963400d2f5eb4f372fd5efdcf2b9bd636e858bb164a3f33999f71172bf4",
+        "tools/profiling/android/variants.py": "fc6f9a20a9b59aaadc9c1b4d193c194cddf4b5155529c5b7b704eba084c04c20",
+        "tools/profiling/android/prepare.py": "cea94568c758c51fc4c353f06e5b00111ccfe904b10cc5dd514d84fbbaad3baf",
+        "tools/profiling/android/quality_sweep.py": "ac9173708637312ffa4692eb1310e65813981171f6a2fd319e4efaffc4641cf9",
+        "tests/test_guided_storage.py": "fb24716301a5fb9e976bc4241bdaa957376193b6438dc449dc2623eac354db8a"
+      }
+    },
+    "raw_artifacts": "outputs\\android\\goal148"
+  },
+  "post_gather_screen": {
+    "method": "Same phone/driver/1080p45 graphics HDR joint workload,120framesx2 short screens.",
+    "rows": [
+      {
+        "name": "gather240",
+        "increment_ms": 1.5408593373813626,
+        "chain_ms": 3.982239486110687,
+        "baseline_ms": 2.4413801487293245
+      },
+      {
+        "name": "gather192",
+        "increment_ms": 1.5389322540950774,
+        "chain_ms": 3.9816665694580076,
+        "baseline_ms": 2.44273431536293
+      },
+      {
+        "name": "gather128",
+        "increment_ms": 1.5643489201412208,
+        "chain_ms": 4.0067186521797185,
+        "baseline_ms": 2.4423697320384976
+      },
+      {
+        "name": "gather-sums",
+        "increment_ms": 1.5344530875377655,
+        "chain_ms": 3.9770311529045106,
+        "baseline_ms": 2.442578065366745
+      },
+      {
+        "name": "gather-norenorm-final",
+        "increment_ms": 1.522760379489899,
+        "chain_ms": 3.9661457365036012,
+        "baseline_ms": 2.4433853570137023
+      },
+      {
+        "name": "two-weight-exp",
+        "increment_ms": 1.5339843375492097,
+        "chain_ms": 3.9752082362823487,
+        "baseline_ms": 2.441223898733139
+      },
+      {
+        "name": "hdr16x4",
+        "increment_ms": 1.571197878307343,
+        "chain_ms": 4.013671777009964,
+        "baseline_ms": 2.4424738987026213
+      },
+      {
+        "name": "hdr32x2",
+        "increment_ms": 1.555130170366287,
+        "chain_ms": 3.997551985736847,
+        "baseline_ms": 2.44242181537056
+      },
+      {
+        "name": "hdr4x16",
+        "increment_ms": 1.4985676717472072,
+        "chain_ms": 3.940807195455551,
+        "baseline_ms": 2.4422395237083436
+      }
+    ],
+    "default_changed": false,
+    "findings": [
+      "Retained256threads remains faster than240/192/128 with new two-row Gather work allocation.",
+      "Gather plus common-window sums and all-level pair-weight renormalization omission are being screened separately; not promoted.",
+      "Common-window sums on Gather produce1.53445ms, no further improvement despite A7307registers/0scratch.",
+      "Omitting pair-weight renormalization throughout reconstruction screens at1.52276ms; default/bracket3/sigma0.02 desktop gates and primary phone gate pass. Matched long repeats running, not promoted.",
+      "Two exponentials plus dominant weight1 screens1.53398ms on pre-normalization-change1.53387ms base; no gain, not promoted.",
+      "HDR reduction4x16threads short-screen1.49857ms vs immutable Gather base1.53387ms. Promising; combined direct-weight reconstruction and nearby shapes being screened."
+    ],
+    "normalization_long_first": {
+      "increment_ms": 1.5254947544231414,
+      "chain_ms": 3.968150944787979,
+      "baseline_ms": 2.4426561903648376,
+      "samples_per_path": 1800,
+      "promoted": false
+    },
+    "normalization_long_control": {
+      "increment_ms": 1.533255170900345,
+      "chain_ms": 3.975442611276627,
+      "baseline_ms": 2.4421874403762818,
+      "samples_per_path": 1800
+    },
+    "normalization_integration": "Promoted after interleaved long repeats, four phone scene gates, 16 regression tests and comparison image refresh. Freshly compiled production SPIR-V is byte-identical to measured candidate."
+  },
+  "gather_stage_history": {
+    "control": {
+      "artifact": "outputs\\android\\goal148\\retained-gatherlong-retry-1",
+      "samples_per_path": 1800,
+      "fusion_ms": 3.9922394858665466,
+      "baseline_ms": 2.4413020237312315,
+      "increment_ms": 1.5509374621353151,
+      "same_output_as_headless": true,
+      "round_increments_ms": [
+        1.5508593371372221,
+        1.551119753797531,
+        1.550911420469284
+      ]
+    },
+    "repeats": [
+      {
+        "artifact": "outputs\\android\\goal148\\guided-hybrid256-gatherlong-retry-0",
+        "samples_per_path": 1800,
+        "fusion_ms": 3.9767707362442017,
+        "baseline_ms": 2.4429686903572083,
+        "increment_ms": 1.5338020458869934,
+        "same_output_as_headless": true,
+        "round_increments_ms": [
+          1.5330989209041594,
+          1.533671837556839,
+          1.5344270458717344
+        ]
+      },
+      {
+        "artifact": "outputs\\android\\goal148\\guided-hybrid256-gatherlong-retry-2",
+        "samples_per_path": 1800,
+        "fusion_ms": 3.975755111268997,
+        "baseline_ms": 2.441822857051849,
+        "increment_ms": 1.5339322542171479,
+        "same_output_as_headless": true,
+        "round_increments_ms": [
+          1.5337239208889009,
+          1.534166629211426,
+          1.5338801708850855
+        ]
+      }
+    ],
+    "changes": [
+      "256 threads per 16x16 Guided output tile.",
+      "Two-row Gather reads cover the first four columns; point reads cover the fifth. Preserve 5x5 support, FP32 moments and existing three barriers.",
+      "Retain half row-sum reuse of dead moment storage. Gather code generation has small coefficient-rounding differences; not bit-exact."
+    ],
+    "improvement_percent": 1.1006447713076906,
+    "quality": {
+      "phone_scenes": [
+        {
+          "scene": "veranda",
+          "byte_identical_to_previous_default": true,
+          "reference": {
+            "finite": true,
+            "rmse_codes": 0.22399933230812452,
+            "p99_codes": 1.0,
+            "max_codes": 8.0,
+            "fraction_pixels_over4": 1.0609567901234568e-05,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+          }
+        },
+        {
+          "scene": "abandoned_tiled_room",
+          "byte_identical_to_previous_default": true,
+          "reference": {
+            "finite": true,
+            "rmse_codes": 0.21913766355060865,
+            "p99_codes": 1.0,
+            "max_codes": 6.0,
+            "fraction_pixels_over4": 1.6878858024691356e-05,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+          }
+        },
+        {
+          "scene": "qwantani_patio",
+          "byte_identical_to_previous_default": true,
+          "reference": {
+            "finite": true,
+            "rmse_codes": 0.22840290798167523,
+            "p99_codes": 1.0,
+            "max_codes": 5.0,
+            "fraction_pixels_over4": 9.645061728395062e-07,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+          }
+        },
+        {
+          "scene": "sundowner_deck",
+          "byte_identical_to_previous_default": true,
+          "reference": {
+            "finite": true,
+            "rmse_codes": 0.22364920885484746,
+            "p99_codes": 1.0,
+            "max_codes": 8.0,
+            "fraction_pixels_over4": 1.0609567901234568e-05,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+          }
+        }
+      ],
+      "stress": [
+        {
+          "artifact": "outputs\\android\\goal148\\gather-final-odd.json",
+          "accepted": true
+        },
+        {
+          "artifact": "outputs\\android\\goal148\\gather-final-bracket3.json",
+          "accepted": true
+        },
+        {
+          "artifact": "outputs\\android\\goal148\\quality-guided-hybrid256-even.json",
+          "accepted": true
+        },
+        {
+          "artifact": "outputs\\android\\goal148\\quality-guided-hybrid256-tiny.json",
+          "accepted": true
+        }
+      ],
+      "readme_artifacts_identical_to_previous_default": false,
+      "manifest": "docs/images/comparison/manifest.json",
+      "note": "README comparisons regenerated and visually inspected. Same independent image gates. Existing 1080p random-HDR +4EV control limitation remains documented."
+    },
+    "validation": {
+      "unit_tests": 16,
+      "all_production_spirv_byte_identical_to_measured_candidate": {
+        "baseline_srgb_compute.spv": true,
+        "reconstruct_guided.spv": true,
+        "reduce_setup_gather.spv": true,
+        "apply_srgb_compute.spv": true,
+        "reconstruct_compact.spv": true,
+        "tail_reconstruct.spv": true,
+        "downsample_compact.spv": true,
+        "reconstruct_ev_fused.spv": true
+      },
+      "coefficient_test": "Point-read control versus Gather: atol1e-4 at fixed tiny/thin/odd/480x270 random and smooth inputs; independent image gates unchanged.",
+      "readme_check": true
+    },
+    "raw_artifacts": "outputs/android/goal148/gather-production and guided-hybrid256-gatherlong-retry-{0,2}"
+  },
+  "hdr_group_screen": {
+    "base": "norm-production,1.5246ms",
+    "rows": [
+      {
+        "name": "norm-hdr4x16",
+        "increment_ms": 1.4877343386783597
+      },
+      {
+        "name": "norm-hdr4x8",
+        "increment_ms": 1.310494759672165
+      },
+      {
+        "name": "norm-hdr4x32",
+        "increment_ms": 1.488411421995163
+      },
+      {
+        "name": "norm-hdr2x32",
+        "increment_ms": 1.4372916315765378
+      }
+    ],
+    "status": "Promoted and target met after interleaved long repeats, four independent phone scene gates, regression tests and README comparison refresh.",
+    "long_first": {
+      "increment_ms": 1.3135416345977786,
+      "chain_ms": 3.7563540749588014,
+      "baseline_ms": 2.4428124403610227,
+      "samples_per_path": 1800
+    },
+    "workload_audit": {
+      "control_dispatched_threads": 130560,
+      "candidate_dispatched_threads": 130560,
+      "valid_pixels": 129600,
+      "same_source": true,
+      "same_inverse": true,
+      "same_production_uniforms": true,
+      "pass_counts": [
+        13,
+        13
+      ]
+    },
+    "compiler_identity": {
+      "reconstruct_ev_fused.spv": true,
+      "tail_reconstruct.spv": true,
+      "baseline_srgb_compute.spv": true,
+      "reconstruct_guided.spv": true,
+      "reconstruct_compact.spv": true,
+      "reduce_setup_gather.spv": true,
+      "downsample_compact.spv": true,
+      "apply_srgb_compute.spv": true
+    },
+    "matched_environment_audit": {
+      "device": "Adreno (TM) 830",
+      "driver_version": 2150932486,
+      "identical_driver_files": true,
+      "identical_native_sources": true,
+      "identical_execution_settings": {
+        "dedicated_compute": false,
+        "fps": 45.0,
+        "frames": 600,
+        "graphics_context": true,
+        "graphics_draws": 1,
+        "hdr_producer": true,
+        "joint_submission": true,
+        "rounds": 3,
+        "separate_queue": false,
+        "tile_memory": null,
+        "warmup": 60
+      },
+      "identical_pass_order": true
+    },
+    "diagnostic_pass_medians_ms": {
+      "control": {
+        "reduce_setup": 0.6271093596897126,
+        "pyramids_mip1": 0.12249999700927734,
+        "pyramids_mip2": 0.04570312388420105,
+        "pyramids_mip3": 0.025520832710266114,
+        "pyramids_mip4": 0.019010416202545167,
+        "pyramids_mip5": 0.017786457899093628,
+        "tail_from_mip5": 0.05572916530609131,
+        "reconstruct_mip4": 0.018515624547958374,
+        "reconstruct_mip3": 0.019270832862854005,
+        "reconstruct_ev": 0.17044270417213442,
+        "reconstruct_guided": 0.41632811483573917,
+        "apply_exposure_production": 2.130624947982788
+      },
+      "candidate_first": {
+        "reduce_setup": 0.4174999898071289,
+        "pyramids_mip1": 0.12148437203407288,
+        "pyramids_mip2": 0.04588541554641724,
+        "pyramids_mip3": 0.02528645771598816,
+        "pyramids_mip4": 0.01869791621017456,
+        "pyramids_mip5": 0.017343749576568604,
+        "tail_from_mip5": 0.05539062364768982,
+        "reconstruct_mip4": 0.018463541215896606,
+        "reconstruct_mip3": 0.019427082859039307,
+        "reconstruct_ev": 0.17119791248703004,
+        "reconstruct_guided": 0.4166666564941406,
+        "apply_exposure_production": 2.1307551563129428
+      },
+      "note": "Separately timestamped diagnostics, not additive headline timings; initialization improves and shared apply stays approximately unchanged."
+    }
+  },
+  "normalization_stage_history": {
+    "control": {
+      "artifact": "outputs\\android\\goal148\\gather-production-normlong-1",
+      "samples_per_path": 1800,
+      "fusion_ms": 3.975442611276627,
+      "baseline_ms": 2.4421874403762818,
+      "increment_ms": 1.533255170900345,
+      "same_output_as_headless": true,
+      "round_increments_ms": [
+        1.5333593375644679,
+        1.5336197542247771,
+        1.5326822542476655
+      ]
+    },
+    "repeats": [
+      {
+        "artifact": "outputs\\android\\goal148\\gather-norenorm-final-normlong-0",
+        "samples_per_path": 1800,
+        "fusion_ms": 3.968150944787979,
+        "baseline_ms": 2.4426561903648376,
+        "increment_ms": 1.5254947544231414,
+        "same_output_as_headless": true,
+        "round_increments_ms": [
+          1.5249999627685549,
+          1.525859337747574,
+          1.5257291294174196
+        ]
+      },
+      {
+        "artifact": "outputs\\android\\goal148\\gather-norenorm-final-normlong-2",
+        "samples_per_path": 1800,
+        "fusion_ms": 3.9660415698394775,
+        "baseline_ms": 2.442343690372467,
+        "increment_ms": 1.5236978794670106,
+        "same_output_as_headless": true,
+        "round_increments_ms": [
+          1.5230207961502078,
+          1.5241145461235046,
+          1.5239582961273195
+        ]
+      }
+    ],
+    "changes": [
+      "Retain 256-thread two-row Gather Guided and shared moment-storage reuse.",
+      "Use decoded normalized Gaussian weight pairs directly in residual reconstruction; omit per-level correction for UNORM pair-sum drift. Initial exposure-weight normalization and all pyramid levels remain. This is a measured approximation."
+    ],
+    "improvement_percent": 0.5647366543811816,
+    "quality": {
+      "phone_scenes": [
+        {
+          "scene": "veranda",
+          "byte_identical_to_previous_default": true,
+          "reference": {
+            "finite": true,
+            "rmse_codes": 0.22399933230812452,
+            "p99_codes": 1.0,
+            "max_codes": 8.0,
+            "fraction_pixels_over4": 1.0609567901234568e-05,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+          }
+        },
+        {
+          "scene": "abandoned_tiled_room",
+          "byte_identical_to_previous_default": true,
+          "reference": {
+            "finite": true,
+            "rmse_codes": 0.21913766355060865,
+            "p99_codes": 1.0,
+            "max_codes": 6.0,
+            "fraction_pixels_over4": 1.6878858024691356e-05,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+          }
+        },
+        {
+          "scene": "qwantani_patio",
+          "byte_identical_to_previous_default": true,
+          "reference": {
+            "finite": true,
+            "rmse_codes": 0.22840290798167523,
+            "p99_codes": 1.0,
+            "max_codes": 5.0,
+            "fraction_pixels_over4": 9.645061728395062e-07,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+          }
+        },
+        {
+          "scene": "sundowner_deck",
+          "byte_identical_to_previous_default": true,
+          "reference": {
+            "finite": true,
+            "rmse_codes": 0.22364920885484746,
+            "p99_codes": 1.0,
+            "max_codes": 8.0,
+            "fraction_pixels_over4": 1.0609567901234568e-05,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+          }
+        }
+      ],
+      "stress": [
+        {
+          "artifact": "outputs\\android\\goal148\\quality-gather-norenorm.json",
+          "accepted": true
+        },
+        {
+          "artifact": "outputs\\android\\goal148\\quality-gather-norenorm-bracket3.json",
+          "accepted": true
+        },
+        {
+          "artifact": "outputs\\android\\goal148\\quality-norm-sigma002.json",
+          "accepted": true
+        },
+        {
+          "artifact": "outputs\\android\\goal148\\quality-norm-even.json",
+          "accepted": true
+        }
+      ],
+      "readme_artifacts_identical_to_previous_default": false,
+      "manifest": "docs/images/comparison/manifest.json",
+      "note": "Regenerated and visually inspected comparisons. Existing 1080p random-HDR +4EV control limitation remains; fixed gates unchanged."
+    },
+    "validation": {
+      "unit_tests": 16,
+      "all_production_spirv_byte_identical_to_measured_candidate": {
+        "apply_srgb_compute.spv": true,
+        "downsample_compact.spv": true,
+        "reconstruct_compact.spv": true,
+        "baseline_srgb_compute.spv": true,
+        "reconstruct_ev_fused.spv": true,
+        "tail_reconstruct.spv": true,
+        "reduce_setup_gather.spv": true,
+        "reconstruct_guided.spv": true
+      },
+      "readme_check": true
+    },
+    "raw_artifacts": "outputs/android/goal148/norm-production and gather-norenorm-final-normlong-{0,2}"
+  },
+  "target_margin_ms": 0.16740888621234884,
+  "offline_initialization": {
+    "target": "Adreno730",
+    "tool": "AOC7.0.15",
+    "registers": 13,
+    "scratch_bytes": 0,
+    "note": "Offline compiler projection, not a measured Adreno830 occupancy figure."
+  },
+  "completion_audit": {
+    "original_1588ms_workload_matched": true,
+    "current_default_matches_measured_shader_binaries_and_settings": true,
+    "two_long_repeats_and_all_six_rounds_below_target": true,
+    "four_phone_scenes_pass_and_unchanged_from_previous_default": true,
+    "same_independent_reference_and_fixed_gates": true,
+    "readme_artifacts_current_and_visually_inspected": true,
+    "tests_passed": 16,
+    "modeled_incremental_gbps_45": 0.74774376,
+    "completion_limit": "Single Adreno830/842.6 driver workload. Existing extreme1080p random-HDR+4EV limitation documented; no new failure introduced by final scheduling change."
+  }
+}

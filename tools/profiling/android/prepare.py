@@ -117,7 +117,10 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
             flags += [f"-DWORK_X={variant_config.get('work_x',8)}",f"-DWORK_Y={variant_config.get('work_y',8)}"]
         if module=='fusion_compact':
             flags += [f"-DHALF_ROW_COEFFICIENTS={int(variant_config.get('half_row_coefficients',False))}"]
+            flags += [f"-DREUSE_MOMENT_STORAGE={int(variant_config.get('reuse_moment_storage',False))}"]
             flags += [f"-DDIRECT_BATCH={variant_config.get('direct_batch',2)}", f"-DTAIL_X={variant_config.get('tail_x',8)}"]
+            flags += [f"-DDIRECT_RESIDUAL_WEIGHTS={int(variant_config.get('direct_residual_weights',False))}"]
+            flags += [f"-DGUIDED_GATHER_ROWS={int(variant_config.get('guided_gather_rows',False))}"]
             flags += [f"-DGUIDED_DIRECT_MOMENTS={int(variant_config.get('guided_direct_moments',False))}"]
             flags += [f"-DGUIDED_STATIC_WINDOWS={int(variant_config.get('guided_static_windows',False))}"]
             flags += [f"-DGUIDED_VERTICAL={variant_config.get('guided_vertical',1)}",f"-DGUIDED_THREADS_Y={variant_config.get('guided_threads_y',variant_config.get('tile_y',16))}"]

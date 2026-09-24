@@ -48,7 +48,18 @@ Compared with round two, the four 4K assets (global EV -1, default Fusion settin
 ## Current verification
 
 The optimized mobile preset additionally stores low-resolution log-luminance/guide
-and EV/guide in RG16F, and horizontal Guided coefficient sums in shared half2.
+and EV/guide in RG16F. Horizontal Guided coefficient sums retain half2 precision
+but reuse the dead FP32 moment storage after the existing synchronization barrier.
+Native half conversion precedes bit packing, preserving backend rounding; no new
+precision reduction or barrier is introduced by this storage reuse.
+Guided reads adjacent rows with component gathers plus point reads, preserving
+FP32 moments and the same 5x5 support. Compiler arithmetic grouping can still
+cross a rounding boundary: a random 480x270 coefficient test changed 20 of
+259,200 components, with maximum absolute difference 0.0000782. This is not a
+bit-exact transformation; independent image gates remain required.
+Residual reconstruction consumes the normalized UNORM Gaussian weight pair
+directly, retaining its small quantization drift instead of correcting the pair
+sum at every level. Initial three-exposure normalization remains unchanged.
 These are measured approximations: absolute-guide quantization can lose small
 differences. Moments, variance, intercept construction, vertical sums and fused
 reconstruction stay FP32; the independent viewer keeps its reference precision.

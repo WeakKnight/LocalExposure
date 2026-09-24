@@ -1,8 +1,19 @@
+// The mobile residual path can consume the normalized Gaussian pair directly.
+// This retains UNORM quantization drift instead of renormalizing it at each level.
+#ifndef DIRECT_RESIDUAL_WEIGHTS
+#define DIRECT_RESIDUAL_WEIGHTS 0
+#endif
+#ifndef GUIDED_GATHER_ROWS
+#define GUIDED_GATHER_ROWS 0
+#endif
 #ifndef DIRECT_BATCH
 #define DIRECT_BATCH 2
 #endif
 #ifndef HALF_ROW_COEFFICIENTS
 #define HALF_ROW_COEFFICIENTS 0
+#endif
+#ifndef REUSE_MOMENT_STORAGE
+#define REUSE_MOMENT_STORAGE 0
 #endif
 #ifndef TAIL_X
 #define TAIL_X 8
@@ -114,6 +125,9 @@
 #endif
 #if GUIDED_DIRECT_MOMENTS && (!SEPARABLE_GUIDED || !PRECOMPUTED_EV || MOMENT_INPUT || GUIDED_RADIUS != 2)
 #error Direct moments require precomputed EV and separable radius-two Guided
+#endif
+#if GUIDED_GATHER_ROWS && (!GUIDED_DIRECT_MOMENTS || (TILE_Y % 2) != 0)
+#error Gather rows require direct radius-two moments and an even output tile height
 #endif
 #if GUIDED_VERTICAL != 1 && GUIDED_VERTICAL != 2
 #error Unsupported vertical Guided batch
@@ -365,7 +379,9 @@ float reconstructValue(uint2 pixel, uint w, uint h)
 #else
     float2 weights=layerWeights[pixel];
 #endif
+    #if !DIRECT_RESIDUAL_WEIGHTS
     weights/=max(weights.x+weights.y+max(1.0-weights.x-weights.y,0.0),1e-20);
+#endif
     float2 contribution=detail*weights;
     float value=contribution.x+contribution.y;
 #else
@@ -490,7 +506,9 @@ void reconstruct_ev_fused(uint3 tid : SV_DispatchThreadID, uint3 local : SV_Grou
         float2 uv=(float2(p)+.5)/float2(gw,gh);
         float2 detail=mip2Luminance[p].xy-mip3Luminance.SampleLevel(linearSampler,uv,0).xy;
         float2 weights=mip2Weights[p];
-        weights/=max(weights.x+weights.y+max(1.0-weights.x-weights.y,0.0),1e-20);
+        #if !DIRECT_RESIDUAL_WEIGHTS
+    weights/=max(weights.x+weights.y+max(1.0-weights.x-weights.y,0.0),1e-20);
+#endif
         float2 contribution=detail*weights;
         mip2Result[lane]=contribution.x+contribution.y+previousResult.SampleLevel(linearSampler,uv,0);
     }
@@ -500,7 +518,9 @@ void reconstruct_ev_fused(uint3 tid : SV_DispatchThreadID, uint3 local : SV_Grou
         float2 uv=(float2(p)+.5)/float2(pw,ph);
         float2 detail=coarseLuminance[p].xy-mip2Luminance.SampleLevel(linearSampler,uv,0).xy;
         float2 weights=mip1Weights[p];
-        weights/=max(weights.x+weights.y+max(1.0-weights.x-weights.y,0.0),1e-20);
+        #if !DIRECT_RESIDUAL_WEIGHTS
+    weights/=max(weights.x+weights.y+max(1.0-weights.x-weights.y,0.0),1e-20);
+#endif
         float2 contribution=detail*weights;
         float2 pos=uv*float2(gw,gh)-.5;
         int2 ip=int2(floor(pos))-mip2Origin;float2 f=frac(pos);uint index=ip.y*7+ip.x;
@@ -517,7 +537,9 @@ void reconstruct_ev_fused(uint3 tid : SV_DispatchThreadID, uint3 local : SV_Grou
     float previous=lerp(lerp(mip1Result[index],mip1Result[index+1],f.x),lerp(mip1Result[index+10],mip1Result[index+11],f.x),f.y);
     float2 detail=fineLuminance[tid.xy].xy-coarseLuminance.SampleLevel(linearSampler,uv,0).xy;
     float2 weights=layerWeights[tid.xy];
+    #if !DIRECT_RESIDUAL_WEIGHTS
     weights/=max(weights.x+weights.y+max(1.0-weights.x-weights.y,0.0),1e-20);
+#endif
     float2 contribution=detail*weights;
     float baseline=baseLightness[tid.xy];
     float lightness=(contribution.x+contribution.y+previous)/RESIDUAL_SCALE+baseline;
@@ -588,6 +610,23 @@ groupshared float2 fusedCoefficients[coefficientPitch*coefficientHeight];
 static const uint momentPitch=coefficientPitch+SHARED_PADDING;
 static const uint rowCoefficientPitch=TILE_X+SHARED_PADDING;
 groupshared float4 rowMoments[momentPitch*inputHeight];
+#if REUSE_MOMENT_STORAGE && HALF_ROW_COEFFICIENTS
+// The coefficient-publication barrier ends every moment read before horizontal
+// sums are written. Reuse those dead words without another barrier or rounding.
+void storeRowCoefficients(uint index, float2 value)
+{
+    // Preserve the native half conversion. f32tof16 can round differently on
+    // D3D12, so pack the converted values' bits instead of converting again.
+    half2 rounded = half2(value);
+    uint packed = uint(asuint16(rounded.x)) | (uint(asuint16(rounded.y)) << 16);
+    rowMoments[index >> 2][index & 3] = asfloat(packed);
+}
+float2 loadRowCoefficients(uint index)
+{
+    uint packed = asuint(rowMoments[index >> 2][index & 3]);
+    return float2(f16tof32(packed & 65535), f16tof32(packed >> 16));
+}
+#else
 #if HALF_ROW_COEFFICIENTS
 // Round only the horizontal coefficient sums. Moments, variance, fitted
 // intercepts and the final vertical accumulation retain FP32 arithmetic.
@@ -603,6 +642,8 @@ void storeRowCoefficients(uint index, float2 value)
     rowCoefficients[index]=value;
 #endif
 }
+float2 loadRowCoefficients(uint index) { return float2(rowCoefficients[index]); }
+#endif
 #endif
 
 [shader("compute")]
@@ -686,6 +727,34 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     // Read-only input permits redundant cached loads instead of a shared tile
     // publication barrier. Keep the same tile anchor and FP32 moment order.
     float anchor=compactSource[clamp(origin,int2(0),int2(w-1,h-1))].y;
+#if GUIDED_GATHER_ROWS
+    // A Gather covers two adjacent rows. Integrate columns 0..3 with four
+    // component gathers, then load column 4 directly. Keep the same anchor,
+    // five-point support and FP32 accumulation before the existing barrier.
+    for(uint task=lane;task<coefficientPitch*(inputHeight/2);task+=TILE_X*GUIDED_THREADS_Y) {
+        uint col=task%coefficientPitch,row=(task/coefficientPitch)*2;
+        float4 first=0,second=0;
+        [unroll] for(uint pair=0;pair<2;pair++) {
+            float2 uv=(float2(origin)+float2(col+pair*2,row)-float(2*GUIDED_RADIUS)+1.)/float2(w,h);
+            float4 e=compactSource.GatherRed(linearSampler,uv);
+            float4 g=compactSource.GatherGreen(linearSampler,uv)-anchor;
+            first+=float4(g.w,e.w,g.w*g.w,g.w*e.w);
+            second+=float4(g.x,e.x,g.x*g.x,g.x*e.x);
+            if(pair<2) {
+                first+=float4(g.z,e.z,g.z*g.z,g.z*e.z);
+                second+=float4(g.y,e.y,g.y*g.y,g.y*e.y);
+            }
+        }
+        int2 last=origin+int2(col+4,row)-2*GUIDED_RADIUS;
+        float2 last0=compactSource[clamp(last,int2(0),int2(w-1,h-1))];
+        float2 last1=compactSource[clamp(last+int2(0,1),int2(0),int2(w-1,h-1))];
+        float g0=last0.y-anchor,g1=last1.y-anchor;
+        first+=float4(g0,last0.x,g0*g0,g0*last0.x);
+        second+=float4(g1,last1.x,g1*g1,g1*last1.x);
+        rowMoments[row*momentPitch+col]=first;
+        rowMoments[(row+1)*momentPitch+col]=second;
+    }
+#else
     static const uint directChunks=(coefficientPitch+DIRECT_BATCH-1)/DIRECT_BATCH;
     for(uint task=lane;task<directChunks*inputHeight;task+=TILE_X*GUIDED_THREADS_Y) {
         uint row=task/directChunks,col=(task%directChunks)*DIRECT_BATCH;
@@ -702,6 +771,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
             rowMoments[row*momentPitch+col+j]=moments;
         }
     }
+#endif
     GroupMemoryBarrierWithGroupSync();
 #endif
 #if GUIDED_VERTICAL == 2
@@ -816,7 +886,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     for(uint task=lane;task<TILE_X*((TILE_Y+1)/2);task+=TILE_X*GUIDED_THREADS_Y) {
         uint col=task%TILE_X,row=(task/TILE_X)*2;
         float2 cached[6];
-        [unroll] for(uint k=0;k<6;k++) cached[k]=rowCoefficients[min(row+k,coefficientHeight-1)*rowCoefficientPitch+col];
+        [unroll] for(uint k=0;k<6;k++) cached[k]=loadRowCoefficients(min(row+k,coefficientHeight-1)*rowCoefficientPitch+col);
         [unroll] for(uint j=0;j<2;j++) {
             uint2 pixel=uint2(origin)+uint2(col,row+j);
             if(row+j<TILE_Y && pixel.x<w && pixel.y<h) {
@@ -830,7 +900,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
 #else
     if(tid.x>=w || tid.y>=h) return;
     float2 sum=0;
-    for(uint y=0;y<=2*GUIDED_RADIUS;y++)sum+=rowCoefficients[(localID.y+y)*rowCoefficientPitch+localID.x];
+    for(uint y=0;y<=2*GUIDED_RADIUS;y++)sum+=loadRowCoefficients((localID.y+y)*rowCoefficientPitch+localID.x);
 #endif
 #else
     if(tid.x>=w || tid.y>=h) return;
@@ -933,7 +1003,9 @@ void tail_reconstruct(uint3 local : SV_GroupThreadID)
             if(!coarsest){TailSample coarse=sampleTail(coarseOffset,coarseSize,(float2(i%size.x,i/size.x)+.5)/float2(size));detail-=coarse.lightness.rgb;previous=coarse.reconstruction;}
 #if RESIDUAL_PYRAMID
             float2 weights=tailWeights[index];
-            weights/=max(weights.x+weights.y+max(1.0-weights.x-weights.y,0.0),1e-20);
+            #if !DIRECT_RESIDUAL_WEIGHTS
+    weights/=max(weights.x+weights.y+max(1.0-weights.x-weights.y,0.0),1e-20);
+#endif
             float2 contribution=detail.xy*weights;
             float value=(contribution.x+contribution.y)+previous;
 #else

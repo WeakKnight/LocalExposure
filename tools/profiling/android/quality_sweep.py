@@ -14,7 +14,7 @@ def codes(linear):
 class Candidate:
     def __init__(self,device,mapper,variant):
         self.device,self.mapper,self.config=device,mapper,VARIANTS[variant]
-        mapping={'GUIDED_BATCH':('guided_batch',1),'GUIDED_SLIDING':('guided_sliding',False),'WAVE_REDUCTION':('wave_reduction',False),'SHARED_PADDING':('shared_padding',0),'HALF_MOMENT_PRODUCTS':('half_moment_products',False),'GATHER_X':('gather_x',8),'GATHER_Y':('gather_y',8),'HALF_GATHER':('half_gather',False),'SCALAR_REDUCTION':('scalar_reduction',False),'LOG_PRODUCT':('log_product',False),'MOMENT_INPUT':('moment_input',False),'PACKED_RESIDUAL':('packed_residual',False),'RESIDUAL_PYRAMID':('residual_pyramid',False),'CURVE_LOG':('curve_log',False),'PRECOMPUTED_EV':('precomputed_ev',False),'SINGLE_WEIGHT':('single_weight',False),'REUSE_SHARED':('reuse_shared',False),'REDUCTION_LOAD':('reduction_load',False),'REDUCTION_GRID':('reduction_grid',4),'GUIDED_RADIUS':('guided_radius',2),'CACHED_BASELINE':('cached_baseline',False),'LOG_EXPOSURE':('log_exposure',False),'TILE_X':('tile_x',16),'TILE_Y':('tile_y',16),'WORK_X':('work_x',8),'WORK_Y':('work_y',8),'SEPARABLE_GUIDED':('separable_guided',False)}
+        mapping={'GUIDED_VERTICAL':('guided_vertical',1),'GUIDED_THREADS_Y':('guided_threads_y',self.config.get('tile_y',16)),'GUIDED_BATCH':('guided_batch',1),'GUIDED_SLIDING':('guided_sliding',False),'WAVE_REDUCTION':('wave_reduction',False),'SHARED_PADDING':('shared_padding',0),'HALF_MOMENT_PRODUCTS':('half_moment_products',False),'GATHER_X':('gather_x',8),'GATHER_Y':('gather_y',8),'HALF_GATHER':('half_gather',False),'SCALAR_REDUCTION':('scalar_reduction',False),'LOG_PRODUCT':('log_product',False),'MOMENT_INPUT':('moment_input',False),'PACKED_RESIDUAL':('packed_residual',False),'RESIDUAL_PYRAMID':('residual_pyramid',False),'CURVE_LOG':('curve_log',False),'PRECOMPUTED_EV':('precomputed_ev',False),'SINGLE_WEIGHT':('single_weight',False),'REUSE_SHARED':('reuse_shared',False),'REDUCTION_LOAD':('reduction_load',False),'REDUCTION_GRID':('reduction_grid',4),'GUIDED_RADIUS':('guided_radius',2),'CACHED_BASELINE':('cached_baseline',False),'LOG_EXPOSURE':('log_exposure',False),'TILE_X':('tile_x',16),'TILE_Y':('tile_y',16),'WORK_X':('work_x',8),'WORK_Y':('work_y',8),'SEPARABLE_GUIDED':('separable_guided',False)}
         defines={key:str(int(self.config.get(name,default))) for key,(name,default) in mapping.items()}
         defines['RESIDUAL_SCALE']=str(self.config.get('residual_scale',1.0))
         defines['PACKED_WEIGHT_BIAS']=str(self.config.get('packed_weight_bias',0.0))
@@ -34,7 +34,11 @@ class Candidate:
         final=m.create_texture(source.width,source.height,spy.Format.rgba16_float)
         view=lambda t,mip=0:t.create_view(mip=mip,mip_count=1)
         enc=self.device.create_command_encoder()
-        def dispatch(name,width,height,**bindings):self.kernels[name].dispatch(thread_count=[width,height,1],vars=bindings,command_encoder=enc)
+        def dispatch(name,width,height,**bindings):
+            if name=='reconstruct_guided' and self.config.get('guided_vertical'):
+                width=((width+15)//16)*16
+                height=((height+15)//16)*self.config.get('guided_threads_y',16)
+            self.kernels[name].dispatch(thread_count=[width,height,1],vars=bindings,command_encoder=enc)
         if self.config.get('separable_reduction'):
             horizontal=m.create_texture(w,h*4,spy.Format.rg32_float)
             dispatch('reduce_horizontal',w,h*4,fullSource=source,horizontalOutput=horizontal,linearSampler=m.sampler)

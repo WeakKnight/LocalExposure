@@ -4,6 +4,11 @@
 
 **Latest production optimization:** [two-hour residual/Gather experiments](twohour-optimization.md), including graphics-produced HDR input, joint submissions, image quality gates, and nominal incremental bandwidth. This supersedes compute-only headless timing as evidence for game performance. The offline reports below remain historical compiler records.
 
+The mobile benchmark now defaults to `guided-vertical2-t256`, R11G11B10 input
+and RGBA8 sRGB output. [Vertical Guided reuse](experiments/guided-vertical-reuse.md)
+is retained after two matched phone comparisons. Use `--variant gather-reduction`
+for the previous control or `--variant lossless` for the original algorithm.
+
 ## Scope: production runtime only
 
 Optimization targets the actual Fusion Local Exposure runtime. Viewer presentation, comparison images, and visualization/debug outputs are excluded from production cost and claimed benefits. Removing those features is not an algorithm optimization.

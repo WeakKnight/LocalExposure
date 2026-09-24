@@ -1,6 +1,7 @@
 """Explicit profiling presets; experimental entries are not runtime defaults.
 
-Retained algorithm: gather-reduction. Output integration alternatives:
+Default mobile algorithm: guided-vertical2-t256. Frozen control: gather-reduction.
+Output integration alternatives:
 gather-work16 and gather-fragment. See docs/performance/twohour-optimization.md.
 The remaining presets preserve experiments and independent historical controls.
 """
@@ -74,3 +75,10 @@ VARIANTS["wave-reduction"] = {**VARIANTS["gather-reduction"], "cooperative_reduc
 for batch in (2,4):
     VARIANTS[f"guided-batch{batch}"] = {**VARIANTS["gather-reduction"], "guided_batch": batch}
 VARIANTS["guided-sliding4"] = {**VARIANTS["guided-batch4"], "guided_sliding": True}
+
+# Vertical reuse: 256 threads is retained; 128 is a rejected experiment.
+# Same 16x16 output tile. See guided-vertical-reuse.md.
+for threads_y in (16,8):
+    VARIANTS[f"guided-vertical2-t{threads_y*16}"] = {**VARIANTS["gather-reduction"], "guided_vertical": 2, "guided_threads_y": threads_y}
+
+DEFAULT_VARIANT = "guided-vertical2-t256"

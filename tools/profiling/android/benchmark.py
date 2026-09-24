@@ -239,10 +239,10 @@ def main():
     pacing=ap.add_mutually_exclusive_group()
     pacing.add_argument('--interval-ms',type=float)
     pacing.add_argument('--fps',type=float,help='Nominal submission cadence and average bandwidth accounting, e.g. 45')
-    ap.add_argument('--source-format',choices=['rgba32_float','r11g11b10_float'],default='rgba32_float')
-    ap.add_argument('--output-format',choices=['rgba16_float','rgba8_srgb'],default='rgba16_float',help='rgba8_srgb uses a real offscreen sRGB color attachment and fragment shader')
-    from .quality import VARIANTS
-    ap.add_argument('--variant',choices=list(VARIANTS),default='lossless',help='Approximate candidates imply fused guided and require sRGB output')
+    ap.add_argument('--source-format',choices=['rgba32_float','r11g11b10_float'],default='r11g11b10_float')
+    ap.add_argument('--output-format',choices=['rgba16_float','rgba8_srgb'],default='rgba8_srgb',help='rgba8_srgb uses a real offscreen sRGB color attachment and fragment shader')
+    from .variants import VARIANTS, DEFAULT_VARIANT
+    ap.add_argument('--variant',choices=list(VARIANTS),default=DEFAULT_VARIANT,help='Approximate candidates imply fused guided and require sRGB output')
     ap.add_argument('--fused-guided',action='store_true',help='Also fuse finest reconstruction, inverse and both guided stages; implies --compact')
     ap.add_argument('--compact',action='store_true',help='Validate production pass fusion and compact FP32 luminance/guide storage against the unfused graph')
     ap.add_argument('--out',type=Path)

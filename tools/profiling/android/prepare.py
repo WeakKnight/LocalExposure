@@ -114,6 +114,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
         if module in ('fusion_compact','present'):
             flags += [f"-DWORK_X={variant_config.get('work_x',8)}",f"-DWORK_Y={variant_config.get('work_y',8)}"]
         if module=='fusion_compact':
+            flags += [f"-DGUIDED_VERTICAL={variant_config.get('guided_vertical',1)}",f"-DGUIDED_THREADS_Y={variant_config.get('guided_threads_y',variant_config.get('tile_y',16))}"]
             flags += [f"-DGUIDED_BATCH={variant_config.get('guided_batch',1)}",f"-DGUIDED_SLIDING={int(variant_config.get('guided_sliding',False))}"]
             flags += [f"-DWAVE_REDUCTION={int(variant_config.get('wave_reduction',False))}"]
             flags += [f"-DSHARED_PADDING={variant_config.get('shared_padding',0)}",f"-DHALF_MOMENT_PRODUCTS={int(variant_config.get('half_moment_products',False))}",f"-DREDUCTION_GRID={variant_config.get('reduction_grid',4)}",f"-DGUIDED_RADIUS={variant_config.get('guided_radius',2)}",f"-DCACHED_BASELINE={int(variant_config.get('cached_baseline',False))}",f"-DLOG_EXPOSURE={int(variant_config.get('log_exposure',False))}",f"-DTILE_X={variant_config.get('tile_x',16)}",f"-DTILE_Y={variant_config.get('tile_y',16)}",f"-DSEPARABLE_GUIDED={int(variant_config.get('separable_guided',False))}",f"-DREDUCTION_LOAD={int(variant_config.get('reduction_load',False))}",f"-DREUSE_SHARED={int(variant_config.get('reuse_shared',False))}",f"-DSINGLE_WEIGHT={int(variant_config.get('single_weight',False))}",f"-DPRECOMPUTED_EV={int(variant_config.get('precomputed_ev',False))}",f"-DCURVE_LOG={int(variant_config.get('curve_log',False))}",f"-DRESIDUAL_PYRAMID={int(variant_config.get('residual_pyramid',False))}",f"-DPACKED_RESIDUAL={int(variant_config.get('packed_residual',False))}",f"-DPACKED_WEIGHT_BIAS={variant_config.get('packed_weight_bias',0.0)}",f"-DRESIDUAL_SCALE={variant_config.get('residual_scale',1.0)}",f"-DMOMENT_INPUT={int(variant_config.get('moment_input',False))}",f"-DLOG_PRODUCT={int(variant_config.get('log_product',False))}",f"-DSCALAR_REDUCTION={int(variant_config.get('scalar_reduction',False))}",f"-DHALF_GATHER={int(variant_config.get('half_gather',False))}",f"-DGATHER_X={variant_config.get('gather_x',8)}",f"-DGATHER_Y={variant_config.get('gather_y',8)}"]
@@ -270,6 +271,8 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
                 fineLuminance=view('luminance'),coarseLuminance=view('luminance',min(1,levels-1)),
                 layerWeights=view('weights'),previousResult=view('reconstructed',min(1,levels-1)),
                 averagedOutput=view('averaged'),inverseLut=view('inverse'),**(dict(momentSource=view('moments')) if variant_config.get('moment_input') else {})),dict(isCoarsest=levels==1))
+            if variant_config.get('guided_vertical'):
+                manifest['passes'][-1]['dispatch_groups']=[(w+15)//16,(h+15)//16,1]
             fused_passes=manifest['passes'][:]
             manifest['passes']=[]
             for p in compact_passes:

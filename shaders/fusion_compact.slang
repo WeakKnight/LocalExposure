@@ -4,6 +4,12 @@
 // The legacy graph remains the independent numerical reference.
 #include "guided.slang"
 #include "zcurve.slang"
+#ifndef GUIDED_VERTICAL
+#define GUIDED_VERTICAL 1
+#endif
+#ifndef GUIDED_THREADS_Y
+#define GUIDED_THREADS_Y TILE_Y
+#endif
 #ifndef GUIDED_BATCH
 #define GUIDED_BATCH 1
 #endif
@@ -90,6 +96,15 @@
 #endif
 #ifndef TILE_Y
 #define TILE_Y 16
+#endif
+#if GUIDED_VERTICAL != 1 && GUIDED_VERTICAL != 2
+#error Unsupported vertical Guided batch
+#endif
+#if GUIDED_VERTICAL == 2 && (!SEPARABLE_GUIDED || MOMENT_INPUT || GUIDED_RADIUS != 2)
+#error Vertical reuse requires separable radius-two Guided with local moments
+#endif
+#if GUIDED_THREADS_Y != TILE_Y && GUIDED_VERTICAL != 2
+#error Decoupled Guided threads require vertical output batching
 #endif
 static const uint inputPitch=TILE_X+4*GUIDED_RADIUS;
 static const uint inputHeight=TILE_Y+4*GUIDED_RADIUS;
@@ -497,7 +512,7 @@ groupshared float2 rowCoefficients[rowCoefficientPitch*coefficientHeight];
 #endif
 
 [shader("compute")]
-[numthreads(TILE_X,TILE_Y,1)]
+[numthreads(TILE_X,GUIDED_THREADS_Y,1)]
 void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_GroupThreadID,
                         uint3 groupID : SV_GroupID)
 {
@@ -506,7 +521,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     uint lane=localID.y*TILE_X+localID.x;
     int2 origin=int2(groupID.xy*uint2(TILE_X,TILE_Y));
 #if !MOMENT_INPUT
-    for(uint i=lane; i<inputPitch*inputHeight; i+=TILE_X*TILE_Y)
+    for(uint i=lane; i<inputPitch*inputHeight; i+=TILE_X*GUIDED_THREADS_Y)
     {
         int2 p=clamp(origin+int2(i%inputPitch,i/inputPitch)-2*GUIDED_RADIUS,int2(0),int2(w-1,h-1));
         float2 lg=compactSource[p];
@@ -525,7 +540,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     // Each lane owns a short run of adjacent windows. Cache their overlapping
     // inputs in registers; preserve the tile anchor and FP32 moment products.
     static const uint chunks=(coefficientPitch+GUIDED_BATCH-1)/GUIDED_BATCH;
-    for(uint chunk=lane;chunk<chunks*inputHeight;chunk+=TILE_X*TILE_Y) {
+    for(uint chunk=lane;chunk<chunks*inputHeight;chunk+=TILE_X*GUIDED_THREADS_Y) {
         uint row=chunk/chunks,col=(chunk%chunks)*GUIDED_BATCH;
         float4 values[GUIDED_BATCH+2*GUIDED_RADIUS];
         [unroll] for(uint x=0;x<GUIDED_BATCH+2*GUIDED_RADIUS;x++) {
@@ -549,7 +564,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
         }
     }
 #else
-    for(uint i=lane;i<coefficientPitch*inputHeight;i+=TILE_X*TILE_Y)
+    for(uint i=lane;i<coefficientPitch*inputHeight;i+=TILE_X*GUIDED_THREADS_Y)
     {
         uint row=i/coefficientPitch, col=i%coefficientPitch;
         float4 moments=0;
@@ -573,7 +588,29 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     GroupMemoryBarrierWithGroupSync();
 #endif
 #endif
-    for(uint i=lane; i<coefficientPitch*coefficientHeight; i+=TILE_X*TILE_Y)
+#if GUIDED_VERTICAL == 2
+    // Two adjacent vertical windows share six rows. Preserve summation order.
+    for(uint task=lane;task<coefficientPitch*((coefficientHeight+1)/2);task+=TILE_X*GUIDED_THREADS_Y) {
+        uint col=task%coefficientPitch,row=(task/coefficientPitch)*2;
+        int2 first=clamp(origin+int2(col,row)-GUIDED_RADIUS,int2(0),int2(w-1,h-1));
+        int2 start=first-origin+GUIDED_RADIUS;
+        float4 cached[6];
+        [unroll] for(uint k=0;k<6;k++) cached[k]=rowMoments[min(start.y+int(k),int(inputHeight-1))*momentPitch+start.x];
+        [unroll] for(uint j=0;j<2;j++) if(row+j<coefficientHeight) {
+            int cy=clamp(origin.y+int(row+j)-GUIDED_RADIUS,0,int(h-1));
+            uint offset=uint(cy-first.y);
+            float4 moments=0;
+            [unroll] for(uint k=0;k<5;k++) moments+=cached[offset+k];
+            moments/=25.0;
+            float variance=max(moments.z-moments.x*moments.x,0.0);
+            half covariance=half(moments.w-moments.x*moments.y);
+            half denominator=half(variance+0.04);
+            half aa=covariance/denominator;
+            fusedCoefficients[(row+j)*coefficientPitch+col]=float2(float(aa),moments.y-float(aa)*(moments.x+anchor));
+        }
+    }
+#else
+    for(uint i=lane; i<coefficientPitch*coefficientHeight; i+=TILE_X*GUIDED_THREADS_Y)
     {
         int2 p=clamp(origin+int2(i%coefficientPitch,i/coefficientPitch)-GUIDED_RADIUS,int2(0),int2(w-1,h-1));
         int2 centerIndex=p-origin+2*GUIDED_RADIUS;
@@ -612,11 +649,12 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
         half a=covariance/denominator;
         fusedCoefficients[i]=float2(float(a),meanE-float(a)*(meanG+center));
     }
+#endif
     GroupMemoryBarrierWithGroupSync();
 #if SEPARABLE_GUIDED
 #if GUIDED_BATCH > 1
     static const uint coefficientChunks=(TILE_X+GUIDED_BATCH-1)/GUIDED_BATCH;
-    for(uint chunk=lane;chunk<coefficientChunks*coefficientHeight;chunk+=TILE_X*TILE_Y) {
+    for(uint chunk=lane;chunk<coefficientChunks*coefficientHeight;chunk+=TILE_X*GUIDED_THREADS_Y) {
         uint row=chunk/coefficientChunks,col=(chunk%coefficientChunks)*GUIDED_BATCH;
         float2 values[GUIDED_BATCH+2*GUIDED_RADIUS];
         [unroll] for(uint x=0;x<GUIDED_BATCH+2*GUIDED_RADIUS;x++)
@@ -637,7 +675,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
         }
     }
 #else
-    for(uint i=lane;i<TILE_X*coefficientHeight;i+=TILE_X*TILE_Y) {
+    for(uint i=lane;i<TILE_X*coefficientHeight;i+=TILE_X*GUIDED_THREADS_Y) {
         uint row=i/TILE_X,col=i%TILE_X;
         float2 sum=0;
         for(uint x=0;x<=2*GUIDED_RADIUS;x++)sum+=fusedCoefficients[row*coefficientPitch+col+x];
@@ -649,9 +687,26 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     }
 #endif
     GroupMemoryBarrierWithGroupSync();
+#if GUIDED_VERTICAL == 2
+    for(uint task=lane;task<TILE_X*((TILE_Y+1)/2);task+=TILE_X*GUIDED_THREADS_Y) {
+        uint col=task%TILE_X,row=(task/TILE_X)*2;
+        float2 cached[6];
+        [unroll] for(uint k=0;k<6;k++) cached[k]=rowCoefficients[min(row+k,coefficientHeight-1)*rowCoefficientPitch+col];
+        [unroll] for(uint j=0;j<2;j++) {
+            uint2 pixel=uint2(origin)+uint2(col,row+j);
+            if(row+j<TILE_Y && pixel.x<w && pixel.y<h) {
+                float2 sum=0;
+                [unroll] for(uint k=0;k<5;k++)sum+=cached[j+k];
+                averagedOutput[pixel]=sum/25.0;
+            }
+        }
+    }
+    return;
+#else
     if(tid.x>=w || tid.y>=h) return;
     float2 sum=0;
     for(uint y=0;y<=2*GUIDED_RADIUS;y++)sum+=rowCoefficients[(localID.y+y)*rowCoefficientPitch+localID.x];
+#endif
 #else
     if(tid.x>=w || tid.y>=h) return;
     float2 sum=0;
@@ -659,7 +714,9 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
         for(int x=-GUIDED_RADIUS; x<=GUIDED_RADIUS; ++x)
             sum+=fusedCoefficients[(localID.y+y+GUIDED_RADIUS)*coefficientPitch+localID.x+x+GUIDED_RADIUS];
 #endif
+#if GUIDED_VERTICAL != 2
     averagedOutput[tid.xy]=sum/float((2*GUIDED_RADIUS+1)*(2*GUIDED_RADIUS+1));
+#endif
 }
 
 // Both packed pyramids use the same four bilinear coordinates and arithmetic.

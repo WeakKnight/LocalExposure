@@ -91,7 +91,7 @@ static void runActivity(ActivityState* state,ANativeWindow* window) {
         const bool dedicated=settings.value("dedicated_compute",false),separate=settings.value("separate_queue",false);
         const bool crossQueue=dedicated||separate;
         const bool joint=settings.value("joint_submission",false);
-        Runner r(false,true,separate,dedicated);r.load();Display display(r,window);
+        Runner r(false,true,separate,dedicated,!settings.value("tile_memory",json()).is_null());r.load();Display display(r,window);
         VkQueue computeQueue=r.queue;VkSemaphore toGraphics{},toCompute{},toPresent{};
         if(crossQueue){
             VkSemaphoreCreateInfo si{VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
@@ -99,7 +99,7 @@ static void runActivity(ActivityState* state,ANativeWindow* window) {
             VkSubmitInfo initial{VK_STRUCTURE_TYPE_SUBMIT_INFO};initial.signalSemaphoreCount=1;initial.pSignalSemaphores=&toGraphics;
             VK(vkQueueSubmit(computeQueue,1,&initial,VK_NULL_HANDLE));
         }
-        Pass graphics=r.passes.back();r.passes.pop_back();r.productionCount--;
+        Pass graphics=r.passes.back();r.passes.pop_back();
         VkCommandBuffer chain=r.cmd,context;
         VkCommandBufferAllocateInfo ai{VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO};ai.commandPool=r.graphicsPool;ai.level=VK_COMMAND_BUFFER_LEVEL_PRIMARY;ai.commandBufferCount=1;VK(vkAllocateCommandBuffers(r.device,&ai,&context));
         r.cmd=context;r.begin();vkCmdResetQueryPool(r.cmd,r.queries,0,2);
@@ -107,7 +107,8 @@ static void runActivity(ActivityState* state,ANativeWindow* window) {
         for(int draw=0;draw<settings.value("graphics_draws",1);draw++){r.dispatch(graphics);r.barrier(true,true);}
         r.barrier(true,false);
         vkCmdWriteTimestamp(r.cmd,VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,r.queries,1);VK(vkEndCommandBuffer(r.cmd));r.cmd=chain;
-        json result={{"device",r.properties.deviceName},{"compute_family",r.family},{"graphics_family",r.graphicsFamily},{"config",settings},{"blocks",json::array()}};
+        json result={{"device",r.properties.deviceName},{"driver_version",r.properties.driverVersion},{"api_version",r.properties.apiVersion},{"compute_family",r.family},{"graphics_family",r.graphicsFamily},{"config",settings},{"blocks",json::array()}};
+        result["tile_memory"]=r.tileReport;
         const int warmup=settings.value("warmup",30),frames=settings.value("frames",90),rounds=settings.value("rounds",3);
         const bool preceding=settings.value("graphics_context",true);
         for(int round=0;round<rounds && !state->stop;round++) for(int phase=0;phase<2 && !state->stop;phase++) {

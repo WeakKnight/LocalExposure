@@ -36,7 +36,10 @@ public:
     double lastSubmitQueryMs{};
     bool hasGraphics=false;
     std::string calibrationExtension;
-    Runner(bool calibrate=false,bool windowed=false,bool separateQueue=false,bool dedicatedCompute=false) {
+    VkDeviceMemory tileMemory{}; PFN_vkCmdBindTileMemoryQCOM bindTile{};
+    json tileReport=json::object();
+    std::map<std::string,VkImage> tileImages;
+    Runner(bool calibrate=false,bool windowed=false,bool separateQueue=false,bool dedicatedCompute=false,bool tile=false) {
         VkApplicationInfo app{VK_STRUCTURE_TYPE_APPLICATION_INFO}; app.pApplicationName="LocalExposure benchmark"; app.apiVersion=VK_API_VERSION_1_2;
         VkInstanceCreateInfo ici{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO}; ici.pApplicationInfo=&app;
         const char* surfaceExtensions[]={"VK_KHR_surface","VK_KHR_android_surface"};
@@ -73,6 +76,16 @@ public:
         VkDeviceQueueCreateInfo queues[2]={qci,qci};queues[1].queueFamilyIndex=graphicsFamily;queues[1].queueCount=1;
         VkDeviceCreateInfo dci{VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO}; dci.pNext=&enabled12; dci.pEnabledFeatures=&enabled; dci.queueCreateInfoCount=dedicatedCompute?2:1; dci.pQueueCreateInfos=queues;
         std::vector<const char*> deviceExtensions;
+        VkPhysicalDeviceTileMemoryHeapFeaturesQCOM tileFeature{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_FEATURES_QCOM};
+        if(tile) {
+            uint32_t n=0;VK(vkEnumerateDeviceExtensionProperties(physical,nullptr,&n,nullptr));
+            std::vector<VkExtensionProperties> ex(n);VK(vkEnumerateDeviceExtensionProperties(physical,nullptr,&n,ex.data()));
+            bool foundTile=false;for(auto& e:ex)foundTile|=std::string(e.extensionName)==VK_QCOM_TILE_MEMORY_HEAP_EXTENSION_NAME;
+            if(!foundTile)throw std::runtime_error("Tile memory extension unavailable");
+            VkPhysicalDeviceFeatures2 f{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2};f.pNext=&tileFeature;vkGetPhysicalDeviceFeatures2(physical,&f);
+            if(!tileFeature.tileMemoryHeap)throw std::runtime_error("Tile memory feature unavailable");
+            enabled12.pNext=&tileFeature;deviceExtensions.push_back(VK_QCOM_TILE_MEMORY_HEAP_EXTENSION_NAME);
+        }
         if(windowed) deviceExtensions.push_back("VK_KHR_swapchain");
         if(calibrate) {
             uint32_t extensionCount=0; VK(vkEnumerateDeviceExtensionProperties(physical,nullptr,&extensionCount,nullptr));
@@ -83,6 +96,7 @@ public:
         }
         dci.enabledExtensionCount=deviceExtensions.size();dci.ppEnabledExtensionNames=deviceExtensions.data();
         VK(vkCreateDevice(physical,&dci,nullptr,&device)); vkGetDeviceQueue(device,family,0,&queue);
+        if(tile){bindTile=reinterpret_cast<PFN_vkCmdBindTileMemoryQCOM>(vkGetDeviceProcAddr(device,"vkCmdBindTileMemoryQCOM"));if(!bindTile)throw std::runtime_error("Missing tile bind command");}
         vkGetDeviceQueue(device,graphicsFamily,separateQueue?1:0,&graphicsQueue);
         VkCommandPoolCreateInfo pci{VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO}; pci.queueFamilyIndex=family; pci.flags=VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
         VK(vkCreateCommandPool(device,&pci,nullptr,&pool));graphicsPool=pool;
@@ -98,7 +112,7 @@ public:
         VK(vkCreateDescriptorPool(device,&di,nullptr,&descriptors));
     }
     uint32_t memoryType(uint32_t bits,VkMemoryPropertyFlags flags) {
-        for(uint32_t i=0;i<memories.memoryTypeCount;i++) if((bits&(1u<<i)) && (memories.memoryTypes[i].propertyFlags&flags)==flags) return i;
+        for(uint32_t i=0;i<memories.memoryTypeCount;i++) if((bits&(1u<<i)) && !(memories.memoryHeaps[memories.memoryTypes[i].heapIndex].flags&VK_MEMORY_HEAP_TILE_MEMORY_BIT_QCOM) && (memories.memoryTypes[i].propertyFlags&flags)==flags) return i;
         throw std::runtime_error("No compatible memory type");
     }
     Buffer buffer(VkDeviceSize size,VkBufferUsageFlags usage,const std::vector<char>* bytes=nullptr) {
@@ -126,6 +140,37 @@ public:
         VkPipelineStageFlags to=toGraphics?(VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT|VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT):VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
         vkCmdPipelineBarrier(cmd,from,to,0,1,&b,0,nullptr,0,nullptr);
     }
+    void bindTileRange() {if(tileMemory){VkTileMemoryBindInfoQCOM info{VK_STRUCTURE_TYPE_TILE_MEMORY_BIND_INFO_QCOM};info.memory=tileMemory;bindTile(cmd,&info);}}
+    void prepareTileImages() {
+        if(!manifest.contains("tile_resources"))return;
+        if(!bindTile || family!=graphicsFamily)throw std::runtime_error("Tile experiment requires enabled feature and one queue family");
+        VkDeviceSize total=0;uint32_t bits=~0u;std::map<std::string,VkDeviceSize> offsets;
+        for(auto& name:manifest["tile_resources"]) {
+            auto it=std::find_if(manifest["resources"].begin(),manifest["resources"].end(),[&](const json& r){return r["name"]==name;});
+            if(it==manifest["resources"].end())throw std::runtime_error("Unknown tile resource");
+            const auto& r=*it;std::string key=name;
+            if(tileImages.count(key))throw std::runtime_error("Duplicate tile resource: "+key);
+            if(r.contains("file")||r.value("attachment",false)||r.value("one_d",false))throw std::runtime_error("Only transient 2D intermediates allowed");
+            VkImageCreateInfo ci{VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO};ci.imageType=VK_IMAGE_TYPE_2D;ci.format=VkFormat(r["format"].get<int>());
+            ci.extent={r["width"],r["height"],1};ci.mipLevels=r["levels"];ci.arrayLayers=1;ci.samples=VK_SAMPLE_COUNT_1_BIT;ci.tiling=VK_IMAGE_TILING_OPTIMAL;
+            ci.usage=VK_IMAGE_USAGE_SAMPLED_BIT|VK_IMAGE_USAGE_STORAGE_BIT|VK_IMAGE_USAGE_TILE_MEMORY_BIT_QCOM;
+            VkImageFormatProperties formatProperties{};
+            VK(vkGetPhysicalDeviceImageFormatProperties(physical,ci.format,ci.imageType,ci.tiling,ci.usage,ci.flags,&formatProperties));
+            if(ci.mipLevels>formatProperties.maxMipLevels||ci.extent.width>formatProperties.maxExtent.width||ci.extent.height>formatProperties.maxExtent.height)throw std::runtime_error("Tile image limits exceeded: "+key);
+            VkImage im;VK(vkCreateImage(device,&ci,nullptr,&im));tileImages[key]=im;
+            VkTileMemoryRequirementsQCOM tr{VK_STRUCTURE_TYPE_TILE_MEMORY_REQUIREMENTS_QCOM};VkMemoryRequirements2 mr{VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2};mr.pNext=&tr;
+            VkImageMemoryRequirementsInfo2 ri{VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2};ri.image=im;vkGetImageMemoryRequirements2(device,&ri,&mr);
+            if(!tr.size||!tr.alignment)throw std::runtime_error("Tile image unsupported: "+key);
+            total=((total+tr.alignment-1)/tr.alignment)*tr.alignment;offsets[key]=total;
+            tileReport[key]={{"offset",total},{"bytes",tr.size},{"alignment",tr.alignment}};total+=tr.size;bits&=mr.memoryRequirements.memoryTypeBits;
+        }
+        uint32_t type=UINT32_MAX;
+        for(uint32_t i=0;i<memories.memoryTypeCount;i++)if((bits&(1u<<i))&&(memories.memoryHeaps[memories.memoryTypes[i].heapIndex].flags&VK_MEMORY_HEAP_TILE_MEMORY_BIT_QCOM)){type=i;break;}
+        if(type==UINT32_MAX||total>memories.memoryHeaps[memories.memoryTypes[type].heapIndex].size)throw std::runtime_error("Tile heap capacity/type unavailable");
+        VkMemoryAllocateInfo ai{VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO};ai.allocationSize=total;ai.memoryTypeIndex=type;VK(vkAllocateMemory(device,&ai,nullptr,&tileMemory));
+        for(auto& [name,im]:tileImages)VK(vkBindImageMemory(device,im,tileMemory,offsets[name]));
+        tileReport["allocation_bytes"]=total;
+    }
     void load(bool reference=false) {
         std::ifstream f("manifest.json"); f>>manifest;
         if(reference) {
@@ -141,7 +186,7 @@ public:
         }
         for(auto& p:manifest["passes"]) hasGraphics|=p.contains("attachment");
         if(hasGraphics && graphicsFamily==family && !(queueFlags&VK_QUEUE_GRAPHICS_BIT)) throw std::runtime_error("Selected compute queue does not support graphics");
-        begin();
+        prepareTileImages();begin();bindTileRange();
         for(const auto& r:manifest["resources"]) {
             Image im; im.width=r["width"]; im.height=r["height"]; im.levels=r["levels"]; im.bpp=r["bpp"]; im.dump=r["dump"];
             bool one=r["one_d"]; auto format=VkFormat(r["format"].get<int>());
@@ -159,10 +204,14 @@ public:
             if(r.value("sampled_attachment",false))ci.usage|=VK_IMAGE_USAGE_SAMPLED_BIT;
             uint32_t sharingFamilies[]={family,graphicsFamily};
             if(family!=graphicsFamily){ci.sharingMode=VK_SHARING_MODE_CONCURRENT;ci.queueFamilyIndexCount=2;ci.pQueueFamilyIndices=sharingFamilies;}
-            VK(vkCreateImage(device,&ci,nullptr,&im.image));
-            VkMemoryRequirements mr; vkGetImageMemoryRequirements(device,im.image,&mr);
-            VkMemoryAllocateInfo ma{VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO}; ma.allocationSize=mr.size; ma.memoryTypeIndex=memoryType(mr.memoryTypeBits,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-            VK(vkAllocateMemory(device,&ma,nullptr,&im.memory)); VK(vkBindImageMemory(device,im.image,im.memory,0));
+            const std::string resourceName=r["name"];
+            if(tileImages.count(resourceName)){im.image=tileImages.at(resourceName);im.memory=tileMemory;}
+            else {
+                VK(vkCreateImage(device,&ci,nullptr,&im.image));
+                VkMemoryRequirements mr; vkGetImageMemoryRequirements(device,im.image,&mr);
+                VkMemoryAllocateInfo ma{VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO}; ma.allocationSize=mr.size; ma.memoryTypeIndex=memoryType(mr.memoryTypeBits,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+                VK(vkAllocateMemory(device,&ma,nullptr,&im.memory)); VK(vkBindImageMemory(device,im.image,im.memory,0));
+            }
             for(uint32_t m=0;m<im.levels;m++) {
                 VkImageViewCreateInfo vi{VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO}; vi.image=im.image; vi.viewType=one?VK_IMAGE_VIEW_TYPE_1D:VK_IMAGE_VIEW_TYPE_2D; vi.format=VkFormat(r.value("storage_view_format",int(format)));
                 vi.subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,m,1,0,1}; VkImageView view; VK(vkCreateImageView(device,&vi,nullptr,&view)); im.views.push_back(view);
@@ -170,7 +219,7 @@ public:
             VkImageMemoryBarrier ib{VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER}; ib.oldLayout=VK_IMAGE_LAYOUT_UNDEFINED; ib.newLayout=VK_IMAGE_LAYOUT_GENERAL;
             ib.srcQueueFamilyIndex=ib.dstQueueFamilyIndex=VK_QUEUE_FAMILY_IGNORED; ib.image=im.image; ib.subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,im.levels,0,1}; ib.dstAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT;
             vkCmdPipelineBarrier(cmd,VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,VK_PIPELINE_STAGE_TRANSFER_BIT,0,0,nullptr,0,nullptr,1,&ib);
-            VkClearColorValue zero{}; vkCmdClearColorImage(cmd,im.image,VK_IMAGE_LAYOUT_GENERAL,&zero,1,&ib.subresourceRange);
+            VkClearColorValue zero{}; if(im.memory!=tileMemory)vkCmdClearColorImage(cmd,im.image,VK_IMAGE_LAYOUT_GENERAL,&zero,1,&ib.subresourceRange);
             if(r.contains("file")) {
                 // Order clear before upload, including their overlapping mip 0 writes.
                 VkMemoryBarrier mb{VK_STRUCTURE_TYPE_MEMORY_BARRIER}; mb.srcAccessMask=mb.dstAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT;
@@ -193,8 +242,12 @@ public:
         if(hasGraphics && family==graphicsFamily) readers|=VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT|VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
         vkCmdPipelineBarrier(cmd,VK_PIPELINE_STAGE_TRANSFER_BIT,readers,0,1,&mb,0,nullptr,0,nullptr); submit();
         for(const auto& p:manifest["passes"]) makePass(p);
-        productionCount=uint32_t(passes.size()-1);
-        VkQueryPoolCreateInfo qi{VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO}; qi.queryType=VK_QUERY_TYPE_TIMESTAMP; qi.queryCount=2*productionCount+2;
+        // Replay probes may contain multiple baseline passes. Never wait on
+        // timestamp slots that the production diagnostic did not write.
+        productionCount=0;
+        for(const auto& p:passes)if(!p.baseline)productionCount++;
+        uint32_t maxPassCount=std::max(productionCount,uint32_t(passes.size())-productionCount);
+        VkQueryPoolCreateInfo qi{VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO}; qi.queryType=VK_QUERY_TYPE_TIMESTAMP; qi.queryCount=2*maxPassCount+2;
         VK(vkCreateQueryPool(device,&qi,nullptr,&queries));
     }
     void makePass(const json& p) {
@@ -288,6 +341,7 @@ public:
             for(int i=0;i<prefixDraws;i++){dispatch(*prefix);barrier(true,i+1<prefixDraws?true:nextGraphics);}
         }
         uint32_t index=0;
+        if(!baseline)bindTileRange();
         for(size_t i=0;i<passes.size();i++) if(passes[i].baseline==baseline) {
             const auto& p=passes[i]; bool nextGraphics=p.graphics;
             for(size_t j=i+1;j<passes.size();j++) if(passes[j].baseline==baseline) {nextGraphics=passes[j].graphics;break;}
@@ -342,10 +396,13 @@ public:
     }
     void dump() {
         // Last execution is Fusion; reference readback happens after all timing.
-        begin(); VkMemoryBarrier mb{VK_STRUCTURE_TYPE_MEMORY_BARRIER}; mb.srcAccessMask=VK_ACCESS_SHADER_WRITE_BIT|VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT; mb.dstAccessMask=VK_ACCESS_TRANSFER_READ_BIT;
+        begin();
+        // Tile images have no transfer usage and expire at submission end.
+        // Validate their effect through final output, which remains normal memory.
+        VkMemoryBarrier mb{VK_STRUCTURE_TYPE_MEMORY_BARRIER}; mb.srcAccessMask=VK_ACCESS_SHADER_WRITE_BIT|VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT; mb.dstAccessMask=VK_ACCESS_TRANSFER_READ_BIT;
         vkCmdPipelineBarrier(cmd,VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,VK_PIPELINE_STAGE_TRANSFER_BIT,0,1,&mb,0,nullptr,0,nullptr);
         std::vector<std::pair<std::string,Buffer>> dumps;
-        for(auto& [name,im]:images) if(im.dump) {
+        for(auto& [name,im]:images) if(im.dump && im.memory!=tileMemory) {
             auto b=buffer(VkDeviceSize(im.width)*im.height*im.bpp,VK_BUFFER_USAGE_TRANSFER_DST_BIT);
             VkBufferImageCopy region{}; region.imageSubresource={VK_IMAGE_ASPECT_COLOR_BIT,0,0,1}; region.imageExtent={im.width,im.height,1};
             vkCmdCopyImageToBuffer(cmd,im.image,VK_IMAGE_LAYOUT_GENERAL,b.buffer,1,&region); dumps.emplace_back(name,b);
@@ -355,7 +412,7 @@ public:
         for(auto& [name,b]:dumps) {void* p; VK(vkMapMemory(device,b.memory,0,b.size,0,&p)); std::ofstream f(name+".device.bin",std::ios::binary); f.write(static_cast<char*>(p),b.size); vkUnmapMemory(device,b.memory);}
     }
     void verify() {
-        begin(); barrier();
+        begin(); bindTileRange();barrier();
         for(size_t i=0;i<passes.size();i++) if(!passes[i].baseline) {
             const auto& p=passes[i]; bool nextGraphics=p.graphics;
             for(size_t j=i+1;j<passes.size();j++) if(!passes[j].baseline) {nextGraphics=passes[j].graphics;break;}
@@ -368,7 +425,8 @@ public:
         for(auto& p:passes) {vkDestroyPipeline(device,p.pipeline,nullptr); vkDestroyPipelineLayout(device,p.layout,nullptr); vkDestroyDescriptorSetLayout(device,p.setLayout,nullptr);
             if(p.graphics) {vkDestroyFramebuffer(device,p.framebuffer,nullptr); vkDestroyRenderPass(device,p.renderPass,nullptr);}}
         for(auto m:modules) vkDestroyShaderModule(device,m,nullptr);
-        for(auto& [name,im]:images) {for(auto v:im.views) vkDestroyImageView(device,v,nullptr); vkDestroyImage(device,im.image,nullptr); vkFreeMemory(device,im.memory,nullptr);}
+        for(auto& [name,im]:images) {for(auto v:im.views) vkDestroyImageView(device,v,nullptr); vkDestroyImage(device,im.image,nullptr); if(im.memory!=tileMemory)vkFreeMemory(device,im.memory,nullptr);}
+        if(tileMemory)vkFreeMemory(device,tileMemory,nullptr);
         for(auto& b:buffers) {vkDestroyBuffer(device,b.buffer,nullptr); vkFreeMemory(device,b.memory,nullptr);}
         vkDestroyQueryPool(device,queries,nullptr); vkDestroyDescriptorPool(device,descriptors,nullptr); vkDestroySampler(device,sampler,nullptr);
         vkDestroyFence(device,fence,nullptr); if(graphicsPool!=pool)vkDestroyCommandPool(device,graphicsPool,nullptr); vkDestroyCommandPool(device,pool,nullptr); vkDestroyDevice(device,nullptr); vkDestroyInstance(instance,nullptr);

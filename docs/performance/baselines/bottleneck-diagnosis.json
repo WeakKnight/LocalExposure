@@ -1,0 +1,328 @@
+{
+  "device": "NX789J / SM8750 / Adreno 830",
+  "driver": "Qualcomm 512.842.6 process-local",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "fps": 45,
+  "mode": "Foreground joint graphics HDR producer; no tile memory; visualization/presentation excluded",
+  "method": "Consecutive identical dispatch replay with normal barriers; marginal costs, not exact additive decomposition. Apply pair repeats both production and baseline.",
+  "control_mean_ms": {
+    "fusion_ms": 4.522096243763923,
+    "baseline_ms": 2.4425129612016683,
+    "increment_ms": 2.079583282562255
+  },
+  "runs": [
+    {
+      "name": "control",
+      "raw_path": "outputs/android/bottleneck/control",
+      "device": "Adreno (TM) 830",
+      "driver_version": 2150932486,
+      "fusion_ms": 4.5239321812191005,
+      "baseline_ms": 2.4425259820346836,
+      "increment_ms": 2.081406199184417,
+      "samples_per_path": 240,
+      "byte_identical": true,
+      "blocks": [
+        {
+          "kind": "fusion",
+          "median_ms": 4.519036348005295
+        },
+        {
+          "kind": "baseline",
+          "median_ms": 2.4422916070404055
+        },
+        {
+          "kind": "baseline",
+          "median_ms": 2.4429686903572083
+        },
+        {
+          "kind": "fusion",
+          "median_ms": 4.526666556152344
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6287239429836273,
+        "pyramids_mip1": 0.1228906219997406,
+        "pyramids_mip2": 0.04609374887466431,
+        "pyramids_mip3": 0.0258593743686676,
+        "pyramids_mip4": 0.01966145785331726,
+        "pyramids_mip5": 0.017916666229248045,
+        "pyramids_mip6": 0.016588541261672973,
+        "pyramids_mip7": 0.01588541627883911,
+        "pyramids_mip8": 0.015911457944869995,
+        "reconstruct_mip8": 0.016588541261672973,
+        "reconstruct_mip7": 0.01937499952697754,
+        "reconstruct_mip6": 0.01958333285522461,
+        "reconstruct_mip5": 0.019895832847595215,
+        "reconstruct_mip4": 0.02067708282852173,
+        "reconstruct_mip3": 0.021796874467849732,
+        "reconstruct_mip2": 0.025520832710266114,
+        "reconstruct_mip1": 0.050390623769760126,
+        "reconstruct_ev": 0.18963541203689577,
+        "reconstruct_guided": 0.853802062488556,
+        "apply_exposure_production": 2.121067656549454
+      },
+      "source_sha256": {
+        "activity.cpp": "2279288bf4203447747233709f58e9ab708f1dc5b02abe175f72c601ad00c696",
+        "runner.cpp": "14b814698738f186806e6dbb865a20c31a23a0c1240a239754dd4ee357a3a940"
+      },
+      "execution_manifest_sha256": "f363a9b1edbf1221c3266d8f2bdbd52a23bd693301188df221ea6f531926d12a",
+      "raw_sha256": "298a10a3a506e7f1d7918a9367f6346ceca1618deb72add8c204065ef95276fd"
+    },
+    {
+      "name": "guided-x2",
+      "raw_path": "outputs/android/bottleneck/guided-x2",
+      "device": "Adreno (TM) 830",
+      "driver_version": 2150932486,
+      "fusion_ms": 5.36867174392891,
+      "baseline_ms": 2.441171815401077,
+      "increment_ms": 2.9274999285278325,
+      "samples_per_path": 240,
+      "byte_identical": true,
+      "blocks": [
+        {
+          "kind": "fusion",
+          "median_ms": 5.365051952350616
+        },
+        {
+          "kind": "baseline",
+          "median_ms": 2.441927023715973
+        },
+        {
+          "kind": "baseline",
+          "median_ms": 2.440260357089996
+        },
+        {
+          "kind": "fusion",
+          "median_ms": 5.372447785503388
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6297395679588318,
+        "pyramids_mip1": 0.12317708032608032,
+        "pyramids_mip2": 0.04624999887084961,
+        "pyramids_mip3": 0.025989582698822022,
+        "pyramids_mip4": 0.019765624517440794,
+        "pyramids_mip5": 0.01807291622543335,
+        "pyramids_mip6": 0.016718749591827394,
+        "pyramids_mip7": 0.015755207948684694,
+        "pyramids_mip8": 0.01609374960708618,
+        "reconstruct_mip8": 0.016718749591827394,
+        "reconstruct_mip7": 0.0191145828666687,
+        "reconstruct_mip6": 0.01945312452507019,
+        "reconstruct_mip5": 0.019739582851409913,
+        "reconstruct_mip4": 0.020651041162490846,
+        "reconstruct_mip3": 0.02192708279800415,
+        "reconstruct_mip2": 0.025520832710266114,
+        "reconstruct_mip1": 0.05023437377357483,
+        "reconstruct_ev": 0.18932291204452514,
+        "reconstruct_guided": 0.8532031041698456,
+        "reconstruct_guided_replay1": 0.8493489375972747,
+        "apply_exposure_production": 2.1202603649024963
+      },
+      "source_sha256": {
+        "activity.cpp": "2279288bf4203447747233709f58e9ab708f1dc5b02abe175f72c601ad00c696",
+        "runner.cpp": "14b814698738f186806e6dbb865a20c31a23a0c1240a239754dd4ee357a3a940"
+      },
+      "execution_manifest_sha256": "32ae2b195bfc720aabced6affa719b2b8eb7bf53014f730c5de43d223b48bd17",
+      "raw_sha256": "1820cebefefd768577e618bf7d7baadf969fdb315c0fd628932b37d951f44d66",
+      "delta_from_bracketing_mean_ms": {
+        "fusion_ms": 0.8465755001649864,
+        "baseline_ms": -0.0013411458005911925,
+        "increment_ms": 0.8479166459655776
+      }
+    },
+    {
+      "name": "reduce-x2",
+      "raw_path": "outputs/android/bottleneck/reduce-x2",
+      "device": "Adreno (TM) 830",
+      "driver_version": 2150932486,
+      "fusion_ms": 5.162577998960495,
+      "baseline_ms": 2.442552023700714,
+      "increment_ms": 2.7200259752597815,
+      "samples_per_path": 240,
+      "byte_identical": true,
+      "blocks": [
+        {
+          "kind": "fusion",
+          "median_ms": 5.155833207458496
+        },
+        {
+          "kind": "baseline",
+          "median_ms": 2.4429686903572083
+        },
+        {
+          "kind": "baseline",
+          "median_ms": 2.442343690372467
+        },
+        {
+          "kind": "fusion",
+          "median_ms": 5.166301957202911
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6321093595676421,
+        "reduce_setup_replay1": 0.6463541508865356,
+        "pyramids_mip1": 0.12296874699783325,
+        "pyramids_mip2": 0.04624999887084961,
+        "pyramids_mip3": 0.025755207704544068,
+        "pyramids_mip4": 0.019557291189193728,
+        "pyramids_mip5": 0.017812499565124512,
+        "pyramids_mip6": 0.01614583293914795,
+        "pyramids_mip7": 0.015781249614715578,
+        "pyramids_mip8": 0.015781249614715578,
+        "reconstruct_mip8": 0.016718749591827394,
+        "reconstruct_mip7": 0.01937499952697754,
+        "reconstruct_mip6": 0.019531249523162843,
+        "reconstruct_mip5": 0.01971354118537903,
+        "reconstruct_mip4": 0.020572916164398193,
+        "reconstruct_mip3": 0.021614582805633546,
+        "reconstruct_mip2": 0.02515624938583374,
+        "reconstruct_mip1": 0.049947915447235106,
+        "reconstruct_ev": 0.1899999953613281,
+        "reconstruct_guided": 0.8535416458282471,
+        "apply_exposure_production": 2.121067656549454
+      },
+      "source_sha256": {
+        "activity.cpp": "2279288bf4203447747233709f58e9ab708f1dc5b02abe175f72c601ad00c696",
+        "runner.cpp": "14b814698738f186806e6dbb865a20c31a23a0c1240a239754dd4ee357a3a940"
+      },
+      "execution_manifest_sha256": "d7a2faa38b1dcd670514edfc1ac62ed4c78777ad6a5be88f7586880c41f3728d",
+      "raw_sha256": "7300780afe3762f142f2e49d8b0b7fe96cc6c8e5fd23446bb05791217e1c0695",
+      "delta_from_bracketing_mean_ms": {
+        "fusion_ms": 0.6404817551965722,
+        "baseline_ms": 3.906249904561676e-05,
+        "increment_ms": 0.6404426926975266
+      }
+    },
+    {
+      "name": "apply-pair-x2-fixed",
+      "raw_path": "outputs/android/bottleneck/apply-pair-x2-fixed",
+      "device": "Adreno (TM) 830",
+      "driver_version": 2150932486,
+      "fusion_ms": 6.653801920886994,
+      "baseline_ms": 4.574817596643448,
+      "increment_ms": 2.078984324243546,
+      "samples_per_path": 240,
+      "byte_identical": true,
+      "blocks": [
+        {
+          "kind": "fusion",
+          "median_ms": 6.649348795995712
+        },
+        {
+          "kind": "baseline",
+          "median_ms": 4.574895721641541
+        },
+        {
+          "kind": "baseline",
+          "median_ms": 4.574739471645355
+        },
+        {
+          "kind": "fusion",
+          "median_ms": 6.660104004066468
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6314062345848084,
+        "pyramids_mip1": 0.12317708032608032,
+        "pyramids_mip2": 0.04614583220672608,
+        "pyramids_mip3": 0.026067707696914674,
+        "pyramids_mip4": 0.019270832862854005,
+        "pyramids_mip5": 0.017916666229248045,
+        "pyramids_mip6": 0.016328124601364135,
+        "pyramids_mip7": 0.015624999618530273,
+        "pyramids_mip8": 0.016119791273117065,
+        "reconstruct_mip8": 0.01677083292388916,
+        "reconstruct_mip7": 0.019479166191101075,
+        "reconstruct_mip6": 0.019218749530792237,
+        "reconstruct_mip5": 0.019791666183471678,
+        "reconstruct_mip4": 0.020520832832336425,
+        "reconstruct_mip3": 0.021614582805633546,
+        "reconstruct_mip2": 0.025312499382019044,
+        "reconstruct_mip1": 0.05015624877548218,
+        "reconstruct_ev": 0.18916666204833985,
+        "reconstruct_guided": 0.8529426875095367,
+        "apply_exposure_production": 2.1213541148757935,
+        "apply_exposure_production_replay1": 2.135520781196594
+      },
+      "source_sha256": {
+        "activity.cpp": "53c5bf812383836afcfe85e958cd4a4a2165b01fb7aeae6a180c60245ba8c7e1",
+        "runner.cpp": "ab8f95e1a5ec1ff4b2b57f00026a2b246be039b9a73ed0b331174494deb61f0e"
+      },
+      "execution_manifest_sha256": "6f7b87208e002d0f9ca1933e829efaf8e957dd19916390a2d3b3db86475bc669",
+      "raw_sha256": "0c89b2c463da773df822ce781ab49fd799e50ede0673f59e7ff44df01afed6d2",
+      "delta_from_bracketing_mean_ms": {
+        "fusion_ms": 2.1317056771230707,
+        "baseline_ms": 2.1323046354417796,
+        "increment_ms": -0.0005989583187089309
+      }
+    },
+    {
+      "name": "control-repeat",
+      "raw_path": "outputs/android/bottleneck/control-repeat",
+      "device": "Adreno (TM) 830",
+      "driver_version": 2150932486,
+      "fusion_ms": 4.520260306308746,
+      "baseline_ms": 2.4424999403686525,
+      "increment_ms": 2.0777603659400934,
+      "samples_per_path": 240,
+      "byte_identical": true,
+      "blocks": [
+        {
+          "kind": "fusion",
+          "median_ms": 4.518150931360244
+        },
+        {
+          "kind": "baseline",
+          "median_ms": 2.442786398694992
+        },
+        {
+          "kind": "baseline",
+          "median_ms": 2.4423957737045288
+        },
+        {
+          "kind": "fusion",
+          "median_ms": 4.522057181264877
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6286197763195038,
+        "pyramids_mip1": 0.12291666366577149,
+        "pyramids_mip2": 0.04624999887084961,
+        "pyramids_mip3": 0.025520832710266114,
+        "pyramids_mip4": 0.01874999954223633,
+        "pyramids_mip5": 0.01786458289718628,
+        "pyramids_mip6": 0.016249999603271486,
+        "pyramids_mip7": 0.015598957952499388,
+        "pyramids_mip8": 0.015833332946777343,
+        "reconstruct_mip8": 0.01656249959564209,
+        "reconstruct_mip7": 0.019062499534606935,
+        "reconstruct_mip6": 0.019687499519348145,
+        "reconstruct_mip5": 0.019843749515533447,
+        "reconstruct_mip4": 0.02070312449455261,
+        "reconstruct_mip3": 0.021770832801818848,
+        "reconstruct_mip2": 0.025677082706451415,
+        "reconstruct_mip1": 0.050364582103729245,
+        "reconstruct_ev": 0.18890624538803102,
+        "reconstruct_guided": 0.8530208125076294,
+        "apply_exposure_production": 2.1209374482192995
+      },
+      "source_sha256": {
+        "activity.cpp": "53c5bf812383836afcfe85e958cd4a4a2165b01fb7aeae6a180c60245ba8c7e1",
+        "runner.cpp": "70c1eeba936fa13b14608bb05fe0e68e1bb56cd19f444931bbf97426cc9e6495"
+      },
+      "execution_manifest_sha256": "f363a9b1edbf1221c3266d8f2bdbd52a23bd693301188df221ea6f531926d12a",
+      "raw_sha256": "625243e4ce77a6d443a92f7cc52a3ffa3cb99042f299232b8420b685fa7001d5"
+    }
+  ],
+  "excluded": "apply-pair-x2: unfinished diagnostic due to historical single-baseline query-count assumption, fixed before repeat",
+  "limitations": [
+    "No frequency lock or hardware counters",
+    "Warm-cache replay includes extra barriers",
+    "Only one scene in this diagnosis",
+    "A730 compiler projections are not phone timings"
+  ]
+}

@@ -1,0 +1,264 @@
+{
+  "manifest_sha256": "5f4b3055d3998a49197f7875f0249180728713f5451ce0077e75edac860cec98",
+  "scope": "Retained gather-reduction production graph; mip-specific sampled reads and storage writes, checked against shader source",
+  "adjacent_edges": [
+    {
+      "producer": "reduce_setup",
+      "consumer": "pyramids_mip1",
+      "read_after_write": [
+        {
+          "resource": "luminance",
+          "mip": 0
+        },
+        {
+          "resource": "weights",
+          "mip": 0
+        }
+      ]
+    },
+    {
+      "producer": "pyramids_mip1",
+      "consumer": "pyramids_mip2",
+      "read_after_write": [
+        {
+          "resource": "luminance",
+          "mip": 1
+        },
+        {
+          "resource": "weights",
+          "mip": 1
+        }
+      ]
+    },
+    {
+      "producer": "pyramids_mip2",
+      "consumer": "pyramids_mip3",
+      "read_after_write": [
+        {
+          "resource": "luminance",
+          "mip": 2
+        },
+        {
+          "resource": "weights",
+          "mip": 2
+        }
+      ]
+    },
+    {
+      "producer": "pyramids_mip3",
+      "consumer": "pyramids_mip4",
+      "read_after_write": [
+        {
+          "resource": "luminance",
+          "mip": 3
+        },
+        {
+          "resource": "weights",
+          "mip": 3
+        }
+      ]
+    },
+    {
+      "producer": "pyramids_mip4",
+      "consumer": "pyramids_mip5",
+      "read_after_write": [
+        {
+          "resource": "luminance",
+          "mip": 4
+        },
+        {
+          "resource": "weights",
+          "mip": 4
+        }
+      ]
+    },
+    {
+      "producer": "pyramids_mip5",
+      "consumer": "pyramids_mip6",
+      "read_after_write": [
+        {
+          "resource": "luminance",
+          "mip": 5
+        },
+        {
+          "resource": "weights",
+          "mip": 5
+        }
+      ]
+    },
+    {
+      "producer": "pyramids_mip6",
+      "consumer": "pyramids_mip7",
+      "read_after_write": [
+        {
+          "resource": "luminance",
+          "mip": 6
+        },
+        {
+          "resource": "weights",
+          "mip": 6
+        }
+      ]
+    },
+    {
+      "producer": "pyramids_mip7",
+      "consumer": "pyramids_mip8",
+      "read_after_write": [
+        {
+          "resource": "luminance",
+          "mip": 7
+        },
+        {
+          "resource": "weights",
+          "mip": 7
+        }
+      ]
+    },
+    {
+      "producer": "pyramids_mip8",
+      "consumer": "reconstruct_mip8",
+      "read_after_write": [
+        {
+          "resource": "luminance",
+          "mip": 8
+        },
+        {
+          "resource": "weights",
+          "mip": 8
+        }
+      ]
+    },
+    {
+      "producer": "reconstruct_mip8",
+      "consumer": "reconstruct_mip7",
+      "read_after_write": [
+        {
+          "resource": "reconstructed",
+          "mip": 8
+        }
+      ]
+    },
+    {
+      "producer": "reconstruct_mip7",
+      "consumer": "reconstruct_mip6",
+      "read_after_write": [
+        {
+          "resource": "reconstructed",
+          "mip": 7
+        }
+      ]
+    },
+    {
+      "producer": "reconstruct_mip6",
+      "consumer": "reconstruct_mip5",
+      "read_after_write": [
+        {
+          "resource": "reconstructed",
+          "mip": 6
+        }
+      ]
+    },
+    {
+      "producer": "reconstruct_mip5",
+      "consumer": "reconstruct_mip4",
+      "read_after_write": [
+        {
+          "resource": "reconstructed",
+          "mip": 5
+        }
+      ]
+    },
+    {
+      "producer": "reconstruct_mip4",
+      "consumer": "reconstruct_mip3",
+      "read_after_write": [
+        {
+          "resource": "reconstructed",
+          "mip": 4
+        }
+      ]
+    },
+    {
+      "producer": "reconstruct_mip3",
+      "consumer": "reconstruct_mip2",
+      "read_after_write": [
+        {
+          "resource": "reconstructed",
+          "mip": 3
+        }
+      ]
+    },
+    {
+      "producer": "reconstruct_mip2",
+      "consumer": "reconstruct_mip1",
+      "read_after_write": [
+        {
+          "resource": "reconstructed",
+          "mip": 2
+        }
+      ]
+    },
+    {
+      "producer": "reconstruct_mip1",
+      "consumer": "reconstruct_ev",
+      "read_after_write": [
+        {
+          "resource": "reconstructed",
+          "mip": 1
+        }
+      ]
+    },
+    {
+      "producer": "reconstruct_ev",
+      "consumer": "reconstruct_guided",
+      "read_after_write": [
+        {
+          "resource": "guide_ev",
+          "mip": 0
+        }
+      ]
+    },
+    {
+      "producer": "reconstruct_guided",
+      "consumer": "apply_exposure_production",
+      "read_after_write": [
+        {
+          "resource": "averaged",
+          "mip": 0
+        }
+      ]
+    }
+  ],
+  "guided_workgroup_barriers": 4,
+  "phases": [
+    {
+      "name": "input",
+      "tasks": 576,
+      "threads": 256,
+      "rounds": 3,
+      "active_slots_fraction": 0.75
+    },
+    {
+      "name": "horizontal_moments",
+      "tasks": 480,
+      "threads": 256,
+      "rounds": 2,
+      "active_slots_fraction": 0.9375
+    },
+    {
+      "name": "coefficient_fit",
+      "tasks": 400,
+      "threads": 256,
+      "rounds": 2,
+      "active_slots_fraction": 0.78125
+    },
+    {
+      "name": "horizontal_coefficients",
+      "tasks": 320,
+      "threads": 256,
+      "rounds": 2,
+      "active_slots_fraction": 0.625
+    }
+  ],
+  "note": "Logical task-slot fractions are not GPU occupancy. Storage descriptors are outputs in this graph; this is not a general hazard analyzer."
+}

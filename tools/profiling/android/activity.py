@@ -19,6 +19,8 @@ def main():
     ap.add_argument('bundle',type=Path);ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--bootstrap',action='store_true',help='Install pinned Android and APK packaging tools locally')
     ap.add_argument('--serial',help='Authorized Android device serial')
+    ap.add_argument('--custom-driver',type=Path,help='Opt-in extracted AdrenoTools driver directory (process-local)')
+    ap.add_argument('--tile-memory',choices=['guided','averaged'],help='Opt-in tile residency; requires supported driver')
     ap.add_argument('--frames',type=int,default=90);ap.add_argument('--warmup',type=int,default=30)
     ap.add_argument('--hdr-producer',action='store_true')
     ap.add_argument('--joint-submission',action='store_true',help='Include the common graphics producer in one submission and both headline timestamp intervals')
@@ -36,8 +38,11 @@ def main():
     if (args.separate_queue or args.dedicated_compute or args.hdr_producer) and args.no_graphics_context:ap.error('Requested mode requires graphics context')
     if args.separate_queue and args.dedicated_compute:ap.error('Choose one queue configuration')
     if args.joint_submission and (args.separate_queue or args.dedicated_compute or args.no_graphics_context):ap.error('Joint submission requires one graphics/compute queue and a graphics producer')
+    if args.tile_memory and (not args.joint_submission or not args.hdr_producer or args.separate_queue or args.dedicated_compute):ap.error('Tile test requires single-queue joint HDR producer')
     out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
     bundle=args.bundle.resolve();manifest=json.loads((bundle/'manifest.json').read_text())
+    if args.tile_memory:
+        manifest['tile_resources']=['guide_ev','averaged'] if args.tile_memory=='guided' else ['averaged']
     if args.dedicated_compute and any('attachment' in p for p in manifest['passes']):raise ValueError('Dedicated mode requires compute-only production passes')
     original=manifest.get('unfused_passes',manifest['passes'])
     if args.hdr_producer:
@@ -56,15 +61,27 @@ def main():
         manifest['resources'].append(dict(name='context_color',width=manifest['width'],height=manifest['height'],levels=1,format=43,format_name='rgba8_srgb',bpp=4,one_d=False,dump=False,attachment=True))
     manifest['passes'].append(context)
     settings=dict(frames=args.frames,warmup=args.warmup,rounds=args.rounds,graphics_context=not args.no_graphics_context,hdr_producer=args.hdr_producer,joint_submission=args.joint_submission,separate_queue=args.separate_queue,dedicated_compute=args.dedicated_compute,graphics_draws=args.graphics_draws,fps=args.fps)
+    settings['tile_memory']=args.tile_memory
+    (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     keytool=java.with_name('keytool.exe')
     clang=NDK/'toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe'
-    cmd=[clang,'--target=aarch64-linux-android29','-std=c++17','-O2','-shared','-fPIC','-static-libstdc++','-I',TOOLS,Path(__file__).with_suffix('.cpp'),'-lvulkan','-landroid','-llog','-o',out/'liblocalexposure.so']
+    source=Path(__file__).with_suffix('.cpp');driver_args=['-lvulkan'];driver_record=None
+    if args.custom_driver:
+        from . import custom_driver
+        driver_record=custom_driver.provenance(args.custom_driver)
+        source=custom_driver.activity_source(out);driver_args=custom_driver.link_args()
+    cmd=[clang,'--target=aarch64-linux-android29','-std=c++17','-O2','-shared','-fPIC','-static-libstdc++','-I',TOOLS,source,*driver_args,'-landroid','-llog','-o',out/'liblocalexposure.so']
     run(cmd)
     xml=f'''<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="{PACKAGE}" android:versionCode="1" android:versionName="1.0"><uses-sdk android:minSdkVersion="29" android:targetSdkVersion="35"/><uses-feature android:name="android.hardware.vulkan.level" android:version="1" android:required="true"/><application android:label="Local Exposure Benchmark" android:hasCode="false" android:debuggable="true" android:extractNativeLibs="true"><activity android:name="android.app.NativeActivity" android:exported="true" android:screenOrientation="landscape" android:configChanges="orientation|screenSize|keyboardHidden"><meta-data android:name="android.app.lib_name" android:value="localexposure"/><intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter></activity></application></manifest>'''
     (out/'AndroidManifest.xml').write_text(xml)
     run([sdk/'aapt2.exe','link','-I',platform,'--manifest',out/'AndroidManifest.xml','-o',out/'unsigned.apk'])
     with zipfile.ZipFile(out/'unsigned.apk','a',compression=zipfile.ZIP_DEFLATED) as z:
         z.write(out/'liblocalexposure.so','lib/arm64-v8a/liblocalexposure.so')
+        if args.custom_driver:
+            library,files=custom_driver.driver_files(args.custom_driver)
+            for p in (custom_driver.BUILD/'src/hook').glob('*.so'):z.write(p,'lib/arm64-v8a/'+p.name)
+            for p in files:z.write(p,'assets/bundle/'+p.name)
+            z.writestr('assets/bundle/custom-driver-name.txt',library)
         for p in bundle.iterdir():
             if p.suffix=='.spv' or (p.suffix=='.bin' and not p.name.endswith(('.reference.bin','.device.bin','.phone-reference.bin'))):z.write(p,'assets/bundle/'+p.name)
         z.writestr('assets/bundle/manifest.json',json.dumps(manifest));z.writestr('assets/bundle/activity.json',json.dumps(settings))
@@ -79,8 +96,9 @@ def main():
     run([*adb,'shell','run-as',PACKAGE,'mkdir','-p','files'])
     run([*adb,'shell','run-as',PACKAGE,'sh','-c',"'echo pending > files/status.txt'"])
     metadata=dict(started_utc=datetime.now(timezone.utc).isoformat(),serial=serial,
+        custom_driver=driver_record,
         command=list(map(str,cmd)),library_sha256=sha(out/'liblocalexposure.so'),
-        bundle=str(bundle),manifest_sha256=sha(bundle/'manifest.json'),settings=settings,
+        bundle=str(bundle),manifest_sha256=sha(bundle/'manifest.json'),execution_manifest_sha256=sha(out/'manifest.json'),settings=settings,
         source_sha256={p:sha(Path(__file__).with_name(p)) for p in ('activity.cpp','runner.cpp')},
         tool_sha256={str(p):sha(p) for p in (clang,java,sdk/'aapt2.exe',sdk/'lib/apksigner.jar',ADB)})
     (out/'metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')

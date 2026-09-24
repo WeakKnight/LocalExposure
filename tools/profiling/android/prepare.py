@@ -114,6 +114,8 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
         if module in ('fusion_compact','present'):
             flags += [f"-DWORK_X={variant_config.get('work_x',8)}",f"-DWORK_Y={variant_config.get('work_y',8)}"]
         if module=='fusion_compact':
+            flags += [f"-DGUIDED_DIRECT_MOMENTS={int(variant_config.get('guided_direct_moments',False))}"]
+            flags += [f"-DGUIDED_STATIC_WINDOWS={int(variant_config.get('guided_static_windows',False))}"]
             flags += [f"-DGUIDED_VERTICAL={variant_config.get('guided_vertical',1)}",f"-DGUIDED_THREADS_Y={variant_config.get('guided_threads_y',variant_config.get('tile_y',16))}"]
             flags += [f"-DGUIDED_BATCH={variant_config.get('guided_batch',1)}",f"-DGUIDED_SLIDING={int(variant_config.get('guided_sliding',False))}"]
             flags += [f"-DWAVE_REDUCTION={int(variant_config.get('wave_reduction',False))}"]

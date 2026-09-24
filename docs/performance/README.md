@@ -1,9 +1,11 @@
 # Mobile performance
 
-The mobile default is `guided-vertical2-t256`: quarter-resolution Fusion with a
-residual pyramid, precomputed EV and vertical Guided-window reuse. The desktop
+The mobile default is `guided-direct-moments`: quarter-resolution Fusion with a
+residual pyramid, precomputed EV, horizontal/vertical Guided-window reuse and
+direct texture moments (three workgroup barriers instead of four). The desktop
 viewer remains the independent reference. `gather-reduction` preserves the previous
-mobile control; `lossless` selects the original algorithm.
+mobile control; `guided-vertical2-t256` preserves the 2.019 ms starting point,
+and `lossless` selects the original algorithm.
 
 ## Current results
 
@@ -12,13 +14,13 @@ in one submission, 45 FPS. Measured on **Adreno 830**, process-local driver 512.
 
 | Path | Complete chain | Local Exposure increment |
 |---|---:|---:|
-| Previous control | 4.526 ms | 2.083 ms |
-| Current default | 4.460 ms | 2.019 ms |
+| Previous default (matched repeat) | 4.464 ms | 2.022 ms |
+| Current default | 4.229 ms | 1.787 ms |
 
-The repeat improved Local Exposure by **3.1%**. Four desktop HDR scenes and the
-phone test image matched the control exactly. These are single-device results,
+The repeat improved Local Exposure by **11.6%**, meeting the 1.8 ms target.
+Desktop differences across four HDR scenes are at most one sRGB8 code. These are single-device results,
 not Snapdragon 8 Gen 1 timings or a guarantee for every scene.
-[Measurement record](baselines/guided-vertical-reuse.json).
+[Measurement and quality record](baselines/goal180.json).
 
 Estimated incremental texture traffic is **19.18 MB/frame**, or **0.863 GB/s at
 45 FPS**. This includes Fusion intermediates; it is not measured DRAM traffic.

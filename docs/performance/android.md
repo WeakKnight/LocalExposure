@@ -19,7 +19,7 @@ bundle and validates against the same-phone reference. The second measures a
 real graphics-produced HDR input. **Use the foreground result for game-performance
 comparisons**, not the preliminary headless timing.
 
-Defaults are 1920x1080, `guided-vertical2-t256`, R11G11B10 input and RGBA8 sRGB output.
+Defaults are 1920x1080, `guided-direct-moments`, R11G11B10 input and RGBA8 sRGB output.
 The retained compute output encodes sRGB explicitly through a compatible UNORM
 storage view. Final blit/presentation is outside the reported GPU interval.
 

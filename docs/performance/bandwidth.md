@@ -13,8 +13,11 @@ For the current mobile path at 1920x1080:
 | At 45 FPS | 0.863 GB/s |
 
 Use R11G11B10 HDR input and RGBA8 sRGB output. Average GB/s is bytes/frame times
-FPS divided by 1e9. Vertical Guided reuse changes shared-memory work, not this
-texture-traffic model.
+FPS divided by 1e9. The direct-moments default keeps this resource-sweep estimate but requests
+more repeated guide reads: the expanded logical-read model increases by
+4.57 MB/frame (0.206 GB/s at 45 FPS) compared with the previous default. Cache
+reuse determines how much of that reaches DRAM; no physical-bandwidth or power
+improvement is claimed.
 
 These estimates are **not measured DRAM bandwidth**. Caches, compression,
 transaction size and tile residency change physical traffic. Dividing modeled

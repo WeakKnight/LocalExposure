@@ -1,0 +1,829 @@
+{
+  "objective": "Local Exposure incremental GPU median <=1.8 ms from the 2.019 ms starting path, without noticeable image loss",
+  "status": "achieved",
+  "default_variant": "guided-direct-moments",
+  "device": "NX789J / SM8750 / Adreno 830",
+  "driver": "Qualcomm 512.842.6 process-local",
+  "workload": "1920x1080 R11G11B10 to RGBA8 sRGB; foreground joint graphics HDR producer; 45 FPS; sigma .2; brackets +/-1.2 EV; no tile memory; visualization/presentation excluded",
+  "matched_repeat": {
+    "candidate": 1.78739578969574,
+    "control": 2.0220832839660643,
+    "improvement_percent": 11.606222954873257,
+    "warmup": 60,
+    "frames_per_block": 600,
+    "rounds": 3
+  },
+  "runs": [
+    {
+      "name": "static-phone",
+      "full_ms": 4.431223850149155,
+      "baseline_ms": 2.441510357059479,
+      "increment_ms": 1.9897134930896758,
+      "samples_per_path": 540,
+      "same_output_as_bundle_control": true,
+      "rounds": [
+        {
+          "round": 0,
+          "fusion": 4.427968641895294,
+          "baseline": 2.441588482057571,
+          "increment": 1.986380159837723
+        },
+        {
+          "round": 1,
+          "baseline": 2.441744732053757,
+          "fusion": 4.433801975086212,
+          "increment": 1.9920572430324546
+        },
+        {
+          "round": 2,
+          "fusion": 4.431458225143433,
+          "baseline": 2.4410936904029845,
+          "increment": 1.9903645347404484
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6288801929798127,
+        "pyramids_mip1": 0.12299478866386414,
+        "pyramids_mip2": 0.04622395720481873,
+        "pyramids_mip3": 0.025572916042327882,
+        "pyramids_mip4": 0.01958333285522461,
+        "pyramids_mip5": 0.017630207902908326,
+        "pyramids_mip6": 0.01627604126930237,
+        "pyramids_mip7": 0.015182291296005249,
+        "pyramids_mip8": 0.015989582942962648,
+        "reconstruct_mip8": 0.016614582927703857,
+        "reconstruct_mip7": 0.019062499534606935,
+        "reconstruct_mip6": 0.01932291619491577,
+        "reconstruct_mip5": 0.01937499952697754,
+        "reconstruct_mip4": 0.02054687449836731,
+        "reconstruct_mip3": 0.02151041614151001,
+        "reconstruct_mip2": 0.02515624938583374,
+        "reconstruct_mip1": 0.05010416544342041,
+        "reconstruct_ev": 0.18906249538421632,
+        "reconstruct_guided": 0.7635156063594819,
+        "apply_exposure_production": 2.121666614868164
+      },
+      "raw_path": "outputs/android/goal180/static-phone",
+      "raw_sha256": "35c8ef8569c34cb9cd0b4696f3d59c4880f0e80c723120a5a1e6c358bcba2331",
+      "execution_manifest_sha256": "669f2a55f3d107eba3bddc2c3e4bc3150f2155b46b441c8b82c4bd067768dcf8"
+    },
+    {
+      "name": "xy-static-phone",
+      "full_ms": 4.373906143215179,
+      "baseline_ms": 2.4424478570365906,
+      "increment_ms": 1.9314582861785885,
+      "samples_per_path": 540,
+      "same_output_as_bundle_control": true,
+      "rounds": [
+        {
+          "round": 0,
+          "fusion": 4.3706509349613185,
+          "baseline": 2.441822857051849,
+          "increment": 1.9288280779094693
+        },
+        {
+          "round": 1,
+          "baseline": 2.4422395237083436,
+          "fusion": 4.375051976520538,
+          "increment": 1.9328124528121946
+        },
+        {
+          "round": 2,
+          "fusion": 4.375572809841156,
+          "baseline": 2.4429166070251465,
+          "increment": 1.9326562028160095
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6282551929950714,
+        "pyramids_mip1": 0.12203124702072143,
+        "pyramids_mip2": 0.04572916555023193,
+        "pyramids_mip3": 0.025312499382019044,
+        "pyramids_mip4": 0.019192707864761353,
+        "pyramids_mip5": 0.017395832908630372,
+        "pyramids_mip6": 0.015911457944869995,
+        "pyramids_mip7": 0.014947916301727295,
+        "pyramids_mip8": 0.015182291296005249,
+        "reconstruct_mip8": 0.016067707941055297,
+        "reconstruct_mip7": 0.019192707864761353,
+        "reconstruct_mip6": 0.018854166206359862,
+        "reconstruct_mip5": 0.019062499534606935,
+        "reconstruct_mip4": 0.020234374505996702,
+        "reconstruct_mip3": 0.02117187448310852,
+        "reconstruct_mip2": 0.02481770772743225,
+        "reconstruct_mip1": 0.05015624877548218,
+        "reconstruct_ev": 0.18968749536895751,
+        "reconstruct_guided": 0.7061978994255066,
+        "apply_exposure_production": 2.1215103648719786
+      },
+      "raw_path": "outputs/android/goal180/xy-static-phone",
+      "raw_sha256": "e7fe6a5688b2a86a01b80c58a12df611e81305cc6eff434622645abdd753ae63",
+      "execution_manifest_sha256": "cd55827b5d7b24e243f177d2a6da74a5c5409d63c7740e5868bbbcc91c17caf6"
+    },
+    {
+      "name": "logproduct-phone",
+      "full_ms": 4.376432184820175,
+      "baseline_ms": 2.44273431536293,
+      "increment_ms": 1.9336978694572444,
+      "samples_per_path": 540,
+      "same_output_as_bundle_control": false,
+      "rounds": [
+        {
+          "round": 0,
+          "fusion": 4.3731248932342535,
+          "baseline": 2.4427082736968995,
+          "increment": 1.930416619537354
+        },
+        {
+          "round": 1,
+          "baseline": 2.4430988986873627,
+          "fusion": 4.378229059776306,
+          "increment": 1.935130161088943
+        },
+        {
+          "round": 2,
+          "fusion": 4.377630101457596,
+          "baseline": 2.44213535704422,
+          "increment": 1.935494744413376
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6222656098079682,
+        "pyramids_mip1": 0.12247395534324645,
+        "pyramids_mip2": 0.04614583220672607,
+        "pyramids_mip3": 0.025598957708358766,
+        "pyramids_mip4": 0.019348957860946654,
+        "pyramids_mip5": 0.01765624956893921,
+        "pyramids_mip6": 0.01609374960708618,
+        "pyramids_mip7": 0.015416666290283203,
+        "pyramids_mip8": 0.015468749622344971,
+        "reconstruct_mip8": 0.016484374597549437,
+        "reconstruct_mip7": 0.018932291204452514,
+        "reconstruct_mip6": 0.0191145828666687,
+        "reconstruct_mip5": 0.01932291619491577,
+        "reconstruct_mip4": 0.02033854117012024,
+        "reconstruct_mip3": 0.02151041614151001,
+        "reconstruct_mip2": 0.025260416049957275,
+        "reconstruct_mip1": 0.049947915447235106,
+        "reconstruct_ev": 0.1890885370502472,
+        "reconstruct_guided": 0.7063020660896302,
+        "apply_exposure_production": 2.1217186982002256
+      },
+      "raw_path": "outputs/android/goal180/logproduct-phone",
+      "raw_sha256": "0106578f35024b6b43a36140208e2e1f0648218fc8e654cd785e4c74c8fd2323",
+      "execution_manifest_sha256": "f2b21d2de58c1c7e6ca8d4aa02a67b90339f108e75c8da8f6ae3f57de2f9296f"
+    },
+    {
+      "name": "curvelog-phone",
+      "full_ms": 4.37627593482399,
+      "baseline_ms": 2.442005148714066,
+      "increment_ms": 1.9342707861099244,
+      "samples_per_path": 540,
+      "same_output_as_bundle_control": false,
+      "rounds": [
+        {
+          "round": 0,
+          "fusion": 4.372395726585388,
+          "baseline": 2.4415624403915404,
+          "increment": 1.930833286193848
+        },
+        {
+          "round": 1,
+          "baseline": 2.4421093153781888,
+          "fusion": 4.377630101457596,
+          "increment": 1.9355207860794073
+        },
+        {
+          "round": 2,
+          "fusion": 4.378645726432801,
+          "baseline": 2.4417968153858185,
+          "increment": 1.9368489110469822
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6236197764415741,
+        "pyramids_mip1": 0.12252603867530823,
+        "pyramids_mip2": 0.0454687488899231,
+        "pyramids_mip3": 0.025416666046142577,
+        "pyramids_mip4": 0.01903645786857605,
+        "pyramids_mip5": 0.01744791624069214,
+        "pyramids_mip6": 0.015989582942962648,
+        "pyramids_mip7": 0.015416666290283203,
+        "pyramids_mip8": 0.015468749622344971,
+        "reconstruct_mip8": 0.016197916271209718,
+        "reconstruct_mip7": 0.0191145828666687,
+        "reconstruct_mip6": 0.01932291619491577,
+        "reconstruct_mip5": 0.019479166191101075,
+        "reconstruct_mip4": 0.02046874950027466,
+        "reconstruct_mip3": 0.02145833280944824,
+        "reconstruct_mip2": 0.02510416605377197,
+        "reconstruct_mip1": 0.050286457105636596,
+        "reconstruct_ev": 0.19096353700447083,
+        "reconstruct_guided": 0.7061978994255066,
+        "apply_exposure_production": 2.121406198207855
+      },
+      "raw_path": "outputs/android/goal180/curvelog-phone",
+      "raw_sha256": "b3a2b66ddb94eaafdc6562faeaa043190d8842d497a12a8d98ad52fdf29c3648",
+      "execution_manifest_sha256": "0a4ed325a28db5a7414cefa670694021c7a4b0b6154e2d2935075901e123c5e0"
+    },
+    {
+      "name": "tail-phone",
+      "full_ms": 4.3900780178203584,
+      "baseline_ms": 2.4426041070327758,
+      "increment_ms": 1.9474739107875827,
+      "samples_per_path": 540,
+      "same_output_as_bundle_control": true,
+      "rounds": [
+        {
+          "round": 0,
+          "fusion": 4.3878384345417025,
+          "baseline": 2.442994732023239,
+          "increment": 1.9448437025184635
+        },
+        {
+          "round": 1,
+          "baseline": 2.4431770236854553,
+          "fusion": 4.390755101137161,
+          "increment": 1.947578077451706
+        },
+        {
+          "round": 2,
+          "fusion": 4.391249892791748,
+          "baseline": 2.4420051487140655,
+          "increment": 1.9492447440776828
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6269791513595581,
+        "pyramids_mip1": 0.12247395534324645,
+        "pyramids_mip2": 0.045937498878479005,
+        "pyramids_mip3": 0.0257031243724823,
+        "pyramids_mip4": 0.018984374536514283,
+        "tail_from_mip4": 0.13700520498847962,
+        "reconstruct_mip3": 0.02145833280944824,
+        "reconstruct_mip2": 0.02507812438774109,
+        "reconstruct_mip1": 0.05005208211135864,
+        "reconstruct_ev": 0.1890885370502472,
+        "reconstruct_guided": 0.7060676910953522,
+        "apply_exposure_production": 2.1216145315361024
+      },
+      "raw_path": "outputs/android/goal180/tail-phone",
+      "raw_sha256": "3c039749b3c372338fc4e9ab006dedff390234891f795f78fdf4f4af7f872013",
+      "execution_manifest_sha256": "8f6734e5b9ae4641c2786ce4fb0b9a59d2f280eb122afd47ba7a07712002e926"
+    },
+    {
+      "name": "control-phone",
+      "full_ms": 4.457135307849884,
+      "baseline_ms": 2.4415624403915404,
+      "increment_ms": 2.015572867458344,
+      "samples_per_path": 900,
+      "same_output_as_bundle_control": true,
+      "rounds": [
+        {
+          "round": 0,
+          "fusion": 4.455911349546433,
+          "baseline": 2.441770773719788,
+          "increment": 2.0141405758266453
+        },
+        {
+          "round": 1,
+          "baseline": 2.441666607055664,
+          "fusion": 4.457265516180039,
+          "increment": 2.0155989091243747
+        },
+        {
+          "round": 2,
+          "fusion": 4.458749891143799,
+          "baseline": 2.441275982065201,
+          "increment": 2.017473909078598
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6264322763729095,
+        "pyramids_mip1": 0.12276041366958618,
+        "pyramids_mip2": 0.04627604053688049,
+        "pyramids_mip3": 0.025468749378204345,
+        "pyramids_mip4": 0.018854166206359862,
+        "pyramids_mip5": 0.017552082904815674,
+        "pyramids_mip6": 0.01601562460899353,
+        "pyramids_mip7": 0.015208332962036133,
+        "pyramids_mip8": 0.015781249614715578,
+        "reconstruct_mip8": 0.01609374960708618,
+        "reconstruct_mip7": 0.019010416202545167,
+        "reconstruct_mip6": 0.01932291619491577,
+        "reconstruct_mip5": 0.019218749530792237,
+        "reconstruct_mip4": 0.020312499504089355,
+        "reconstruct_mip3": 0.021406249477386476,
+        "reconstruct_mip2": 0.025260416049957275,
+        "reconstruct_mip1": 0.05010416544342041,
+        "reconstruct_ev": 0.1887760370578766,
+        "reconstruct_guided": 0.7909635223560334,
+        "apply_exposure_production": 2.121484323205948
+      },
+      "raw_path": "outputs/android/goal180/control-phone",
+      "raw_sha256": "f69d801932e8961d6d1ce7b700e6fbcdf3e3ddf08ad5176a04a4916c636d1284",
+      "execution_manifest_sha256": "30e1623ca289e4ce746b24309686c09f728b2a1d0404e2632261be2b05a3f953"
+    },
+    {
+      "name": "direct-phone",
+      "full_ms": 4.228307188436508,
+      "baseline_ms": 2.44213535704422,
+      "increment_ms": 1.7861718313922883,
+      "samples_per_path": 540,
+      "same_output_as_bundle_control": true,
+      "rounds": [
+        {
+          "round": 0,
+          "fusion": 4.224218646869659,
+          "baseline": 2.441770773719788,
+          "increment": 1.782447873149871
+        },
+        {
+          "round": 1,
+          "baseline": 2.44213535704422,
+          "fusion": 4.228307188436508,
+          "increment": 1.7861718313922883
+        },
+        {
+          "round": 2,
+          "fusion": 4.230833230041505,
+          "baseline": 2.442161398710251,
+          "increment": 1.7886718313312535
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6241145680961608,
+        "pyramids_mip1": 0.12153645536613464,
+        "pyramids_mip2": 0.045703123884201044,
+        "pyramids_mip3": 0.025520832710266114,
+        "pyramids_mip4": 0.019062499534606935,
+        "pyramids_mip5": 0.017812499565124512,
+        "pyramids_mip6": 0.016328124601364135,
+        "pyramids_mip7": 0.015624999618530273,
+        "pyramids_mip8": 0.015624999618530273,
+        "reconstruct_mip8": 0.016406249599456788,
+        "reconstruct_mip7": 0.019062499534606935,
+        "reconstruct_mip6": 0.01924479119682312,
+        "reconstruct_mip5": 0.019140624532699584,
+        "reconstruct_mip4": 0.020182291173934937,
+        "reconstruct_mip3": 0.02083333282470703,
+        "reconstruct_mip2": 0.024635416065216065,
+        "reconstruct_mip1": 0.049999998779296874,
+        "reconstruct_ev": 0.18890624538803102,
+        "reconstruct_guided": 0.5546614447917939,
+        "apply_exposure_production": 2.121041614883423
+      },
+      "raw_path": "outputs/android/goal180/direct-phone",
+      "raw_sha256": "7625be61aa5c3a0b8d76eba5cd3f91f9f2e87fe4b6114122ee5aab0b392bd315",
+      "execution_manifest_sha256": "e53c1fb2b3e54672a0991bdd56c75d4cc17e9b02e33b382ee2347560b867bd79"
+    },
+    {
+      "name": "direct-long",
+      "full_ms": 4.229348855077744,
+      "baseline_ms": 2.4419530653820036,
+      "increment_ms": 1.78739578969574,
+      "samples_per_path": 1800,
+      "same_output_as_bundle_control": true,
+      "rounds": [
+        {
+          "round": 0,
+          "fusion": 4.227994688444138,
+          "baseline": 2.441822857051849,
+          "increment": 1.7861718313922887
+        },
+        {
+          "round": 1,
+          "baseline": 2.441770773719788,
+          "fusion": 4.229713438402175,
+          "increment": 1.7879426646823875
+        },
+        {
+          "round": 2,
+          "fusion": 4.230468646717071,
+          "baseline": 2.44213535704422,
+          "increment": 1.7883332896728512
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6311718595905303,
+        "pyramids_mip1": 0.12330728865623475,
+        "pyramids_mip2": 0.04614583220672607,
+        "pyramids_mip3": 0.02591145770072937,
+        "pyramids_mip4": 0.018828124540328978,
+        "pyramids_mip5": 0.017786457899093628,
+        "pyramids_mip6": 0.01651041626358032,
+        "pyramids_mip7": 0.015546874620437622,
+        "pyramids_mip8": 0.015703124616622925,
+        "reconstruct_mip8": 0.01630208293533325,
+        "reconstruct_mip7": 0.019427082859039307,
+        "reconstruct_mip6": 0.019791666183471678,
+        "reconstruct_mip5": 0.019817707849502562,
+        "reconstruct_mip4": 0.0208854161567688,
+        "reconstruct_mip3": 0.022005207796096802,
+        "reconstruct_mip2": 0.025520832710266114,
+        "reconstruct_mip1": 0.050338540437698365,
+        "reconstruct_ev": 0.18963541203689577,
+        "reconstruct_guided": 0.5563020697517395,
+        "apply_exposure_production": 2.1213541148757935
+      },
+      "raw_path": "outputs/android/goal180/direct-long",
+      "raw_sha256": "e1cd0782e22bd94b1a703c2c05d653afc0b9d2b8781e93aa4ab4e46984b398f7",
+      "execution_manifest_sha256": "e53c1fb2b3e54672a0991bdd56c75d4cc17e9b02e33b382ee2347560b867bd79"
+    },
+    {
+      "name": "control-long",
+      "full_ms": 4.464010307682037,
+      "baseline_ms": 2.441927023715973,
+      "increment_ms": 2.0220832839660643,
+      "samples_per_path": 1800,
+      "same_output_as_bundle_control": true,
+      "rounds": [
+        {
+          "round": 0,
+          "fusion": 4.463046766038895,
+          "baseline": 2.4421874403762818,
+          "increment": 2.020859325662613
+        },
+        {
+          "round": 1,
+          "baseline": 2.4419530653820036,
+          "fusion": 4.4644009326725005,
+          "increment": 2.022447867290497
+        },
+        {
+          "round": 2,
+          "fusion": 4.464505099336624,
+          "baseline": 2.4415624403915404,
+          "increment": 2.022942658945084
+        }
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6275520680122375,
+        "pyramids_mip1": 0.12315103866004944,
+        "pyramids_mip2": 0.046015623876571654,
+        "pyramids_mip3": 0.025781249370574952,
+        "pyramids_mip4": 0.019531249523162843,
+        "pyramids_mip5": 0.017760416233062744,
+        "pyramids_mip6": 0.016197916271209718,
+        "pyramids_mip7": 0.015520832954406738,
+        "pyramids_mip8": 0.015572916286468506,
+        "reconstruct_mip8": 0.01651041626358032,
+        "reconstruct_mip7": 0.019348957860946654,
+        "reconstruct_mip6": 0.019687499519348145,
+        "reconstruct_mip5": 0.019765624517440794,
+        "reconstruct_mip4": 0.02083333282470703,
+        "reconstruct_mip3": 0.021979166130065918,
+        "reconstruct_mip2": 0.02549479104423523,
+        "reconstruct_mip1": 0.050416665435791014,
+        "reconstruct_ev": 0.1901822870235443,
+        "reconstruct_guided": 0.7911197723522185,
+        "apply_exposure_production": 2.121458281539917
+      },
+      "raw_path": "outputs/android/goal180/control-long",
+      "raw_sha256": "74efca90d95c3371c0265c399717c6fe01752034883002da7c9eca3b3150f7ac",
+      "execution_manifest_sha256": "30e1623ca289e4ce746b24309686c09f728b2a1d0404e2632261be2b05a3f953"
+    }
+  ],
+  "phone_image_checks": [
+    {
+      "scene": "abandoned_tiled_room",
+      "byte_identical": true,
+      "raw_path": "outputs/android/goal180/quality-abandoned_tiled_room",
+      "timing_use": false
+    },
+    {
+      "scene": "qwantani_patio",
+      "byte_identical": true,
+      "raw_path": "outputs/android/goal180/quality-qwantani_patio",
+      "timing_use": false
+    },
+    {
+      "scene": "sundowner_deck",
+      "byte_identical": true,
+      "raw_path": "outputs/android/goal180/quality-sundowner_deck",
+      "timing_use": false
+    },
+    {
+      "scene": "veranda",
+      "byte_identical": true,
+      "raw_path": "outputs/android/goal180/direct-long",
+      "timing_use": true
+    }
+  ],
+  "desktop_scenes": [
+    {
+      "scene": "abandoned_tiled_room_4k",
+      "quality_vs_current": {
+        "finite": true,
+        "rmse_codes": 0.0027486902979254437,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "quality_vs_original": {
+        "finite": true,
+        "rmse_codes": 0.1009352166128101,
+        "p99_codes": 1.0,
+        "max_codes": 2.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "qwantani_patio_4k",
+      "quality_vs_current": {
+        "finite": true,
+        "rmse_codes": 0.002196026152894708,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "quality_vs_original": {
+        "finite": true,
+        "rmse_codes": 0.1133831646530867,
+        "p99_codes": 1.0,
+        "max_codes": 3.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "sundowner_deck_4k",
+      "quality_vs_current": {
+        "finite": true,
+        "rmse_codes": 0.0034952937200327544,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "quality_vs_original": {
+        "finite": true,
+        "rmse_codes": 0.11013970622273911,
+        "p99_codes": 1.0,
+        "max_codes": 4.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "veranda_4k",
+      "quality_vs_current": {
+        "finite": true,
+        "rmse_codes": 0.003079660809178257,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "quality_vs_original": {
+        "finite": true,
+        "rmse_codes": 0.11559319298917259,
+        "p99_codes": 1.0,
+        "max_codes": 4.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    }
+  ],
+  "synthetic_checks": {
+    "quality-direct.json": {
+      "accepted": true,
+      "width": 513,
+      "height": 289,
+      "temporal_max": 2.0
+    },
+    "quality-tiny.json": {
+      "accepted": true,
+      "width": 17,
+      "height": 9,
+      "temporal_max": 1.0
+    }
+  },
+  "traffic": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 45,
+    "rows": [
+      {
+        "pass_name": "reduce_setup",
+        "read_sweep_bytes": 8294400,
+        "write_bytes": 2592000,
+        "expanded_read_bytes": 24883200
+      },
+      {
+        "pass_name": "pyramids_mip1",
+        "read_sweep_bytes": 1036800,
+        "write_bytes": 259200,
+        "expanded_read_bytes": 4147200
+      },
+      {
+        "pass_name": "pyramids_mip2",
+        "read_sweep_bytes": 259200,
+        "write_bytes": 64320,
+        "expanded_read_bytes": 1029120
+      },
+      {
+        "pass_name": "pyramids_mip3",
+        "read_sweep_bytes": 64320,
+        "write_bytes": 15840,
+        "expanded_read_bytes": 253440
+      },
+      {
+        "pass_name": "pyramids_mip4",
+        "read_sweep_bytes": 15840,
+        "write_bytes": 3840,
+        "expanded_read_bytes": 61440
+      },
+      {
+        "pass_name": "pyramids_mip5",
+        "read_sweep_bytes": 3840,
+        "write_bytes": 960,
+        "expanded_read_bytes": 15360
+      },
+      {
+        "pass_name": "pyramids_mip6",
+        "read_sweep_bytes": 960,
+        "write_bytes": 224,
+        "expanded_read_bytes": 3584
+      },
+      {
+        "pass_name": "pyramids_mip7",
+        "read_sweep_bytes": 224,
+        "write_bytes": 48,
+        "expanded_read_bytes": 768
+      },
+      {
+        "pass_name": "pyramids_mip8",
+        "read_sweep_bytes": 48,
+        "write_bytes": 8,
+        "expanded_read_bytes": 128
+      },
+      {
+        "pass_name": "reconstruct_mip8",
+        "read_sweep_bytes": 8,
+        "write_bytes": 4,
+        "expanded_read_bytes": 8
+      },
+      {
+        "pass_name": "reconstruct_mip7",
+        "read_sweep_bytes": 56,
+        "write_bytes": 24,
+        "expanded_read_bytes": 240
+      },
+      {
+        "pass_name": "reconstruct_mip6",
+        "read_sweep_bytes": 272,
+        "write_bytes": 112,
+        "expanded_read_bytes": 1120
+      },
+      {
+        "pass_name": "reconstruct_mip5",
+        "read_sweep_bytes": 1184,
+        "write_bytes": 480,
+        "expanded_read_bytes": 4800
+      },
+      {
+        "pass_name": "reconstruct_mip4",
+        "read_sweep_bytes": 4800,
+        "write_bytes": 1920,
+        "expanded_read_bytes": 19200
+      },
+      {
+        "pass_name": "reconstruct_mip3",
+        "read_sweep_bytes": 19680,
+        "write_bytes": 7920,
+        "expanded_read_bytes": 79200
+      },
+      {
+        "pass_name": "reconstruct_mip2",
+        "read_sweep_bytes": 80160,
+        "write_bytes": 32160,
+        "expanded_read_bytes": 321600
+      },
+      {
+        "pass_name": "reconstruct_mip1",
+        "read_sweep_bytes": 323520,
+        "write_bytes": 129600,
+        "expanded_read_bytes": 1296000
+      },
+      {
+        "pass_name": "reconstruct_ev",
+        "read_sweep_bytes": 2853248,
+        "write_bytes": 1036800,
+        "expanded_read_bytes": 7257600
+      },
+      {
+        "pass_name": "reconstruct_guided",
+        "read_sweep_bytes": 1036800,
+        "write_bytes": 518400,
+        "expanded_read_bytes": 6919680
+      },
+      {
+        "pass_name": "apply_exposure_production",
+        "read_sweep_bytes": 518400,
+        "write_bytes": 0,
+        "expanded_read_bytes": 33177600
+      }
+    ],
+    "fusion_scale": 4,
+    "baseline_bytes": 16588800,
+    "incremental_sweep_bytes": 19177620,
+    "incremental_sweep_gbps": 0.8629929,
+    "incremental_expanded_bytes": 84135148,
+    "incremental_expanded_gbps": 3.78608166,
+    "assumptions": [
+      "Increment over matched tonemap: final source read and output write cancel; all other production passes remain.",
+      "Sweep model charges every bound input mip once per pass, and every output once. Assumes within-pass reuse; ignores cross-pass reuse. Not a DRAM lower bound.",
+      "Expanded model includes zero-weight/duplicate texel slots even for aligned reduction samples. It charges each issued load and four texels per bilinear 2D sample (two for 1D), including duplicate/clamped taps. Not a DRAM upper bound.",
+      "Default reduction integrates 16 source locations; the divisible-size gather variant uses 12 component gathers covering the same 4x4 pixels. Separate guided stages load 144 entries per 8x8 group; fused guided uses output-tile halos, independently of thread-group size; direct moments instead count six texture loads per pair of horizontal windows plus a per-thread anchor load. Partial groups included; shared-memory accesses excluded.",
+      "Whole stored texel bytes charged even for RGB/alpha-only reads. Inverse LUT assumed queried at every low-res pixel; actual branch can skip.",
+      "No compression, cache-line transactions, write allocation, uniforms, instructions, metadata or unrelated GPU traffic modeled.",
+      "Calibration, uploads, viewer/debug resources and presentation excluded."
+    ]
+  },
+  "extra_expanded_read_bytes": 4569600,
+  "shader": {
+    "spirv_sha256": "098da2d2549c137eb87085e0fa68bcd955aca59e5a937bb105b0357c4a9cbab6",
+    "current_source_sha256": "c261e84dcb084ea5a744dd061021ba2bd9c0bd6f22bf339cca189ca31d989c37",
+    "fresh_default_prepare_binary_match": true,
+    "workgroup_barriers": 3,
+    "shared_bytes": 13440,
+    "a730_offline": {
+      "main_instructions": 781,
+      "register_footprint": 9,
+      "scratch": 0,
+      "projected_occupancy_percent": 75
+    }
+  },
+  "validation": "10 unit/regression tests; fresh prepare confirms default shader matches timed SPIR-V; desktop four scenes max one sRGB8 code, RMSE <.004; four phone scenes byte-identical; viewed Veranda comparison",
+  "limitations": [
+    "Same phone/driver/static scene timing; not A730 phone time or all-scene speed guarantee",
+    "No physical DRAM or power counters; direct reads increase cache demand",
+    "Existing narrow-sigma residual precision limitations remain",
+    "Rejected log-product/curve-log runs compared against the old control, not a new headless golden; failed exact check, no measured gain, not retained"
+  ],
+  "research_archive": "outputs/android/goal180/research-before-cleanup.patch and .slang preserve rejected code; rejected setup and tail edits were removed; 16/8 tail variants passed desktop gates but were not phone timed"
+}

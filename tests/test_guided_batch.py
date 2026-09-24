@@ -12,11 +12,13 @@ class GuidedBatchTests(unittest.TestCase):
         device = spy.Device(enable_hot_reload=False)
         kernels = {}
         for name, batch, sliding in [('control', 1, 0), ('batch2', 2, 0),
-                                     ('batch4', 4, 0), ('sliding4', 4, 1), ('vertical256', 1, 0), ('vertical128', 1, 0)]:
+                                     ('batch4', 4, 0), ('sliding4', 4, 1), ('vertical256', 1, 0), ('vertical128', 1, 0), ('static', 1, 0), ('xy-static', 2, 0), ('direct-static', 2, 0)]:
             session = device.create_slang_session(compiler_options={
                 'include_paths': [ROOT / 'shaders'],
                 'defines': {'SEPARABLE_GUIDED': '1', 'PRECOMPUTED_EV': '1',
-                            'GUIDED_VERTICAL': '2' if name.startswith('vertical') else '1',
+                            'GUIDED_DIRECT_MOMENTS': '1' if name == 'direct-static' else '0',
+                            'GUIDED_STATIC_WINDOWS': '1' if 'static' in name else '0',
+                            'GUIDED_VERTICAL': '2' if name.startswith('vertical') or 'static' in name else '1',
                             'GUIDED_THREADS_Y': '8' if name == 'vertical128' else '16',
                             'GUIDED_BATCH': str(batch), 'GUIDED_SLIDING': str(sliding)},
             })
@@ -45,7 +47,7 @@ class GuidedBatchTests(unittest.TestCase):
                         coefficients = output.to_numpy()
                         self.assertTrue(np.isfinite(coefficients).all(), name)
                         results[name] = coefficients[..., 0] * data[..., 1] + coefficients[..., 1]
-                    for name in ('batch2', 'batch4', 'sliding4', 'vertical256', 'vertical128'):
+                    for name in ('batch2', 'batch4', 'sliding4', 'vertical256', 'vertical128', 'static', 'xy-static', 'direct-static'):
                         # Under 0.001 EV is about 0.07% exposure; this checks only
                         # the scheduling change, independently of the Fusion proxy.
                         np.testing.assert_allclose(results[name], results['control'],

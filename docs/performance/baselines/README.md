@@ -3,7 +3,7 @@
 JSON files preserve compiler/device identity, hashes, settings and measurements.
 Recorded absolute paths describe the original run and are intentionally unchanged.
 
-- [Current retained optimization](guided-vertical-reuse.json).
+- [Current retained optimization](goal180.json).
 - [Bottleneck diagnosis](bottleneck-diagnosis.json) and [dependency graph](dependency-review.json).
 - [Tile-memory experiment](tile-memory-runtime.json).
 

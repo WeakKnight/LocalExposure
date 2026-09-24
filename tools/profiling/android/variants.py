@@ -1,6 +1,6 @@
 """Explicit profiling presets; experimental entries are not runtime defaults.
 
-Default mobile algorithm: guided-vertical2-t256. Frozen control: gather-reduction.
+Default mobile algorithm: guided-direct-moments. Frozen control: gather-reduction.
 Output integration alternatives:
 gather-work16 and gather-fragment. See docs/performance/archive/twohour-optimization.md.
 The remaining presets preserve experiments and independent historical controls.
@@ -81,4 +81,10 @@ VARIANTS["guided-sliding4"] = {**VARIANTS["guided-batch4"], "guided_sliding": Tr
 for threads_y in (16,8):
     VARIANTS[f"guided-vertical2-t{threads_y*16}"] = {**VARIANTS["gather-reduction"], "guided_vertical": 2, "guided_threads_y": threads_y}
 
-DEFAULT_VARIANT = "guided-vertical2-t256"
+# Retained Guided scheduling: shared-window reuse, static register indexing,
+# then direct read-only moments to remove one workgroup publication barrier.
+VARIANTS["guided-static2"] = {**VARIANTS["guided-vertical2-t256"], "guided_static_windows": True}
+VARIANTS["guided-xy-static2"] = {**VARIANTS["guided-static2"], "guided_batch": 2}
+VARIANTS["guided-direct-moments"] = {**VARIANTS["guided-xy-static2"], "guided_direct_moments": True}
+
+DEFAULT_VARIANT = "guided-direct-moments"

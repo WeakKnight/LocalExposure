@@ -4,6 +4,12 @@
 // The legacy graph remains the independent numerical reference.
 #include "guided.slang"
 #include "zcurve.slang"
+#ifndef GUIDED_DIRECT_MOMENTS
+#define GUIDED_DIRECT_MOMENTS 0
+#endif
+#ifndef GUIDED_STATIC_WINDOWS
+#define GUIDED_STATIC_WINDOWS 0
+#endif
 #ifndef GUIDED_VERTICAL
 #define GUIDED_VERTICAL 1
 #endif
@@ -96,6 +102,9 @@
 #endif
 #ifndef TILE_Y
 #define TILE_Y 16
+#endif
+#if GUIDED_DIRECT_MOMENTS && (!SEPARABLE_GUIDED || !PRECOMPUTED_EV || MOMENT_INPUT || GUIDED_RADIUS != 2)
+#error Direct moments require precomputed EV and separable radius-two Guided
 #endif
 #if GUIDED_VERTICAL != 1 && GUIDED_VERTICAL != 2
 #error Unsupported vertical Guided batch
@@ -520,7 +529,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     averagedOutput.GetDimensions(w,h);
     uint lane=localID.y*TILE_X+localID.x;
     int2 origin=int2(groupID.xy*uint2(TILE_X,TILE_Y));
-#if !MOMENT_INPUT
+#if !MOMENT_INPUT && !GUIDED_DIRECT_MOMENTS
     for(uint i=lane; i<inputPitch*inputHeight; i+=TILE_X*GUIDED_THREADS_Y)
     {
         int2 p=clamp(origin+int2(i%inputPitch,i/inputPitch)-2*GUIDED_RADIUS,int2(0),int2(w-1,h-1));
@@ -588,6 +597,28 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     GroupMemoryBarrierWithGroupSync();
 #endif
 #endif
+#if GUIDED_DIRECT_MOMENTS
+    // Read-only input permits redundant cached loads instead of a shared tile
+    // publication barrier. Keep the same tile anchor and FP32 moment order.
+    float anchor=compactSource[clamp(origin,int2(0),int2(w-1,h-1))].y;
+    static const uint directChunks=(coefficientPitch+1)/2;
+    for(uint task=lane;task<directChunks*inputHeight;task+=TILE_X*GUIDED_THREADS_Y) {
+        uint row=task/directChunks,col=(task%directChunks)*2;
+        float4 values[6];
+        [unroll] for(uint k=0;k<6;k++) {
+            int2 p=clamp(origin+int2(col+k,row)-2*GUIDED_RADIUS,int2(0),int2(w-1,h-1));
+            float2 lg=compactSource[p];
+            float g=lg.y-anchor,e=lg.x;
+            values[k]=float4(g,e,g*g,g*e);
+        }
+        [unroll] for(uint j=0;j<2;j++) if(col+j<coefficientPitch) {
+            float4 moments=0;
+            [unroll] for(uint k=0;k<5;k++)moments+=values[j+k];
+            rowMoments[row*momentPitch+col+j]=moments;
+        }
+    }
+    GroupMemoryBarrierWithGroupSync();
+#endif
 #if GUIDED_VERTICAL == 2
     // Two adjacent vertical windows share six rows. Preserve summation order.
     for(uint task=lane;task<coefficientPitch*((coefficientHeight+1)/2);task+=TILE_X*GUIDED_THREADS_Y) {
@@ -600,7 +631,16 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
             int cy=clamp(origin.y+int(row+j)-GUIDED_RADIUS,0,int(h-1));
             uint offset=uint(cy-first.y);
             float4 moments=0;
+#if GUIDED_STATIC_WINDOWS
+            // Avoid dynamic indexing of a private register array at clamped edges.
+            if(offset==0) {
+                [unroll] for(uint k=0;k<5;k++) moments+=cached[k];
+            } else {
+                [unroll] for(uint k=0;k<5;k++) moments+=cached[k+1];
+            }
+#else
             [unroll] for(uint k=0;k<5;k++) moments+=cached[offset+k];
+#endif
             moments/=25.0;
             float variance=max(moments.z-moments.x*moments.x,0.0);
             half covariance=half(moments.w-moments.x*moments.y);

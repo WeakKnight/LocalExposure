@@ -28,3 +28,19 @@ class TrafficTests(unittest.TestCase):
     def test_unknown_pass_fails_instead_of_silently_undercounting(self):
         self.manifest['passes'][0]['entry']='future_pass'
         with self.assertRaises(ValueError): estimate(self.manifest)
+
+    def test_direct_moments_counts_repeated_loads_but_same_resource_sweep(self):
+        m=copy.deepcopy(self.manifest)
+        m['resources'] += [dict(name='guide_ev',width=17,height=17,levels=1,bpp=8),
+                           dict(name='averaged_test',width=17,height=17,levels=1,bpp=4)]
+        m['config']['variant_settings']=dict(precomputed_ev=True,guided_vertical=2,guided_threads_y=16)
+        m['passes']=[dict(entry='reconstruct_guided',label='guided',baseline=False,
+            width=17,height=17,group_size=[16,16,1],descriptors=[
+                dict(name='compactSource',resource='guide_ev',mip=0),
+                dict(name='averagedOutput',resource='averaged_test',mip=0)])]
+        before=estimate(m)['rows'][0]
+        m['config']['variant_settings']['guided_direct_moments']=True
+        after=estimate(m)['rows'][0]
+        self.assertEqual(before['expanded_read_bytes'],4*24*24*8)
+        self.assertEqual(after['expanded_read_bytes'],4*(10*24*6+256)*8)
+        self.assertEqual(after['read_sweep_bytes'],before['read_sweep_bytes'])

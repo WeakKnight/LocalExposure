@@ -114,6 +114,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
         if module in ('fusion_compact','present'):
             flags += [f"-DWORK_X={variant_config.get('work_x',8)}",f"-DWORK_Y={variant_config.get('work_y',8)}"]
         if module=='fusion_compact':
+            flags += [f"-DDIRECT_BATCH={variant_config.get('direct_batch',2)}", f"-DTAIL_X={variant_config.get('tail_x',8)}"]
             flags += [f"-DGUIDED_DIRECT_MOMENTS={int(variant_config.get('guided_direct_moments',False))}"]
             flags += [f"-DGUIDED_STATIC_WINDOWS={int(variant_config.get('guided_static_windows',False))}"]
             flags += [f"-DGUIDED_VERTICAL={variant_config.get('guided_vertical',1)}",f"-DGUIDED_THREADS_Y={variant_config.get('guided_threads_y',variant_config.get('tile_y',16))}"]
@@ -232,7 +233,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
         if variant_config.get('cooperative_reduction'):manifest['passes'][-1]['dispatch_groups']=[(w+7)//8,(h+7)//8,1]
         # A tail candidate only launches when its complete shared footprint fits.
         tail_mip=1
-        while tail_mip<levels-1 and (max(1,w>>tail_mip)>32 or max(1,h>>tail_mip)>16):tail_mip+=1
+        while tail_mip<levels-1 and (max(1,w>>tail_mip)>variant_config.get('tail_max_width',32) or max(1,h>>tail_mip)>variant_config.get('tail_max_height',16)):tail_mip+=1
         use_tail=variant_config.get('tail_fusion') and tail_mip<levels-1
         manifest['config']['tail_mip']=tail_mip if use_tail else None
         for mip in range(1,tail_mip+1 if use_tail else levels):

@@ -12,14 +12,15 @@ class GuidedBatchTests(unittest.TestCase):
         device = spy.Device(enable_hot_reload=False)
         kernels = {}
         for name, batch, sliding in [('control', 1, 0), ('batch2', 2, 0),
-                                     ('batch4', 4, 0), ('sliding4', 4, 1), ('vertical256', 1, 0), ('vertical128', 1, 0), ('static', 1, 0), ('xy-static', 2, 0), ('direct-static', 2, 0)]:
+                                     ('batch4', 4, 0), ('sliding4', 4, 1), ('vertical256', 1, 0), ('vertical128', 1, 0), ('static', 1, 0), ('xy-static', 2, 0), ('direct-static', 2, 0), ('direct1-static', 2, 0), ('direct512-static', 2, 0)]:
             session = device.create_slang_session(compiler_options={
                 'include_paths': [ROOT / 'shaders'],
                 'defines': {'SEPARABLE_GUIDED': '1', 'PRECOMPUTED_EV': '1',
-                            'GUIDED_DIRECT_MOMENTS': '1' if name == 'direct-static' else '0',
+                            'DIRECT_BATCH': '1' if name in ('direct1-static','direct512-static') else '2',
+                            'GUIDED_DIRECT_MOMENTS': '1' if name.startswith('direct') else '0',
                             'GUIDED_STATIC_WINDOWS': '1' if 'static' in name else '0',
                             'GUIDED_VERTICAL': '2' if name.startswith('vertical') or 'static' in name else '1',
-                            'GUIDED_THREADS_Y': '8' if name == 'vertical128' else '16',
+                            'GUIDED_THREADS_Y': '8' if name == 'vertical128' else '32' if name == 'direct512-static' else '16',
                             'GUIDED_BATCH': str(batch), 'GUIDED_SLIDING': str(sliding)},
             })
             kernels[name] = device.create_compute_kernel(
@@ -42,12 +43,12 @@ class GuidedBatchTests(unittest.TestCase):
                         output = device.create_texture(
                             width=width, height=height, format=spy.Format.rg32_float,
                             usage=spy.TextureUsage.shader_resource | spy.TextureUsage.unordered_access)
-                        kernel.dispatch(thread_count=[((width+15)//16)*16, ((height+15)//16)*(8 if name == 'vertical128' else 16), 1], vars={
+                        kernel.dispatch(thread_count=[((width+15)//16)*16, ((height+15)//16)*(8 if name == 'vertical128' else 32 if name == 'direct512-static' else 16), 1], vars={
                             'compactSource': source, 'averagedOutput': output})
                         coefficients = output.to_numpy()
                         self.assertTrue(np.isfinite(coefficients).all(), name)
                         results[name] = coefficients[..., 0] * data[..., 1] + coefficients[..., 1]
-                    for name in ('batch2', 'batch4', 'sliding4', 'vertical256', 'vertical128', 'static', 'xy-static', 'direct-static'):
+                    for name in ('batch2', 'batch4', 'sliding4', 'vertical256', 'vertical128', 'static', 'xy-static', 'direct-static', 'direct1-static', 'direct512-static'):
                         # Under 0.001 EV is about 0.07% exposure; this checks only
                         # the scheduling change, independently of the Fusion proxy.
                         np.testing.assert_allclose(results[name], results['control'],

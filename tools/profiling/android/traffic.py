@@ -45,9 +45,10 @@ def estimate(manifest, fps=45):
             loads=((p['width']+gx-1)//gx)*((p['height']+gy-1)//gy)*(gx+4*radius)*(gy+4*radius)
             if config.get('guided_direct_moments'):
                 groups=((p['width']+gx-1)//gx)*((p['height']+gy-1)//gy)
-                # Six input loads per pair of horizontal windows, plus one
-                # anchor load per thread. Cache/broadcast savings are unknown.
-                loads=groups*(((gx+2*radius+1)//2)*(gy+4*radius)*6+threads)
+                # A batch shares its horizontal halo. Count the per-thread anchor
+                # too; texture cache/broadcast savings are unknown.
+                batch=config.get('direct_batch',2)
+                loads=groups*(((gx+2*radius+batch-1)//batch)*(gy+4*radius)*(batch+2*radius)+threads)
             if 'momentSource' in descriptors:
                 coefficient_loads=((p['width']+gx-1)//gx)*((p['height']+gy-1)//gy)*(gx+2*radius)*(gy+2*radius)
                 read('momentSource',coefficient_loads*3,True);write('averagedOutput')
@@ -124,7 +125,7 @@ def estimate(manifest, fps=45):
                     'Increment over matched tonemap: final source read and output write cancel; all other production passes remain.',
                     'Sweep model charges every bound input mip once per pass, and every output once. Assumes within-pass reuse; ignores cross-pass reuse. Not a DRAM lower bound.',
                     'Expanded model includes zero-weight/duplicate texel slots even for aligned reduction samples. It charges each issued load and four texels per bilinear 2D sample (two for 1D), including duplicate/clamped taps. Not a DRAM upper bound.',
-                    'Default reduction integrates 16 source locations; the divisible-size gather variant uses 12 component gathers covering the same 4x4 pixels. Separate guided stages load 144 entries per 8x8 group; fused guided uses output-tile halos, independently of thread-group size; direct moments instead count six texture loads per pair of horizontal windows plus a per-thread anchor load. Partial groups included; shared-memory accesses excluded.',
+                    'Default reduction integrates 16 source locations; the divisible-size gather variant uses 12 component gathers covering the same 4x4 pixels. Separate guided stages load 144 entries per 8x8 group; fused guided uses output-tile halos, independently of thread-group size; direct moments count each horizontal batch and its halo plus a per-thread anchor load. Partial groups included; shared-memory accesses excluded.',
                     'Whole stored texel bytes charged even for RGB/alpha-only reads. Inverse LUT assumed queried at every low-res pixel; actual branch can skip.',
                     'No compression, cache-line transactions, write allocation, uniforms, instructions, metadata or unrelated GPU traffic modeled.',
                     'Calibration, uploads, viewer/debug resources and presentation excluded.'])

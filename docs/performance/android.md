@@ -19,11 +19,11 @@ bundle and validates against the same-phone reference. The second measures a
 real graphics-produced HDR input. **Use the foreground result for game-performance
 comparisons**, not the preliminary headless timing.
 
-Defaults are 1920x1080, `guided-direct-moments`, R11G11B10 input and RGBA8 sRGB output.
+Defaults are 1920x1080, `guided-direct-tail`, R11G11B10 input and RGBA8 sRGB output.
 The retained compute output encodes sRGB explicitly through a compatible UNORM
 storage view. Final blit/presentation is outside the reported GPU interval.
 
-Use `--variant gather-reduction` or `--variant lossless` on the first command for
+Use `--variant guided-direct-moments` or `--variant lossless` on the first command for
 controls. Other useful options are `--image assets/another.exr`, `--ev`,
 `--width`, `--height` and `--serial`. Use fresh output directories and run only
 one phone benchmark at a time. `--fps` and `--interval-ms` are mutually exclusive.

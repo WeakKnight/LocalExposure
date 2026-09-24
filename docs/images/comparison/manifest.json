@@ -1,0 +1,108 @@
+{
+  "settings": {
+    "width": 1920,
+    "height": 1080,
+    "global_ev": 0.0,
+    "bracket_ev": 1.2,
+    "sigma": 0.2,
+    "fusion_scale": 4,
+    "input_format": "R11G11B10_FLOAT"
+  },
+  "variant": "guided-direct-tail",
+  "variant_config": {
+    "half_aux": true,
+    "compute_srgb": true,
+    "cached_baseline": true,
+    "log_exposure": true,
+    "separable_guided": true,
+    "precomputed_ev": true,
+    "residual_pyramid": true,
+    "gather_reduction": true,
+    "guided_vertical": 2,
+    "guided_threads_y": 32,
+    "guided_static_windows": true,
+    "guided_batch": 2,
+    "guided_direct_moments": true,
+    "direct_batch": 1,
+    "tail_fusion": true,
+    "tail_max_width": 16,
+    "tail_max_height": 8,
+    "tail_x": 16
+  },
+  "backend": {
+    "api": "D3D12",
+    "adapter": "NVIDIA GeForce RTX 5080"
+  },
+  "sources": {
+    "tone_mapper.py": "10ec0f77964e96a9c2a0417e8d4a9ae56f5bd9cf4ea0977821b0cbd1b5d6889b",
+    "zcurve.py": "6c5e9f07dc8b9ca1e9cd877fe6cbca196c829b43bdc41ba59b48384c15c7db8b",
+    "requirements.txt": "83309e8b213979037e2353ae66b125927ba4ffc718a2a9ce5bf1938c2ba5df80",
+    "tools/render_comparison.py": "6c6a1e2256455855a61f724fd06002995f5e8d9f816427eecc23c905b4a64d20",
+    "tools/profiling/android/quality.py": "a72ae178f4773c39a492d85a92eaff5f5862442f6b96ce352e1b22c5162a984f",
+    "tools/profiling/android/quality_sweep.py": "cce648477efb04ea7e8abc08865826949a61916aeaf44caab2067d6680d86444",
+    "tools/profiling/android/variants.py": "4f68e74b4782efef067825780817d98b4f9779bd0a18cf5d11c40353bb7c566c",
+    "tools/profiling/android/pack_source.slang": "32a7d227670f04c003d46f6c37d9916f593f2a39d5045b874bb53b8244b7e346",
+    "shaders/aces.slang": "926b65c08bd1cd46e13ce28eb82cba9ce6428b74a32ea5743ae7e3b8ac0d006f",
+    "shaders/fusion.slang": "ed98e36c678c1450d437bcbc84c9c186a0628e280332d5d5186e8154f317c75c",
+    "shaders/fusion_compact.slang": "7b7c745d8ddb88fcfe7ca32d9cf07a4eb31db5e11bc593304dd08e8882a70331",
+    "shaders/guided.slang": "43050071379ca3ea95ce5929af6169155e80b3b116d5a359b30e81f8427f62fe",
+    "shaders/pyramid.slang": "7f1e3b61cdfc95ca0c833c9a23316fd4ff5d8dccc734c30260a2925fe005758d",
+    "shaders/tone_operator.slang": "5ddc7bf52dabba3427fb4d87d95fac268142101b9301f1d660aa82799891fb72",
+    "shaders/tonemap.slang": "87ac9969949225b35f3c8fb7fffa21268a9301c3bcf5de211296376bd6dd299d",
+    "shaders/zcurve.slang": "94aeed77fb2843675a1104be81e076b7476c7430ce0c8b1bbaa53f225c39cc76",
+    "shaders/zcurve_calibrate.slang": "36010790bb5cee42e4501e0cd8cc883631fe128a8be2211340914ed74537928a",
+    "Assets/sundowner_deck_4k.exr": "1a64e9e8ef071356fd6c1b28b201fc3425c3e481138ceae56abb9555c99cd0d7",
+    "Assets/veranda_4k.exr": "818c3b1d8086ab6e0a2b73852f8ac2db497848cc9f7e1d9bc32cc9c63910e4d8"
+  },
+  "artifacts": {
+    "sundowner_deck-reference.png": "c04de7241c944f0e62ef9002dc42643c028506f1f7ef5ee2b1faf340eb70881d",
+    "sundowner_deck-optimized.png": "739dc0b887b9e4bddc36db533a5b719c61ea2cf55c7707588fe045209ef9f58c",
+    "sundowner_deck-error.png": "979c81524da7ee66a97af5ff0531eb55878d59a29f346e7834ec4eb2df552804",
+    "sundowner_deck-comparison.png": "f56c4b61a969c51de16268b7c2f7975dc5b9cb9671a20b771241d5cc7ad54a3e",
+    "veranda-reference.png": "9f57c45645203edab8e9a5f9987775718ac95217436fe7aad9b9fdb8d1fbd75d",
+    "veranda-optimized.png": "14ababf4410cff6301b824a9b82d2d9d157d218d7394b539c34a3cf43301307b",
+    "veranda-error.png": "eed7943023313e1d47e52b43b1fd738a647ec73a293ef5cecbc4299109b4c0ff",
+    "veranda-comparison.png": "81fcb7093b53a659b8760648674e04ac8c1a29a4f8db618030abfb2dda0ca774"
+  },
+  "scenes": [
+    {
+      "scene": "sundowner_deck",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.10488716870254537,
+        "p99_codes": 1.0,
+        "max_codes": 3.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      }
+    },
+    {
+      "scene": "veranda",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.09984877969501861,
+        "p99_codes": 0.0,
+        "max_codes": 3.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      }
+    }
+  ],
+  "reference": "Independent unfused ToneMapper; full pyramid; quarter-width/height fusion + Guided.",
+  "comparison": "Same desktop backend, packed HDR input, calibration and final sRGB8 encoding; not phone captures.",
+  "error": "Absolute sRGB8 RGB error; heatmap max channel, fixed 0..12 scale; preview 3x3 max pooled."
+}

@@ -18,6 +18,17 @@ Exposure fusion supplies the foundation. Our work focuses on turning it into a p
 - **Do the heavy work on 1/16 of the pixels.** Fusion runs at quarter width and height. Guided upsampling uses full-resolution luminance to align exposure changes with image edges and reduce halos.
 - **Store exposure differences, preserve the baseline.** The optimized mobile graph keeps the middle-exposure lightness in FP32 and stores two signed differences in RG16F, with compact weights, Gather reduction, and fused passes. Precision is spent where reconstruction needs it.
 
+## Keeping the optimized result faithful
+
+**Full reference · Optimized default · Error**
+
+![Deck: full reference, optimized result, and error](docs/images/comparison/sundowner_deck-comparison.png)
+![Veranda: full reference, optimized result, and error](docs/images/comparison/veranda-comparison.png)
+
+Both paths use the same HDR input, default ±1.2 EV brackets, complete pyramid, and quarter-resolution Fusion with Guided upsampling. The reference runs the independent, unfused pipeline. Error colors show the largest RGB difference in sRGB8 code values on a fixed 0–12 scale; black means identical. Previews preserve peak errors rather than averaging them away.
+
+[Full-size images, settings, and regeneration](docs/image-comparison.md)
+
 ## Try it
 
 Windows or macOS

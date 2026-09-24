@@ -1,3 +1,9 @@
+#ifndef DIRECT_BATCH
+#define DIRECT_BATCH 2
+#endif
+#ifndef TAIL_X
+#define TAIL_X 8
+#endif
 // Production pass fusion. The default configuration keeps luminance/guide FP32.
 // RESIDUAL_PYRAMID stores exposure differences in RG16F, independent weights in
 // RG16_UNORM, and the finest middle exposure separately in R32F.
@@ -601,17 +607,17 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     // Read-only input permits redundant cached loads instead of a shared tile
     // publication barrier. Keep the same tile anchor and FP32 moment order.
     float anchor=compactSource[clamp(origin,int2(0),int2(w-1,h-1))].y;
-    static const uint directChunks=(coefficientPitch+1)/2;
+    static const uint directChunks=(coefficientPitch+DIRECT_BATCH-1)/DIRECT_BATCH;
     for(uint task=lane;task<directChunks*inputHeight;task+=TILE_X*GUIDED_THREADS_Y) {
-        uint row=task/directChunks,col=(task%directChunks)*2;
-        float4 values[6];
-        [unroll] for(uint k=0;k<6;k++) {
+        uint row=task/directChunks,col=(task%directChunks)*DIRECT_BATCH;
+        float4 values[DIRECT_BATCH+4];
+        [unroll] for(uint k=0;k<DIRECT_BATCH+4;k++) {
             int2 p=clamp(origin+int2(col+k,row)-2*GUIDED_RADIUS,int2(0),int2(w-1,h-1));
             float2 lg=compactSource[p];
             float g=lg.y-anchor,e=lg.x;
             values[k]=float4(g,e,g*g,g*e);
         }
-        [unroll] for(uint j=0;j<2;j++) if(col+j<coefficientPitch) {
+        [unroll] for(uint j=0;j<DIRECT_BATCH;j++) if(col+j<coefficientPitch) {
             float4 moments=0;
             [unroll] for(uint k=0;k<5;k++)moments+=values[j+k];
             rowMoments[row*momentPitch+col+j]=moments;
@@ -806,39 +812,59 @@ TailSample sampleTail(uint offset,uint2 size,float2 uv)
     return value;
 }
 [shader("compute")]
-[numthreads(8,8,1)]
+[numthreads(TAIL_X,8,1)]
 void tail_reconstruct(uint3 local : SV_GroupThreadID)
 {
     uint w,h;reconstructionOutput.GetDimensions(w,h);
-    uint lane=local.y*8+local.x;
-    uint offsets[6];uint2 sizes[6];offsets[0]=0;sizes[0]=uint2(w,h);
-    for(uint m=1;m<tailLevels;m++){offsets[m]=offsets[m-1]+sizes[m-1].x*sizes[m-1].y;sizes[m]=max(sizes[m-1]/2,uint2(1));}
-    for(uint i=lane;i<w*h;i+=64){uint2 p=uint2(i%w,i/w);tailLightness[i]=fineLuminance[p];tailWeights[i]=layerWeights[p];tailResult[i]=0;}
+    uint lane=local.y*TAIL_X+local.x;
+    uint levelOffset=0;uint2 currentSize=uint2(w,h);
+    for(uint i=lane;i<w*h;i+=TAIL_X*8){uint2 p=uint2(i%w,i/w);tailLightness[i]=fineLuminance[p];tailWeights[i]=layerWeights[p];tailResult[i]=0;}
     GroupMemoryBarrierWithGroupSync();
     for(uint m=1;m<tailLevels;m++) {
-        uint2 size=sizes[m],previous=sizes[m-1];
-        for(uint i=lane;i<size.x*size.y;i+=64) {
+        uint2 previous=currentSize;uint previousOffset=levelOffset;
+        currentSize=max(previous/2,uint2(1));levelOffset+=previous.x*previous.y;
+        uint2 size=currentSize;uint outputOffset=levelOffset;
+        for(uint i=lane;i<size.x*size.y;i+=TAIL_X*8) {
             float2 uv=(float2(i%size.x,i/size.x)+.5)/float2(size),texel=1.0/float2(previous);
-            TailSample a=sampleTail(offsets[m-1],previous,uv+texel*float2(-1,-1));
-            TailSample b=sampleTail(offsets[m-1],previous,uv+texel*float2(1,-1));
-            TailSample c=sampleTail(offsets[m-1],previous,uv+texel*float2(-1,1));
-            TailSample d=sampleTail(offsets[m-1],previous,uv+texel*float2(1,1));
-            uint index=offsets[m]+i;
+            TailSample a=sampleTail(previousOffset,previous,uv+texel*float2(-1,-1));
+            TailSample b=sampleTail(previousOffset,previous,uv+texel*float2(1,-1));
+            TailSample c=sampleTail(previousOffset,previous,uv+texel*float2(-1,1));
+            TailSample d=sampleTail(previousOffset,previous,uv+texel*float2(1,1));
+            uint index=outputOffset+i;
+#if RESIDUAL_PYRAMID
+            // Preserve the retained pyramid's per-level RG16F / RG16_UNORM storage.
+            float2 residual=(((a.lightness.xy+b.lightness.xy)+c.lightness.xy)+d.lightness.xy)*.25;
+            tailLightness[index]=float4(float2(half2(residual)),0,0);
+            float2 weights=(((a.weights+b.weights)+c.weights)+d.weights)*.25;
+            tailWeights[index]=floor(saturate(weights)*65535.0+0.5)/65535.0;
+#else
             tailLightness[index]=((a.lightness+b.lightness)+c.lightness+d.lightness)*.25;
             tailWeights[index]=float2(half2(((a.weights+b.weights)+c.weights+d.weights)*.25));
+#endif
             tailResult[index]=0;
         }
         GroupMemoryBarrierWithGroupSync();
     }
     for(int m=int(tailLevels)-1;m>=0;m--) {
-        uint2 size=sizes[m];bool coarsest=m==int(tailLevels)-1;
-        for(uint i=lane;i<size.x*size.y;i+=64) {
-            uint index=offsets[m]+i;float4 fine=tailLightness[index];float3 detail=fine.rgb;float previous=0;
-            if(!coarsest){TailSample coarse=sampleTail(offsets[m+1],sizes[m+1],(float2(i%size.x,i/size.x)+.5)/float2(size));detail-=coarse.lightness.rgb;previous=coarse.reconstruction;}
+        uint2 size=max(uint2(w,h)>>m,uint2(1));uint outputOffset=levelOffset;
+        uint2 coarseSize=max(size/2,uint2(1));uint coarseOffset=levelOffset+size.x*size.y;
+        bool coarsest=m==int(tailLevels)-1;
+        for(uint i=lane;i<size.x*size.y;i+=TAIL_X*8) {
+            uint index=outputOffset+i;float4 fine=tailLightness[index];float3 detail=fine.rgb;float previous=0;
+            if(!coarsest){TailSample coarse=sampleTail(coarseOffset,coarseSize,(float2(i%size.x,i/size.x)+.5)/float2(size));detail-=coarse.lightness.rgb;previous=coarse.reconstruction;}
+#if RESIDUAL_PYRAMID
+            float2 weights=tailWeights[index];
+            weights/=max(weights.x+weights.y+max(1.0-weights.x-weights.y,0.0),1e-20);
+            float2 contribution=detail.xy*weights;
+            float value=(contribution.x+contribution.y)+previous;
+#else
             float3 weights=float3(fine.a,tailWeights[index]);weights/=max(weights.x+weights.y+weights.z,1e-20);
-            float3 contribution=detail*weights;tailResult[index]=(contribution.x+contribution.y+contribution.z)+previous;
+            float3 contribution=detail*weights;float value=(contribution.x+contribution.y+contribution.z)+previous;
+#endif
+            if(m==0)reconstructionOutput[uint2(i%w,i/w)]=value;
+            else tailResult[index]=value;
         }
-        GroupMemoryBarrierWithGroupSync();
+        if(m>0)GroupMemoryBarrierWithGroupSync();
+        if(m>0){uint2 finer=max(uint2(w,h)>>(m-1),uint2(1));levelOffset-=finer.x*finer.y;}
     }
-    for(uint i=lane;i<w*h;i+=64)reconstructionOutput[uint2(i%w,i/w)]=tailResult[i];
 }

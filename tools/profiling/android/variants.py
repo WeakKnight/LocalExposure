@@ -1,6 +1,6 @@
 """Explicit profiling presets; experimental entries are not runtime defaults.
 
-Default mobile algorithm: guided-direct-moments. Frozen control: gather-reduction.
+Default mobile algorithm: guided-direct-tail. Frozen control: gather-reduction.
 Output integration alternatives:
 gather-work16 and gather-fragment. See docs/performance/archive/twohour-optimization.md.
 The remaining presets preserve experiments and independent historical controls.
@@ -87,4 +87,10 @@ VARIANTS["guided-static2"] = {**VARIANTS["guided-vertical2-t256"], "guided_stati
 VARIANTS["guided-xy-static2"] = {**VARIANTS["guided-static2"], "guided_batch": 2}
 VARIANTS["guided-direct-moments"] = {**VARIANTS["guided-xy-static2"], "guided_direct_moments": True}
 
-DEFAULT_VARIANT = "guided-direct-moments"
+# One moment per thread, then 512 threads per moment workgroup; small tails
+# retain every level and the same RG16F / UNORM quantization.
+VARIANTS["guided-direct-single-moment"] = {**VARIANTS["guided-direct-moments"], "direct_batch": 1}
+VARIANTS["guided-direct-tail"] = {**VARIANTS["guided-direct-single-moment"], "guided_threads_y": 32,
+    "tail_fusion": True, "tail_max_width": 16, "tail_max_height": 8, "tail_x": 16}
+
+DEFAULT_VARIANT = "guided-direct-tail"

@@ -13,21 +13,40 @@ def codes(linear):
 
 class Candidate:
     def __init__(self,device,mapper,variant):
-        self.device,self.mapper,self.config=device,mapper,VARIANTS[variant]
-        mapping={'DIRECT_RESIDUAL_WEIGHTS':('direct_residual_weights',False),'GUIDED_GATHER_ROWS':('guided_gather_rows',False),'REUSE_MOMENT_STORAGE':('reuse_moment_storage',False),'HALF_ROW_COEFFICIENTS':('half_row_coefficients',False),'DIRECT_BATCH':('direct_batch',2),'TAIL_X':('tail_x',8),'GUIDED_DIRECT_MOMENTS':('guided_direct_moments',False),'GUIDED_STATIC_WINDOWS':('guided_static_windows',False),'GUIDED_VERTICAL':('guided_vertical',1),'GUIDED_THREADS_Y':('guided_threads_y',self.config.get('tile_y',16)),'GUIDED_BATCH':('guided_batch',1),'GUIDED_SLIDING':('guided_sliding',False),'WAVE_REDUCTION':('wave_reduction',False),'SHARED_PADDING':('shared_padding',0),'HALF_MOMENT_PRODUCTS':('half_moment_products',False),'GATHER_X':('gather_x',8),'GATHER_Y':('gather_y',8),'HALF_GATHER':('half_gather',False),'SCALAR_REDUCTION':('scalar_reduction',False),'LOG_PRODUCT':('log_product',False),'MOMENT_INPUT':('moment_input',False),'PACKED_RESIDUAL':('packed_residual',False),'RESIDUAL_PYRAMID':('residual_pyramid',False),'CURVE_LOG':('curve_log',False),'PRECOMPUTED_EV':('precomputed_ev',False),'SINGLE_WEIGHT':('single_weight',False),'REUSE_SHARED':('reuse_shared',False),'REDUCTION_LOAD':('reduction_load',False),'REDUCTION_GRID':('reduction_grid',4),'GUIDED_RADIUS':('guided_radius',2),'CACHED_BASELINE':('cached_baseline',False),'LOG_EXPOSURE':('log_exposure',False),'TILE_X':('tile_x',16),'TILE_Y':('tile_y',16),'WORK_X':('work_x',8),'WORK_Y':('work_y',8),'SEPARABLE_GUIDED':('separable_guided',False)}
+        self.device,self.mapper,self.config=device,mapper,dict(VARIANTS[variant])
+        if self.config.get('residual_snorm'):
+            # Every lightness lies in [0,max_lightness]; normalized differences
+            # and their Gaussian averages therefore remain representable in SNORM.
+            self.config['residual_scale'] = 1.0 / max(1.0, mapper.curve.max_lightness)
+        mapping={'PACKED_HALF_COEFFICIENTS':('packed_half_coefficients',False),'COEFF_PAD':('coefficient_padding',0),'GUIDED_INTERIOR_FIT':('guided_interior_fit',False),'SHARED_INPUT_LOG':('shared_input_log',False),'GATHER_QUAD_LOG':('gather_quad_log',False),'FUSE_TAIL_BASE':('fuse_tail_base',False),'SKIP_TAIL_CLEAR':('skip_tail_clear',False),'COMPACT_TAIL_STORAGE':('compact_tail_storage',False),'TAIL_GRID_WALK':('tail_grid_walk',False),'FLOAT_TAIL_WEIGHTS':('float_tail_weights',False),'FLOAT_TAIL_RESIDUAL':('float_tail_residual',False),'COMPENSATE_RESIDUAL':('compensate_residual',False),'DIRECT_RESIDUAL_WEIGHTS':('direct_residual_weights',False),'GUIDED_GATHER_ROWS':('guided_gather_rows',False),'REUSE_MOMENT_STORAGE':('reuse_moment_storage',False),'HALF_ROW_COEFFICIENTS':('half_row_coefficients',False),'DIRECT_BATCH':('direct_batch',2),'TAIL_X':('tail_x',8),'GUIDED_DIRECT_MOMENTS':('guided_direct_moments',False),'GUIDED_STATIC_WINDOWS':('guided_static_windows',False),'GUIDED_VERTICAL':('guided_vertical',1),'GUIDED_THREADS_Y':('guided_threads_y',self.config.get('tile_y',16)),'GUIDED_BATCH':('guided_batch',1),'GUIDED_SLIDING':('guided_sliding',False),'WAVE_REDUCTION':('wave_reduction',False),'SHARED_PADDING':('shared_padding',0),'HALF_MOMENT_PRODUCTS':('half_moment_products',False),'GATHER_X':('gather_x',8),'GATHER_Y':('gather_y',8),'HALF_GATHER':('half_gather',False),'SCALAR_REDUCTION':('scalar_reduction',False),'LOG_PRODUCT':('log_product',False),'MOMENT_INPUT':('moment_input',False),'PACKED_RESIDUAL':('packed_residual',False),'RESIDUAL_PYRAMID':('residual_pyramid',False),'CURVE_LOG':('curve_log',False),'PRECOMPUTED_EV':('precomputed_ev',False),'SINGLE_WEIGHT':('single_weight',False),'REUSE_SHARED':('reuse_shared',False),'REDUCTION_LOAD':('reduction_load',False),'REDUCTION_GRID':('reduction_grid',4),'GUIDED_RADIUS':('guided_radius',2),'CACHED_BASELINE':('cached_baseline',False),'LOG_EXPOSURE':('log_exposure',False),'TILE_X':('tile_x',16),'TILE_Y':('tile_y',16),'WORK_X':('work_x',8),'WORK_Y':('work_y',8),'SEPARABLE_GUIDED':('separable_guided',False)}
+        mapping.update(PYRAMID_X=('pyramid_x',self.config.get('work_x',8)),
+                       PYRAMID_Y=('pyramid_y',self.config.get('work_y',8)))
         defines={key:str(int(self.config.get(name,default))) for key,(name,default) in mapping.items()}
         defines['RESIDUAL_SCALE']=str(self.config.get('residual_scale',1.0))
         defines['PACKED_WEIGHT_BIAS']=str(self.config.get('packed_weight_bias',0.0))
         session=device.create_slang_session(compiler_options={'include_paths':[ROOT/'shaders'],'defines':defines})
         self.kernels={name:device.create_compute_kernel(session.load_program('fusion_compact.slang',[name])) for name in ['reconstruct_ev_fused','reduce_setup_gather','guided_moments','reduce_horizontal','reduce_setup_vertical','reduce_setup_cooperative','tail_reconstruct','reconstruct_ev','reduce_setup','downsample_compact','reconstruct_compact','reconstruct_guided']}
+        self.unsigned_gather = None
+        if self.config.get('gather_unsigned_source'):
+            unsigned_session = device.create_slang_session(compiler_options={
+                'include_paths': [ROOT/'shaders'],
+                'defines': {**defines, 'GATHER_UNSIGNED_SOURCE': '1'}})
+            self.unsigned_gather = device.create_compute_kernel(unsigned_session.load_program(
+                'fusion_compact.slang', ['reduce_setup_gather']))
         self.final=device.create_compute_kernel(session.load_program(str(Path(__file__).with_name('joint.slang')) if self.config.get('joint_upsample') else 'guided.slang',['apply_joint_linear' if self.config.get('joint_upsample') else 'apply_exposure_production']))
     def render(self,source,ev,bracket=1.2,sigma=.2,*,highlight_ev=None,shadow_ev=None):
         # Keep symmetric callers compatible; asymmetric brackets match the viewer UI.
         highlight_ev = bracket if highlight_ev is None else highlight_ev
         shadow_ev = bracket if shadow_ev is None else shadow_ev
         m=self.mapper;w,h=m.work_source.width,m.work_source.height;levels=m.reconstructed.mip_count
+        float_from = self.config.get('residual_float_from', levels)
+        if float_from < 1:
+            raise ValueError('The mixed residual pyramid must retain at least mip 0 in half')
+        if float_from < levels and (not self.config.get('residual_pyramid') or any(
+                self.config.get(key) for key in ('residual_float', 'residual_snorm', 'packed_residual', 'packed_snorm'))):
+            raise ValueError('Mixed residual storage requires an RG16F residual pyramid')
         compact=m.create_texture(w,h,spy.Format.rg16_float if self.config.get('half_compact') else spy.Format.rg32_float)
-        lum=m.create_texture(w,h,spy.Format.rgba16_snorm if self.config.get('packed_snorm') else spy.Format.rgba16_float if self.config.get('packed_residual') else spy.Format.rg32_float if self.config.get('residual_float') else spy.Format.rg16_float if self.config.get('residual_pyramid') else spy.Format.rgba32_float,levels=levels)
+        lum=m.create_texture(w,h,spy.Format.rgba16_snorm if self.config.get('packed_snorm') else spy.Format.rgba16_float if self.config.get('packed_residual') else spy.Format.rg16_snorm if self.config.get('residual_snorm') else spy.Format.rg32_float if self.config.get('residual_float') else spy.Format.rg16_float if self.config.get('residual_pyramid') else spy.Format.rgba32_float,levels=min(levels,float_from))
         base_lightness=m.create_texture(w,h,spy.Format.r32_float)
         weights=m.create_texture(w,h,spy.Format.rg16_unorm if self.config.get('residual_pyramid') else spy.Format.r16_unorm if self.config.get('weight_unorm') else spy.Format.r16_float if self.config.get('single_weight') else (spy.Format.rg16_float if self.config.get('half_aux') else spy.Format.rg32_float),levels=levels)
         recon=m.create_texture(w,h,spy.Format.r32_float,levels=levels)
@@ -35,13 +54,20 @@ class Candidate:
         moments=m.create_texture(w,h,spy.Format.rgba32_float)
         guide_ev=m.create_texture(w,h,spy.Format.rg16_float if self.config.get('half_guide') else spy.Format.rg32_float)
         final=m.create_texture(source.width,source.height,spy.Format.rgba16_float)
-        view=lambda t,mip=0:t.create_view(mip=mip,mip_count=1)
+        coarse_float = m.create_texture(max(1,w>>float_from),max(1,h>>float_from),spy.Format.rg32_float,levels=levels-float_from) if float_from < levels else None
+        def view(t, mip=0):
+            if t is lum and coarse_float is not None and mip >= float_from:
+                return coarse_float.create_view(mip=mip-float_from, mip_count=1)
+            return t.create_view(mip=mip, mip_count=1)
         enc=self.device.create_command_encoder()
         def dispatch(name,width,height,**bindings):
             if name=='reconstruct_guided' and self.config.get('guided_vertical'):
                 width=((width+15)//16)*16
                 height=((height+15)//16)*self.config.get('guided_threads_y',16)
-            self.kernels[name].dispatch(thread_count=[width,height,1],vars=bindings,command_encoder=enc)
+            kernel = self.kernels[name]
+            if name == 'reduce_setup_gather' and self.unsigned_gather is not None and source.format == spy.Format.r11g11b10_float:
+                kernel = self.unsigned_gather
+            kernel.dispatch(thread_count=[width,height,1],vars=bindings,command_encoder=enc)
         if self.config.get('separable_reduction'):
             horizontal=m.create_texture(w,h*4,spy.Format.rg32_float)
             dispatch('reduce_horizontal',w,h*4,fullSource=source,horizontalOutput=horizontal,linearSampler=m.sampler)

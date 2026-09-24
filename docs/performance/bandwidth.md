@@ -8,15 +8,15 @@ For the current mobile path at 1920x1080:
 
 | Metric | Estimate |
 |---|---:|
-| Incremental texture-sweep payload | 16.62 MB/frame |
-| At 30 FPS | 0.498 GB/s |
-| At 45 FPS | 0.748 GB/s |
+| Incremental texture-sweep payload | 16.66 MB/frame |
+| At 30 FPS | 0.500 GB/s |
+| At 45 FPS | 0.750 GB/s |
 
 Use R11G11B10 HDR input and RGBA8 sRGB output. Average GB/s is bytes/frame times
 FPS divided by 1e9. Compared with `guided-direct-tail`, the current default reduces
-the sweep estimate from 19.18 to 16.62 MB/frame by narrowing two intermediates and
+the sweep estimate from 19.18 to 16.66 MB/frame by narrowing two intermediates and
 reconstructing fine levels locally. The expanded logical-access estimate is
-79.96 MB/frame (3.598 GB/s at 45 FPS), including duplicated reconstruction halos.
+83.85 MB/frame (3.773 GB/s at 45 FPS), including duplicated reconstruction halos.
 Cache reuse determines how much reaches DRAM; no physical-bandwidth or power
 improvement is claimed.
 
@@ -33,4 +33,4 @@ python -m tools.profiling.android.bandwidth --out outputs/android/bandwidth
 
 Its copy throughput characterizes that workload; it does not measure Local
 Exposure's physical DRAM traffic or power consumption.
-[Historical measurements](archive/bandwidth-history.md).
+[Current raw accounting](baselines/current.json).

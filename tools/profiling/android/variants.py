@@ -1,8 +1,9 @@
 """Explicit profiling presets; experimental entries are not runtime defaults.
 
-Default mobile algorithm: guided-fused-reconstruction. Frozen control: gather-reduction.
+The current mobile default is selected at the end of this module.
+Frozen control: gather-reduction.
 Output integration alternatives:
-gather-work16 and gather-fragment. See docs/performance/archive/twohour-optimization.md.
+gather-work16 and gather-fragment. Keep these independent controls for numerical and timing comparisons.
 The remaining presets preserve experiments and independent historical controls.
 """
 
@@ -67,7 +68,7 @@ VARIANTS = {
 }
 
 # Research only: image gate passed, but foreground timing regressed.
-# See docs/performance/archive/experiments/wave-operations.md; not a retained optimization.
+# Experimental wave control; not a retained optimization.
 VARIANTS["wave-reduction"] = {**VARIANTS["gather-reduction"], "cooperative_reduction": True, "wave_reduction": True}
 
 # Short-window register reuse: batch2 has modest phone gains and remains opt-in.
@@ -98,4 +99,37 @@ VARIANTS["guided-fused-reconstruction"] = {**VARIANTS["guided-direct-tail"],
     "half_row_coefficients": True, "reuse_moment_storage": True,
     "guided_threads_y": 16, "guided_gather_rows": True, "direct_residual_weights": True, "gather_x": 4, "gather_y": 8}
 
-DEFAULT_VARIANT = "guided-fused-reconstruction"
+# Research only: better asset errors, but phone timing regresses.
+# SNORM also trades away precision for near-zero residuals; see residual-precision.md.
+VARIANTS["guided-residual-compensation"] = {**VARIANTS["guided-fused-reconstruction"], "compensate_residual": True}
+VARIANTS["guided-snorm-residual"] = {**VARIANTS["guided-fused-reconstruction"], "residual_snorm": True}
+
+# Coarse residual precision with compact, division-free shared tail traversal.
+VARIANTS["guided-coarse-precision"] = {**VARIANTS["guided-fused-reconstruction"],
+    "residual_float_from": 4, "compact_tail_storage": True, "tail_grid_walk": True}
+
+# Veranda strong-preset precision candidates; keep the mip-4 control independent.
+VARIANTS["guided-coarse3-precision"] = {**VARIANTS["guided-coarse-precision"], "residual_float_from": 3}
+VARIANTS["guided-coarse3-compensated"] = {**VARIANTS["guided-coarse3-precision"], "compensate_residual": True}
+VARIANTS["guided-veranda-precision"] = {**VARIANTS["guided-coarse3-precision"],
+    "skip_tail_clear": True, "fuse_tail_base": True}
+
+VARIANTS["guided-log-init"] = {**VARIANTS["guided-veranda-precision"],
+    "curve_log": True, "gather_quad_log": True}
+
+VARIANTS["guided-interior-fit"] = {**VARIANTS["guided-log-init"],
+    "guided_interior_fit": True, "shared_input_log": True}
+
+VARIANTS["guided-pyramid-layout"] = {**VARIANTS["guided-interior-fit"],
+    "pyramid_x": 4, "pyramid_y": 16}
+
+VARIANTS["guided-unsigned-gather"] = {**VARIANTS["guided-pyramid-layout"],
+    "gather_unsigned_source": True}
+
+VARIANTS["guided-coefficient-layout"] = {**VARIANTS["guided-unsigned-gather"],
+    "coefficient_padding": 4}
+
+VARIANTS["guided-packed-coefficients"] = {**VARIANTS["guided-coefficient-layout"],
+    "packed_half_coefficients": True}
+
+DEFAULT_VARIANT = "guided-packed-coefficients"

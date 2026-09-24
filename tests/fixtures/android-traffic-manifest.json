@@ -1,0 +1,1931 @@
+{
+  "schema": 1,
+  "width": 1920,
+  "height": 1080,
+  "resources": [
+    {
+      "name": "source",
+      "width": 1920,
+      "height": 1080,
+      "levels": 1,
+      "format": 122,
+      "format_name": "r11g11b10_float",
+      "bpp": 4,
+      "one_d": false,
+      "dump": false,
+      "file": "source.bin"
+    },
+    {
+      "name": "inverse",
+      "width": 1024,
+      "height": 1,
+      "levels": 1,
+      "format": 76,
+      "format_name": "r16_float",
+      "bpp": 2,
+      "one_d": true,
+      "dump": false,
+      "file": "inverse.bin"
+    },
+    {
+      "name": "reduced",
+      "width": 480,
+      "height": 270,
+      "levels": 1,
+      "format": 109,
+      "format_name": "rgba32_float",
+      "bpp": 16,
+      "one_d": false,
+      "dump": true
+    },
+    {
+      "name": "luminance",
+      "width": 480,
+      "height": 270,
+      "levels": 9,
+      "format": 109,
+      "format_name": "rgba32_float",
+      "bpp": 16,
+      "one_d": false,
+      "dump": true
+    },
+    {
+      "name": "weights",
+      "width": 480,
+      "height": 270,
+      "levels": 9,
+      "format": 109,
+      "format_name": "rgba32_float",
+      "bpp": 16,
+      "one_d": false,
+      "dump": true
+    },
+    {
+      "name": "reconstructed",
+      "width": 480,
+      "height": 270,
+      "levels": 9,
+      "format": 100,
+      "format_name": "r32_float",
+      "bpp": 4,
+      "one_d": false,
+      "dump": true
+    },
+    {
+      "name": "exposure",
+      "width": 480,
+      "height": 270,
+      "levels": 1,
+      "format": 76,
+      "format_name": "r16_float",
+      "bpp": 2,
+      "one_d": false,
+      "dump": true
+    },
+    {
+      "name": "coefficients",
+      "width": 480,
+      "height": 270,
+      "levels": 1,
+      "format": 103,
+      "format_name": "rg32_float",
+      "bpp": 8,
+      "one_d": false,
+      "dump": true
+    },
+    {
+      "name": "averaged",
+      "width": 480,
+      "height": 270,
+      "levels": 1,
+      "format": 103,
+      "format_name": "rg32_float",
+      "bpp": 8,
+      "one_d": false,
+      "dump": true
+    },
+    {
+      "name": "final",
+      "width": 1920,
+      "height": 1080,
+      "levels": 1,
+      "format": 43,
+      "format_name": "rgba8_srgb",
+      "bpp": 4,
+      "one_d": false,
+      "dump": true,
+      "attachment": true
+    },
+    {
+      "name": "baseline",
+      "width": 1920,
+      "height": 1080,
+      "levels": 1,
+      "format": 43,
+      "format_name": "rgba8_srgb",
+      "bpp": 4,
+      "one_d": false,
+      "dump": false,
+      "attachment": true
+    }
+  ],
+  "passes": [
+    {
+      "entry": "reduce_source",
+      "label": "reduce_source",
+      "width": 480,
+      "height": 270,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "fullSource",
+          "type": 2,
+          "resource": "source",
+          "mip": 0
+        },
+        {
+          "binding": 2,
+          "name": "linearSampler",
+          "type": 0
+        },
+        {
+          "binding": 3,
+          "name": "reducedOutput",
+          "type": 3,
+          "resource": "reduced",
+          "mip": 0
+        }
+      ],
+      "uniform": "00-reduce_source.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "setup_weights",
+      "label": "setup_weights",
+      "width": 480,
+      "height": 270,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 6,
+          "name": "hdrSource",
+          "type": 2,
+          "resource": "reduced",
+          "mip": 0
+        },
+        {
+          "binding": 7,
+          "name": "luminanceOutput",
+          "type": 3,
+          "resource": "luminance",
+          "mip": 0
+        },
+        {
+          "binding": 8,
+          "name": "weightOutput",
+          "type": 3,
+          "resource": "weights",
+          "mip": 0
+        }
+      ],
+      "uniform": "01-setup_weights.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "luminance_mip1",
+      "width": 240,
+      "height": 135,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 0
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "luminance",
+          "mip": 1
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "02-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "luminance_mip2",
+      "width": 120,
+      "height": 67,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 1
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "luminance",
+          "mip": 2
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "03-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "luminance_mip3",
+      "width": 60,
+      "height": 33,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 2
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "luminance",
+          "mip": 3
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "04-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "luminance_mip4",
+      "width": 30,
+      "height": 16,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 3
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "luminance",
+          "mip": 4
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "05-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "luminance_mip5",
+      "width": 15,
+      "height": 8,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 4
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "luminance",
+          "mip": 5
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "06-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "luminance_mip6",
+      "width": 7,
+      "height": 4,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 5
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "luminance",
+          "mip": 6
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "07-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "luminance_mip7",
+      "width": 3,
+      "height": 2,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 6
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "luminance",
+          "mip": 7
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "08-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "luminance_mip8",
+      "width": 1,
+      "height": 1,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 7
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "luminance",
+          "mip": 8
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "09-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "weights_mip1",
+      "width": 240,
+      "height": 135,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "weights",
+          "mip": 0
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "weights",
+          "mip": 1
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "10-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "weights_mip2",
+      "width": 120,
+      "height": 67,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "weights",
+          "mip": 1
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "weights",
+          "mip": 2
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "11-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "weights_mip3",
+      "width": 60,
+      "height": 33,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "weights",
+          "mip": 2
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "weights",
+          "mip": 3
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "12-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "weights_mip4",
+      "width": 30,
+      "height": 16,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "weights",
+          "mip": 3
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "weights",
+          "mip": 4
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "13-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "weights_mip5",
+      "width": 15,
+      "height": 8,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "weights",
+          "mip": 4
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "weights",
+          "mip": 5
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "14-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "weights_mip6",
+      "width": 7,
+      "height": 4,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "weights",
+          "mip": 5
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "weights",
+          "mip": 6
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "15-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "weights_mip7",
+      "width": 3,
+      "height": 2,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "weights",
+          "mip": 6
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "weights",
+          "mip": 7
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "16-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "downsample",
+      "label": "weights_mip8",
+      "width": 1,
+      "height": 1,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inputTexture",
+          "type": 2,
+          "resource": "weights",
+          "mip": 7
+        },
+        {
+          "binding": 2,
+          "name": "outputTexture",
+          "type": 3,
+          "resource": "weights",
+          "mip": 8
+        },
+        {
+          "binding": 3,
+          "name": "linearSampler",
+          "type": 0
+        }
+      ],
+      "uniform": "17-downsample.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "reconstruct",
+      "label": "reconstruct_mip8",
+      "width": 1,
+      "height": 1,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 3,
+          "name": "fineLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 8
+        },
+        {
+          "binding": 4,
+          "name": "coarseLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 8
+        },
+        {
+          "binding": 5,
+          "name": "layerWeights",
+          "type": 2,
+          "resource": "weights",
+          "mip": 8
+        },
+        {
+          "binding": 6,
+          "name": "previousResult",
+          "type": 2,
+          "resource": "exposure",
+          "mip": 0
+        },
+        {
+          "binding": 7,
+          "name": "linearSampler",
+          "type": 0
+        },
+        {
+          "binding": 8,
+          "name": "reconstructionOutput",
+          "type": 3,
+          "resource": "reconstructed",
+          "mip": 8
+        }
+      ],
+      "uniform": "18-reconstruct.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "reconstruct",
+      "label": "reconstruct_mip7",
+      "width": 3,
+      "height": 2,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 3,
+          "name": "fineLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 7
+        },
+        {
+          "binding": 4,
+          "name": "coarseLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 8
+        },
+        {
+          "binding": 5,
+          "name": "layerWeights",
+          "type": 2,
+          "resource": "weights",
+          "mip": 7
+        },
+        {
+          "binding": 6,
+          "name": "previousResult",
+          "type": 2,
+          "resource": "reconstructed",
+          "mip": 8
+        },
+        {
+          "binding": 7,
+          "name": "linearSampler",
+          "type": 0
+        },
+        {
+          "binding": 8,
+          "name": "reconstructionOutput",
+          "type": 3,
+          "resource": "reconstructed",
+          "mip": 7
+        }
+      ],
+      "uniform": "19-reconstruct.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "reconstruct",
+      "label": "reconstruct_mip6",
+      "width": 7,
+      "height": 4,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 3,
+          "name": "fineLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 6
+        },
+        {
+          "binding": 4,
+          "name": "coarseLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 7
+        },
+        {
+          "binding": 5,
+          "name": "layerWeights",
+          "type": 2,
+          "resource": "weights",
+          "mip": 6
+        },
+        {
+          "binding": 6,
+          "name": "previousResult",
+          "type": 2,
+          "resource": "reconstructed",
+          "mip": 7
+        },
+        {
+          "binding": 7,
+          "name": "linearSampler",
+          "type": 0
+        },
+        {
+          "binding": 8,
+          "name": "reconstructionOutput",
+          "type": 3,
+          "resource": "reconstructed",
+          "mip": 6
+        }
+      ],
+      "uniform": "20-reconstruct.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "reconstruct",
+      "label": "reconstruct_mip5",
+      "width": 15,
+      "height": 8,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 3,
+          "name": "fineLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 5
+        },
+        {
+          "binding": 4,
+          "name": "coarseLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 6
+        },
+        {
+          "binding": 5,
+          "name": "layerWeights",
+          "type": 2,
+          "resource": "weights",
+          "mip": 5
+        },
+        {
+          "binding": 6,
+          "name": "previousResult",
+          "type": 2,
+          "resource": "reconstructed",
+          "mip": 6
+        },
+        {
+          "binding": 7,
+          "name": "linearSampler",
+          "type": 0
+        },
+        {
+          "binding": 8,
+          "name": "reconstructionOutput",
+          "type": 3,
+          "resource": "reconstructed",
+          "mip": 5
+        }
+      ],
+      "uniform": "21-reconstruct.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "reconstruct",
+      "label": "reconstruct_mip4",
+      "width": 30,
+      "height": 16,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 3,
+          "name": "fineLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 4
+        },
+        {
+          "binding": 4,
+          "name": "coarseLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 5
+        },
+        {
+          "binding": 5,
+          "name": "layerWeights",
+          "type": 2,
+          "resource": "weights",
+          "mip": 4
+        },
+        {
+          "binding": 6,
+          "name": "previousResult",
+          "type": 2,
+          "resource": "reconstructed",
+          "mip": 5
+        },
+        {
+          "binding": 7,
+          "name": "linearSampler",
+          "type": 0
+        },
+        {
+          "binding": 8,
+          "name": "reconstructionOutput",
+          "type": 3,
+          "resource": "reconstructed",
+          "mip": 4
+        }
+      ],
+      "uniform": "22-reconstruct.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "reconstruct",
+      "label": "reconstruct_mip3",
+      "width": 60,
+      "height": 33,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 3,
+          "name": "fineLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 3
+        },
+        {
+          "binding": 4,
+          "name": "coarseLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 4
+        },
+        {
+          "binding": 5,
+          "name": "layerWeights",
+          "type": 2,
+          "resource": "weights",
+          "mip": 3
+        },
+        {
+          "binding": 6,
+          "name": "previousResult",
+          "type": 2,
+          "resource": "reconstructed",
+          "mip": 4
+        },
+        {
+          "binding": 7,
+          "name": "linearSampler",
+          "type": 0
+        },
+        {
+          "binding": 8,
+          "name": "reconstructionOutput",
+          "type": 3,
+          "resource": "reconstructed",
+          "mip": 3
+        }
+      ],
+      "uniform": "23-reconstruct.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "reconstruct",
+      "label": "reconstruct_mip2",
+      "width": 120,
+      "height": 67,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 3,
+          "name": "fineLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 2
+        },
+        {
+          "binding": 4,
+          "name": "coarseLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 3
+        },
+        {
+          "binding": 5,
+          "name": "layerWeights",
+          "type": 2,
+          "resource": "weights",
+          "mip": 2
+        },
+        {
+          "binding": 6,
+          "name": "previousResult",
+          "type": 2,
+          "resource": "reconstructed",
+          "mip": 3
+        },
+        {
+          "binding": 7,
+          "name": "linearSampler",
+          "type": 0
+        },
+        {
+          "binding": 8,
+          "name": "reconstructionOutput",
+          "type": 3,
+          "resource": "reconstructed",
+          "mip": 2
+        }
+      ],
+      "uniform": "24-reconstruct.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "reconstruct",
+      "label": "reconstruct_mip1",
+      "width": 240,
+      "height": 135,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 3,
+          "name": "fineLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 1
+        },
+        {
+          "binding": 4,
+          "name": "coarseLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 2
+        },
+        {
+          "binding": 5,
+          "name": "layerWeights",
+          "type": 2,
+          "resource": "weights",
+          "mip": 1
+        },
+        {
+          "binding": 6,
+          "name": "previousResult",
+          "type": 2,
+          "resource": "reconstructed",
+          "mip": 2
+        },
+        {
+          "binding": 7,
+          "name": "linearSampler",
+          "type": 0
+        },
+        {
+          "binding": 8,
+          "name": "reconstructionOutput",
+          "type": 3,
+          "resource": "reconstructed",
+          "mip": 1
+        }
+      ],
+      "uniform": "25-reconstruct.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "reconstruct",
+      "label": "reconstruct_mip0",
+      "width": 480,
+      "height": 270,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 3,
+          "name": "fineLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 0
+        },
+        {
+          "binding": 4,
+          "name": "coarseLuminance",
+          "type": 2,
+          "resource": "luminance",
+          "mip": 1
+        },
+        {
+          "binding": 5,
+          "name": "layerWeights",
+          "type": 2,
+          "resource": "weights",
+          "mip": 0
+        },
+        {
+          "binding": 6,
+          "name": "previousResult",
+          "type": 2,
+          "resource": "reconstructed",
+          "mip": 1
+        },
+        {
+          "binding": 7,
+          "name": "linearSampler",
+          "type": 0
+        },
+        {
+          "binding": 8,
+          "name": "reconstructionOutput",
+          "type": 3,
+          "resource": "reconstructed",
+          "mip": 0
+        }
+      ],
+      "uniform": "26-reconstruct.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "convert_exposure",
+      "label": "convert_exposure",
+      "width": 480,
+      "height": 270,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "inverseLut",
+          "type": 2,
+          "resource": "inverse",
+          "mip": 0
+        },
+        {
+          "binding": 2,
+          "name": "inverseSampler",
+          "type": 0
+        },
+        {
+          "binding": 9,
+          "name": "hdrSource",
+          "type": 2,
+          "resource": "reduced",
+          "mip": 0
+        },
+        {
+          "binding": 10,
+          "name": "fusedLightness",
+          "type": 2,
+          "resource": "reconstructed",
+          "mip": 0
+        },
+        {
+          "binding": 11,
+          "name": "exposureOutput",
+          "type": 3,
+          "resource": "exposure",
+          "mip": 0
+        }
+      ],
+      "uniform": "27-convert_exposure.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "fit_coefficients",
+      "label": "fit_coefficients",
+      "width": 480,
+      "height": 270,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 4,
+          "name": "reducedSource",
+          "type": 2,
+          "resource": "reduced",
+          "mip": 0
+        },
+        {
+          "binding": 5,
+          "name": "lowExposure",
+          "type": 2,
+          "resource": "exposure",
+          "mip": 0
+        },
+        {
+          "binding": 6,
+          "name": "coefficientOutput",
+          "type": 3,
+          "resource": "coefficients",
+          "mip": 0
+        }
+      ],
+      "uniform": "28-fit_coefficients.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "average_coefficients",
+      "label": "average_coefficients",
+      "width": 480,
+      "height": 270,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 7,
+          "name": "coefficients",
+          "type": 2,
+          "resource": "coefficients",
+          "mip": 0
+        },
+        {
+          "binding": 8,
+          "name": "averagedOutput",
+          "type": 3,
+          "resource": "averaged",
+          "mip": 0
+        }
+      ],
+      "uniform": "29-average_coefficients.uniform.bin",
+      "baseline": false
+    },
+    {
+      "entry": "apply_fragment",
+      "label": "apply_exposure_production",
+      "width": 1920,
+      "height": 1080,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "fullSource",
+          "type": 2,
+          "resource": "source",
+          "mip": 0
+        },
+        {
+          "binding": 2,
+          "name": "linearSampler",
+          "type": 0
+        },
+        {
+          "binding": 5,
+          "name": "lowExposure",
+          "type": 2,
+          "resource": "exposure",
+          "mip": 0
+        },
+        {
+          "binding": 9,
+          "name": "averagedCoefficients",
+          "type": 2,
+          "resource": "averaged",
+          "mip": 0
+        }
+      ],
+      "uniform": "30-apply_fragment.uniform.bin",
+      "baseline": false,
+      "attachment": "final"
+    },
+    {
+      "entry": "baseline_fragment",
+      "label": "tonemap_baseline",
+      "width": 1920,
+      "height": 1080,
+      "group_size": [
+        8,
+        8,
+        1
+      ],
+      "descriptors": [
+        {
+          "binding": 1,
+          "name": "fullSource",
+          "type": 2,
+          "resource": "source",
+          "mip": 0
+        }
+      ],
+      "uniform": "31-baseline_fragment.uniform.bin",
+      "baseline": true,
+      "attachment": "baseline"
+    }
+  ],
+  "config": {
+    "globalEV": 0.0,
+    "highlightEV": 1.2,
+    "shadowEV": 1.2,
+    "sigma": 0.2,
+    "fusion_scale": 4,
+    "source_format": "r11g11b10_float",
+    "output_format": "rgba8_srgb"
+  },
+  "calibration": {
+    "parameters": {
+      "contrast": 1.525768756866455,
+      "shoulder": 0.999448835849762,
+      "b": 1.0061192512512207,
+      "c": 0.21021375060081482
+    },
+    "max_input": 65535.0,
+    "inverse_size": 1024,
+    "inverse_format": "r16_float",
+    "luminance_rmse": 0.00463270714151628,
+    "max_luminance_error": 0.01866292929959046,
+    "max_lightness_error": 0.010231205786312758,
+    "monotonicity": "a,b,c>0; 0<shoulder<=1; globally monotone before domain clamping",
+    "calibration": "neutral RGB only; not a model of chromatic response",
+    "gpu_roundtrip_max_ev": 0.014787191035683853
+  },
+  "image": {
+    "path": "D:\\Github\\LocalExposure\\Assets\\veranda_4k.exr",
+    "sha256": "818c3b1d8086ab6e0a2b73852f8ac2db497848cc9f7e1d9bc32cc9c63910e4d8"
+  },
+  "reference_backend": "<slangpy.DeviceInfo object at 0x0000020DAFDFFD10>",
+  "shaders": {
+    "aces.slang": "926b65c08bd1cd46e13ce28eb82cba9ce6428b74a32ea5743ae7e3b8ac0d006f",
+    "fusion.slang": "e80f9f6338164842fa8c518c5b0f4f5812647ea7476c61b7a2e35a78f1f7fd8d",
+    "guided.slang": "78f80cbfe3eef93fb056bf1052e70728979ef48ba21b3dabb3c98ea4ae17c796",
+    "pyramid.slang": "e0f570d5dc49d77c8cf505e09fa035c33a9e9c19ff47fa7ad6d2166fa312753d",
+    "tonemap.slang": "ceb773b26013398e4a7f512cf9d519153438bde5a557febcde5c04f71ab2dd46",
+    "tone_operator.slang": "5ddc7bf52dabba3427fb4d87d95fac268142101b9301f1d660aa82799891fb72",
+    "zcurve.slang": "94aeed77fb2843675a1104be81e076b7476c7430ce0c8b1bbaa53f225c39cc76",
+    "zcurve_calibrate.slang": "36010790bb5cee42e4501e0cd8cc883631fe128a8be2211340914ed74537928a"
+  },
+  "benchmark_shaders": {
+    "bandwidth.slang": "54644390ff1725d761d9862b8d586eb95d7e0717cc94739ae49ef405dcf1321a",
+    "pack_source.slang": "32a7d227670f04c003d46f6c37d9916f593f2a39d5045b874bb53b8244b7e346",
+    "present.slang": "798a2bd6c66b6330a1b934e2d981fc1956f8a005e83b2adef54f8ea142897f95",
+    "probes.slang": "385948ce49ac93a0c501d2b47e9fb8edf7c5d5d87a03734dae3408d0db312def"
+  },
+  "slangc_sha256": "f5413f54845abd4bdf349ffd410c0131adac92cc2e5d6ed6449512537bae059c",
+  "commands": [
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "reduce_source",
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\reduce_source.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\reduce_source.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "fit_coefficients",
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\fit_coefficients.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\fit_coefficients.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "average_coefficients",
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\average_coefficients.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\average_coefficients.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "apply_exposure",
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\apply_exposure.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\apply_exposure.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "apply_exposure_production",
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\apply_exposure_production.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\apply_exposure_production.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\shaders\\guided.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "tonemap_baseline",
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\tonemap_baseline.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\tonemap_baseline.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\shaders\\pyramid.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "setup_weights",
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\setup_weights.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\setup_weights.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\shaders\\pyramid.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "downsample",
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\downsample.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\downsample.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\shaders\\fusion.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "reconstruct",
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\reconstruct.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\reconstruct.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\shaders\\fusion.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "convert_exposure",
+      "-stage",
+      "compute",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\convert_exposure.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\convert_exposure.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\tools\\profiling\\android\\present.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "fullscreen_vertex",
+      "-stage",
+      "vertex",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\fullscreen_vertex.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\fullscreen_vertex.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\tools\\profiling\\android\\present.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "apply_fragment",
+      "-stage",
+      "fragment",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\apply_fragment.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\apply_fragment.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\tools\\profiling\\android\\present.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "baseline_fragment",
+      "-stage",
+      "fragment",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\baseline_fragment.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\baseline_fragment.reflection.json"
+    ],
+    [
+      "D:\\Github\\LocalExposure\\.tools\\mobile\\slang-2026.12\\bin\\slangc.exe",
+      "D:\\Github\\LocalExposure\\tools\\profiling\\android\\present.slang",
+      "-I",
+      "D:\\Github\\LocalExposure\\shaders",
+      "-entry",
+      "reference_fragment",
+      "-stage",
+      "fragment",
+      "-profile",
+      "spirv_1_3",
+      "-O3",
+      "-fvk-use-entrypoint-name",
+      "-target",
+      "spirv",
+      "-o",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\reference_fragment.spv",
+      "-reflection-json",
+      "D:\\Github\\LocalExposure\\outputs\\android\\r11-srgb45-scoped\\bundle\\reference_fragment.reflection.json"
+    ]
+  ],
+  "reference_pass": {
+    "entry": "apply_exposure",
+    "label": "viewer_reference",
+    "width": 1920,
+    "height": 1080,
+    "group_size": [
+      8,
+      8,
+      1
+    ],
+    "descriptors": [
+      {
+        "binding": 1,
+        "name": "fullSource",
+        "type": 2,
+        "resource": "source",
+        "mip": 0
+      },
+      {
+        "binding": 2,
+        "name": "linearSampler",
+        "type": 0
+      },
+      {
+        "binding": 5,
+        "name": "lowExposure",
+        "type": 2,
+        "resource": "exposure",
+        "mip": 0
+      },
+      {
+        "binding": 9,
+        "name": "averagedCoefficients",
+        "type": 2,
+        "resource": "averaged",
+        "mip": 0
+      },
+      {
+        "binding": 10,
+        "name": "fullExposureOutput",
+        "type": 3,
+        "resource": "debug_exposure",
+        "mip": 0
+      },
+      {
+        "binding": 11,
+        "name": "baseOutput",
+        "type": 3,
+        "resource": "viewer_base",
+        "mip": 0
+      },
+      {
+        "binding": 12,
+        "name": "colorOutput",
+        "type": 3,
+        "resource": "viewer_linear",
+        "mip": 0
+      }
+    ],
+    "uniform": "32-apply_exposure.uniform.bin",
+    "baseline": false
+  },
+  "reference_resource": {
+    "name": "debug_exposure",
+    "width": 1920,
+    "height": 1080,
+    "levels": 1,
+    "format": 76,
+    "format_name": "r16_float",
+    "bpp": 2,
+    "one_d": false,
+    "dump": false
+  },
+  "reference_resources": [
+    {
+      "name": "viewer_linear",
+      "width": 1920,
+      "height": 1080,
+      "levels": 1,
+      "format": 97,
+      "format_name": "rgba16_float",
+      "bpp": 8,
+      "one_d": false,
+      "dump": false
+    },
+    {
+      "name": "viewer_base",
+      "width": 1920,
+      "height": 1080,
+      "levels": 1,
+      "format": 97,
+      "format_name": "rgba16_float",
+      "bpp": 8,
+      "one_d": false,
+      "dump": false
+    }
+  ],
+  "reference_resolve": {
+    "entry": "reference_fragment",
+    "label": "reference_resolve",
+    "width": 1920,
+    "height": 1080,
+    "group_size": [
+      8,
+      8,
+      1
+    ],
+    "descriptors": [
+      {
+        "binding": 1,
+        "name": "fullSource",
+        "type": 2,
+        "resource": "viewer_linear",
+        "mip": 0
+      }
+    ],
+    "uniform": "32-reference_fragment.uniform.bin",
+    "baseline": false,
+    "attachment": "final"
+  },
+  "files": {
+    "00-reduce_source.uniform.bin": "7889cebc21c00fa377b1bdb132a2a3bb846e7294bf6865c3ad9b7fe231a364b7",
+    "01-setup_weights.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "02-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "03-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "04-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "05-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "06-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "07-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "08-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "09-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "10-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "11-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "12-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "13-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "14-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "15-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "16-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "17-downsample.uniform.bin": "195a5c30c2665dbb44813413a95433940ec4f26737a07c8b91f18ebe41f31915",
+    "18-reconstruct.uniform.bin": "c2d8253c71dcd674f6c7eda138c547e17539936017b16fbaa8dc6fdcefbe4a1b",
+    "19-reconstruct.uniform.bin": "cf767feb09d5097fc75dee96c532e601bb0bb55bc99f49f58e580c08b5f91591",
+    "20-reconstruct.uniform.bin": "cf767feb09d5097fc75dee96c532e601bb0bb55bc99f49f58e580c08b5f91591",
+    "21-reconstruct.uniform.bin": "cf767feb09d5097fc75dee96c532e601bb0bb55bc99f49f58e580c08b5f91591",
+    "22-reconstruct.uniform.bin": "cf767feb09d5097fc75dee96c532e601bb0bb55bc99f49f58e580c08b5f91591",
+    "23-reconstruct.uniform.bin": "cf767feb09d5097fc75dee96c532e601bb0bb55bc99f49f58e580c08b5f91591",
+    "24-reconstruct.uniform.bin": "cf767feb09d5097fc75dee96c532e601bb0bb55bc99f49f58e580c08b5f91591",
+    "25-reconstruct.uniform.bin": "cf767feb09d5097fc75dee96c532e601bb0bb55bc99f49f58e580c08b5f91591",
+    "26-reconstruct.uniform.bin": "cf767feb09d5097fc75dee96c532e601bb0bb55bc99f49f58e580c08b5f91591",
+    "27-convert_exposure.uniform.bin": "cf767feb09d5097fc75dee96c532e601bb0bb55bc99f49f58e580c08b5f91591",
+    "28-fit_coefficients.uniform.bin": "7889cebc21c00fa377b1bdb132a2a3bb846e7294bf6865c3ad9b7fe231a364b7",
+    "29-average_coefficients.uniform.bin": "7889cebc21c00fa377b1bdb132a2a3bb846e7294bf6865c3ad9b7fe231a364b7",
+    "30-apply_fragment.uniform.bin": "7889cebc21c00fa377b1bdb132a2a3bb846e7294bf6865c3ad9b7fe231a364b7",
+    "31-baseline_fragment.uniform.bin": "7889cebc21c00fa377b1bdb132a2a3bb846e7294bf6865c3ad9b7fe231a364b7",
+    "32-apply_exposure.uniform.bin": "7889cebc21c00fa377b1bdb132a2a3bb846e7294bf6865c3ad9b7fe231a364b7",
+    "32-reference_fragment.uniform.bin": "7889cebc21c00fa377b1bdb132a2a3bb846e7294bf6865c3ad9b7fe231a364b7",
+    "apply_exposure.spv": "9761fc650db70b4fd008e55fb6f2ddf01e9075865bd563685985d93f2be3eb28",
+    "apply_exposure_production.spv": "ea6f1317a701949558dfb815579da275b57332158a0646cab4d1aaee2e0f5e82",
+    "apply_fragment.spv": "4e029cddc1181bd51b071892cc591189be6cf70cf5d031a146d9c4dec0250470",
+    "averaged.reference.bin": "3a2447454304dad8faa368856debd835f8c291852b9d89c1431d94c0e0e42eda",
+    "average_coefficients.spv": "59cf9618c83f7055348d305f731d156ca686d30e76a42eed6ff74f591a9ff1f6",
+    "baseline_fragment.spv": "1f9742db488205bfee5911b8497e3fb81b5dcfa54b242e23953871d56d3ea3bb",
+    "coefficients.reference.bin": "b14bb279d34342ebe1255cb04e0ba8a0ccfeebb795b45d67867afff7edaa1f6a",
+    "convert_exposure.spv": "91109a06208493b976399c95eba805e20957daf1255b335a2f64324c6f40c759",
+    "downsample.spv": "0f9140b80fd17d5c09bdb350496786d1cc3847dbece98730762a4e4cbccfc8ee",
+    "exposure.reference.bin": "721a84f1ec64f8a8365de5ebf0a1c2431007170aa6ea7f8d10d62afadc93cceb",
+    "final.reference.bin": "da5650303f372e11ee55e802a4557103a45ad6d6361997829d703c32cd27f041",
+    "fit_coefficients.spv": "0c19c73b3eb1891cb1cd64c863dc1157e425a8d6968d0df50be2baf268ed0bad",
+    "fullscreen_vertex.spv": "2d893439af053f61ed558263b585671e10677cb77be52350a90b10713518ea9f",
+    "inverse.bin": "e7ae64334d5294f524f3b6150db5482bd2ba884dcd330d37dda809f75eb8ee97",
+    "luminance.reference.bin": "15b82640d5bd8c81c188fbad6af13582d459b21268d7393db18d4ca32f60fddc",
+    "reconstruct.spv": "e1ece163339468aaef46f6fb5bd07a117eb76928ad837bc765f52f0896973e96",
+    "reconstructed.reference.bin": "c8571eac2c6f3858077cce3962bb66dbda3f23fdd3eb8a5626bb83ef4afecf44",
+    "reduced.reference.bin": "fabdea92a594c1c9cb2914a351467c235beddb3425a26ae26278f9541234e3ef",
+    "reduce_source.spv": "2455ac5993a405a9af13b2ed1d1a25dd4e949f41e77555f14b8ebd5c7afdb211",
+    "reference_fragment.spv": "89a3e86cce30ff3a18dc5bf51311f0903a9b5c83fdc75994d868895d164bc898",
+    "setup_weights.spv": "7a1c70d2006d14b4ecab5ae5a195c410f760a49b276f82fc02dfd99c92d156c1",
+    "source.bin": "bfa1632acd7e31f8700accde0a7a5756c152c684f02edff20bbe4d6a484056ec",
+    "tonemap_baseline.spv": "d8f334c3615b39a384fa2bf9b5af1cda2403359c3414f0eb2c92e6524bb514da",
+    "weights.reference.bin": "e8c71898f3f05efb80e86f099e04a674107043434baf0a364d80d30865b9ded3"
+  }
+}

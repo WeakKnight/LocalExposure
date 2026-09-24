@@ -39,12 +39,12 @@
     "requirements.txt": "83309e8b213979037e2353ae66b125927ba4ffc718a2a9ce5bf1938c2ba5df80",
     "tools/render_comparison.py": "6c6a1e2256455855a61f724fd06002995f5e8d9f816427eecc23c905b4a64d20",
     "tools/profiling/android/quality.py": "a72ae178f4773c39a492d85a92eaff5f5862442f6b96ce352e1b22c5162a984f",
-    "tools/profiling/android/quality_sweep.py": "c346f042306fc6832753a29a978ce1bb735fc39450e2211fb6a47b44b8ae28de",
-    "tools/profiling/android/variants.py": "b1dd2009fc64bc6572264aed126d0047dcf6846c4719850509c404b39a8a9bac",
+    "tools/profiling/android/quality_sweep.py": "b31b222e3050dbcb0877bb11298e0de7682bbc2ff6ae77de5488c284f8d36bf2",
+    "tools/profiling/android/variants.py": "19493373fb99ffb5883403259c74f1044f1f538b50ff8884d3c10dae2f082e40",
     "tools/profiling/android/pack_source.slang": "32a7d227670f04c003d46f6c37d9916f593f2a39d5045b874bb53b8244b7e346",
     "shaders/aces.slang": "926b65c08bd1cd46e13ce28eb82cba9ce6428b74a32ea5743ae7e3b8ac0d006f",
     "shaders/fusion.slang": "ed98e36c678c1450d437bcbc84c9c186a0628e280332d5d5186e8154f317c75c",
-    "shaders/fusion_compact.slang": "7119fe197d826351f55db700e0ac44258d518e04a595f6763f2bd33e98dde25f",
+    "shaders/fusion_compact.slang": "98ca5d0ec3917154cf1dc6b6b5f9d9233f257ef906439045f6c90f69c4de5404",
     "shaders/guided.slang": "43050071379ca3ea95ce5929af6169155e80b3b116d5a359b30e81f8427f62fe",
     "shaders/pyramid.slang": "7f1e3b61cdfc95ca0c833c9a23316fd4ff5d8dccc734c30260a2925fe005758d",
     "shaders/tone_operator.slang": "5ddc7bf52dabba3427fb4d87d95fac268142101b9301f1d660aa82799891fb72",
@@ -59,26 +59,26 @@
     "Assets/qwantani_patio_4k.exr": "bbd401be5fedf7d23b28f51e1051b00bda4d605a2a40ed983ac012c6e62b11d0"
   },
   "artifacts": {
-    "abandoned_tiled_room_4k-default-worst.png": "cb53a143f1e318f4c3d787049af23c6c375906d8fd7668e456b8787978f15b4b",
-    "abandoned_tiled_room_4k-dark-shadow-lift-worst.png": "edc047f9687b84c1fd0312e285f989f13d0876307bc539461a06b3f5b1ba2e0a",
-    "abandoned_tiled_room_4k-bright-highlight-protection-worst.png": "7ed601e7e0316710bcb3a73d5f5430efd1f1a185ed95a23eb36bba0f6bd40550",
-    "abandoned_tiled_room_4k-strong-balanced-worst.png": "86482d614feef516008fac9474e2e87f26ab9cb05d65a1e78731bdd3b16939e7",
-    "abandoned_tiled_room_4k.png": "39eb9796d9eab54d307674d5bb76b336ab5323d6a19607ea4e58c5d75e412ab0",
-    "qwantani_patio_4k-default-worst.png": "f40b47d5e58a1f72030af796d47481f2e55d49552620a7d94ecae1221cfcdfff",
-    "qwantani_patio_4k-dark-shadow-lift-worst.png": "783a5a2c2a960a9ad5d4812331fc937b6b78ff0f073f6ef438d08c81ae53a213",
-    "qwantani_patio_4k-bright-highlight-protection-worst.png": "de51c12e681023f8b8d8d1a5adb3420f1ecf4a96f13a566e60570f44abaad8df",
-    "qwantani_patio_4k-strong-balanced-worst.png": "6d46f5a802d4b42f86cd78ccc3ee32779ec772a668ac4f9ef98fe0557797446f",
-    "qwantani_patio_4k.png": "14a67c811ab30a69f00c40d813fb4bea9bca563094df3dcde1a8e7bf5135c471",
-    "sundowner_deck_4k-default-worst.png": "3e0e9c6b760a128a386c98dcb3095ab9d993daa99744704ad6ea97a78d64f038",
-    "sundowner_deck_4k-dark-shadow-lift-worst.png": "1eddf81aa2d8229b9c1cab476443c89fa5437ced1efd9b8906991735c16f9923",
-    "sundowner_deck_4k-bright-highlight-protection-worst.png": "c47cee5fdc3c3fe3c44fad8426fcb954970ca5782f5a8320123ae791361008f8",
-    "sundowner_deck_4k-strong-balanced-worst.png": "5d28eda6c440a9a1553113f9759989e0c504ade10b0bc366d287d1a466cd4c65",
-    "sundowner_deck_4k.png": "5b94b97231c7afd188d926681fbfd7467e16d12f635214e84ae7ab3f6f32627c",
-    "veranda_4k-default-worst.png": "834bc52303f0ac128041318fcd0dc516f2c537e82275d77cf17dcfa6bb669e0e",
-    "veranda_4k-dark-shadow-lift-worst.png": "63a012529f7bf3747af0f6a049530d71c337364fb81a903496e853c291634c9f",
-    "veranda_4k-bright-highlight-protection-worst.png": "c71da80417ef913a73c16805bdc78a8f08df47c5b5452e1ceec6d8335934eec3",
-    "veranda_4k-strong-balanced-worst.png": "de2eea7938f2e3bc6dccfd91747ce18f1d520c273ff0022304f0849b0b9f7b67",
-    "veranda_4k.png": "1b24e048c03d948eb2bb058d05662e21834be358ccaa771efe708982e8064a86"
+    "abandoned_tiled_room_4k-default-worst.png": "36c27096bf11e5c2cc539172b5d0749827e870e4464fdf4aeeaceda741cef4ee",
+    "abandoned_tiled_room_4k-dark-shadow-lift-worst.png": "d8583f215f58121091ac1bbab9c30fa648e73bebcac47aa06c4d17f45c31e3a8",
+    "abandoned_tiled_room_4k-bright-highlight-protection-worst.png": "6a3fd598fdc165de37001fce1a23e6677fa99d7a6cb46d8756df700ed4c2bb61",
+    "abandoned_tiled_room_4k-strong-balanced-worst.png": "e4123902e24f49a5f977e51b7e0982ff3d1f894908f7730d0f9fc2b599695b97",
+    "abandoned_tiled_room_4k.png": "a7c63155bfd959d408748422dcff404dacbe4f69a50d8b488a38be5903349b44",
+    "qwantani_patio_4k-default-worst.png": "5af453635bfb3bcfc7b36e213f768221687aeece04a014ea3c055922e136320c",
+    "qwantani_patio_4k-dark-shadow-lift-worst.png": "b05201db40b627ff245b9aa47bd5e1e39d72bef1ab4d9679e1515f0c77b4d70e",
+    "qwantani_patio_4k-bright-highlight-protection-worst.png": "a88ee222c3178d6c644652626aa4404d0f0e24113404a498f303935387b87761",
+    "qwantani_patio_4k-strong-balanced-worst.png": "121c148701deb60fcb8265bdf24b2084d9f664a24cb0b18901a748b7973a867a",
+    "qwantani_patio_4k.png": "877190e5e783291852f58ba8c675b747e872ce50fa3d121aa066249a06a76fa2",
+    "sundowner_deck_4k-default-worst.png": "55e9087a2fbb72bc9ec383879613b361a28eb288c477c5e2b5a7d150111afc8a",
+    "sundowner_deck_4k-dark-shadow-lift-worst.png": "60c53683f48363e3b817b88ab9bb52b6c5ce1e59df307fbd3a0956d766c45342",
+    "sundowner_deck_4k-bright-highlight-protection-worst.png": "95e5163fd48cf8b2c2ec25914955274171f9f578fd406a2505bd55f943d37492",
+    "sundowner_deck_4k-strong-balanced-worst.png": "b55800f7500a1c523ac0047a740279344754ecbd96f553dde0c1dcc0ab4358b6",
+    "sundowner_deck_4k.png": "f6c9a0a3b84a60f0881671ccf515f7509cbd011f9fb642d7714b92c5849700b0",
+    "veranda_4k-default-worst.png": "8f12dc9af678e3216e2a39bdd7b69ee583967524cc01c21e1f191fc49346dbb7",
+    "veranda_4k-dark-shadow-lift-worst.png": "ef1a6ec4a7a83d70c1834815bd59a889cd188a11958e619ace03d31546556ef7",
+    "veranda_4k-bright-highlight-protection-worst.png": "62bc12ceb59a4b7e2ee21e317c50bfab6f915551243d8ad3bccd7cdeef638c55",
+    "veranda_4k-strong-balanced-worst.png": "fcb64df93873d5e853af5e8989b26c91edcc3656a0a8391833a51fa0a6dbd1df",
+    "veranda_4k.png": "e4f4b170456843371830b9cd20626dcd17a9de77636eb0b9905ce95253b8613f"
   },
   "cases": [
     {
@@ -93,7 +93,45 @@
       "shadow_ev": 1.1999999999999997,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.21820626132039353,
+        "rmse_codes": 0.21807066767638203,
+        "p99_codes": 1.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+        "pixels_over4": 0,
+        "pixels_over12": 0
+      },
+      "worst_pixel_xy": [
+        79,
+        0
+      ],
+      "worst_crop": "abandoned_tiled_room_4k-default-worst.png",
+      "full_resolution_artifacts": {
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-default-reference.png": "c5179c7646e967bdb3ccd5000b26f7c314e998d7d518d49b8cf214624aca09ce",
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-default-optimized.png": "378d5dbdc8189715503d0f6d8816a7d6b44a0deba8f55ad38160d45fc925497c",
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-default-error.png": "6c93f7d1e7003a00d34301098b14eb3879bf5103e0d944c3c2e4a575ad424f82"
+      }
+    },
+    {
+      "scene": "abandoned_tiled_room_4k",
+      "preset": {
+        "name": "dark-shadow-lift",
+        "global_ev": -2,
+        "highlight_contrast": 0.9,
+        "shadow_contrast": 0.5
+      },
+      "highlight_ev": 0.5999999999999999,
+      "shadow_ev": 3.0,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.27700761287840553,
         "p99_codes": 1.0,
         "max_codes": 2.0,
         "fraction_pixels_over4": 0.0,
@@ -109,52 +147,14 @@
         "pixels_over12": 0
       },
       "worst_pixel_xy": [
-        1114,
-        309
-      ],
-      "worst_crop": "abandoned_tiled_room_4k-default-worst.png",
-      "full_resolution_artifacts": {
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-default-reference.png": "c5179c7646e967bdb3ccd5000b26f7c314e998d7d518d49b8cf214624aca09ce",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-default-optimized.png": "dc6ebae7ec395329418f60236969e5f063e95ae8c89774c3f6e6b12af7259670",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-default-error.png": "98ddc4bd473651200e9a287cd043dde21927650ea1daac1b4ed545bcdc981891"
-      }
-    },
-    {
-      "scene": "abandoned_tiled_room_4k",
-      "preset": {
-        "name": "dark-shadow-lift",
-        "global_ev": -2,
-        "highlight_contrast": 0.9,
-        "shadow_contrast": 0.5
-      },
-      "highlight_ev": 0.5999999999999999,
-      "shadow_ev": 3.0,
-      "quality": {
-        "finite": true,
-        "rmse_codes": 0.2785452361101708,
-        "p99_codes": 1.0,
-        "max_codes": 3.0,
-        "fraction_pixels_over4": 0.0,
-        "thresholds": {
-          "rmse_codes": 0.75,
-          "p99_codes": 3,
-          "max_codes": 12,
-          "fraction_pixels_over4": 0.001
-        },
-        "accepted": true,
-        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
-        "pixels_over4": 0,
-        "pixels_over12": 0
-      },
-      "worst_pixel_xy": [
-        1304,
-        509
+        81,
+        443
       ],
       "worst_crop": "abandoned_tiled_room_4k-dark-shadow-lift-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-dark-shadow-lift-reference.png": "1bd161039d028bc164fd1033f4608a886377a1522536097a69095a334d32a59f",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-dark-shadow-lift-optimized.png": "7951fea706d37794fe9e642879930c8908bd7c7e17eef02989bd1d626dfbd7cf",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-dark-shadow-lift-error.png": "eb2a83c64c9e708d2c279424b659465ff922e9b26cde12f3b9841e6e57840245"
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-dark-shadow-lift-optimized.png": "e8085aa39ee1ce8f420a862ba75beb7ae77896e3e63d7efca76235b9f3770195",
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-dark-shadow-lift-error.png": "6af01b788fbc547137919479634ca68cacfefce0bc9fef720b52a00068507262"
       }
     },
     {
@@ -169,10 +169,10 @@
       "shadow_ev": 0.5999999999999999,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.1523130558268353,
+        "rmse_codes": 0.15639756406436608,
         "p99_codes": 1.0,
-        "max_codes": 7.0,
-        "fraction_pixels_over4": 2.3148148148148147e-05,
+        "max_codes": 3.0,
+        "fraction_pixels_over4": 0.0,
         "thresholds": {
           "rmse_codes": 0.75,
           "p99_codes": 3,
@@ -181,7 +181,7 @@
         },
         "accepted": true,
         "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
-        "pixels_over4": 48,
+        "pixels_over4": 0,
         "pixels_over12": 0
       },
       "worst_pixel_xy": [
@@ -191,8 +191,8 @@
       "worst_crop": "abandoned_tiled_room_4k-bright-highlight-protection-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-bright-highlight-protection-reference.png": "dc831c2bab657df0d9e51f3c67cf898adb8040bd013b64c3cb5947bcea775fc3",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-bright-highlight-protection-optimized.png": "7f3c4f0b932b445a1c6fff81f22a2bd1200e35d1256f7f6b98ff1733721ef8ab",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-bright-highlight-protection-error.png": "3b9ad225df0953ab92af4587f9c97011a7e80f0da068db9575723c5d439d6d96"
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-bright-highlight-protection-optimized.png": "afb9185fc34a03d20bf1922497861025620c5208e4065d2f90123d3dac3ba25b",
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-bright-highlight-protection-error.png": "854ae33efcdb54da511fda57ac3eea788c1d96e721c73485f7122b7b42dfb028"
       }
     },
     {
@@ -207,9 +207,9 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.27992199043743005,
+        "rmse_codes": 0.27697540365237316,
         "p99_codes": 1.0,
-        "max_codes": 4.0,
+        "max_codes": 2.0,
         "fraction_pixels_over4": 0.0,
         "thresholds": {
           "rmse_codes": 0.75,
@@ -223,14 +223,14 @@
         "pixels_over12": 0
       },
       "worst_pixel_xy": [
-        1682,
-        518
+        161,
+        74
       ],
       "worst_crop": "abandoned_tiled_room_4k-strong-balanced-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-strong-balanced-reference.png": "a5f1a8d1d56df63144103e8cf3dd9aef122d3461cba3e36e56b46aaa8de7751b",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-strong-balanced-optimized.png": "ac88a9619385e4abf002a5fd4c3ccd71e6309952c747d23de6b6e530e85d6694",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-strong-balanced-error.png": "d8e86f9bcd69b9877e881f187ad78d63c56ef4ab6e3bd3cc88f23d90af593917"
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-strong-balanced-optimized.png": "17e0fb304df837ae1c585b285342bf86bfa175e77233b9ff59991dcb82355e44",
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-strong-balanced-error.png": "985a0b8e1997858eef643aaa4b900c6c310a175a9285a7ea343b2f83451bcc51"
       }
     },
     {
@@ -245,9 +245,9 @@
       "shadow_ev": 1.1999999999999997,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.20250211158275178,
+        "rmse_codes": 0.19931120136538222,
         "p99_codes": 1.0,
-        "max_codes": 3.0,
+        "max_codes": 2.0,
         "fraction_pixels_over4": 0.0,
         "thresholds": {
           "rmse_codes": 0.75,
@@ -261,14 +261,14 @@
         "pixels_over12": 0
       },
       "worst_pixel_xy": [
-        1234,
-        600
+        183,
+        451
       ],
       "worst_crop": "qwantani_patio_4k-default-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/qwantani_patio_4k-default-reference.png": "55fac2f7fd6583dea4b6d15f2a0b5b6e9cade01344915f5b32ee424d6325f427",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-default-optimized.png": "c2e40b964cd809b03ef6fc3600318b7865faeafd8a176982b7b9a8df48ca54c3",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-default-error.png": "29e3eade69bdf4d3b100c398562130863475a501f1471727c594ad444ef9b5b3"
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-default-optimized.png": "7548f573b5d22b2ba816fec5482b21f2daaac183ff6801edff6e3708641613e6",
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-default-error.png": "e7c05538b5b74ee91baf5f042ad130a7028421698ddb3ae3d3ded7e9c7586474"
       }
     },
     {
@@ -283,9 +283,9 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.29879839088432475,
+        "rmse_codes": 0.29672233187360586,
         "p99_codes": 1.0,
-        "max_codes": 4.0,
+        "max_codes": 2.0,
         "fraction_pixels_over4": 0.0,
         "thresholds": {
           "rmse_codes": 0.75,
@@ -299,14 +299,14 @@
         "pixels_over12": 0
       },
       "worst_pixel_xy": [
-        1291,
-        670
+        1073,
+        316
       ],
       "worst_crop": "qwantani_patio_4k-dark-shadow-lift-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/qwantani_patio_4k-dark-shadow-lift-reference.png": "75bcc35c74c17c77ee35dbd24886b49caf95ee196b7f9fb66974d686e43a8e0f",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-dark-shadow-lift-optimized.png": "b9c89874455928b206d740f08219a485acbb706329f2fa7b21614a6d99a9981c",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-dark-shadow-lift-error.png": "234059a58ab05a0ca7c7728553aa04f6afa80a4b704dd364e8b2cd64a1748922"
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-dark-shadow-lift-optimized.png": "c77262c2589143430082c12f287a095bb276e96fa6e9c46cd49b7f20820c83c0",
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-dark-shadow-lift-error.png": "cb7dc2fa75a563988849ce14f1df5dfe910c104e8ebdc814756fd6634c28309e"
       }
     },
     {
@@ -321,9 +321,9 @@
       "shadow_ev": 0.5999999999999999,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.16222129074440844,
+        "rmse_codes": 0.1595036749579861,
         "p99_codes": 1.0,
-        "max_codes": 4.0,
+        "max_codes": 2.0,
         "fraction_pixels_over4": 0.0,
         "thresholds": {
           "rmse_codes": 0.75,
@@ -337,14 +337,14 @@
         "pixels_over12": 0
       },
       "worst_pixel_xy": [
-        1120,
-        350
+        1059,
+        187
       ],
       "worst_crop": "qwantani_patio_4k-bright-highlight-protection-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/qwantani_patio_4k-bright-highlight-protection-reference.png": "263a01363a04194c571349270edd0f89c9b8f3516539d4a7490c87d3d23c7795",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-bright-highlight-protection-optimized.png": "297ca63b4ddb8aec3da3a08712441d77d4012a108cb28b31fbc03ea6248297f8",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-bright-highlight-protection-error.png": "00b353292988afd83f205931cdec32dd5277d887034f24a4cbe02d12789e1ab2"
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-bright-highlight-protection-optimized.png": "206d6b8e2517c1c00a79b571f767be0a74bacc0bca329b5a73cc8465c9815467",
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-bright-highlight-protection-error.png": "0fe12520d00e3ec523fa23f84a4dc72757fb7f84f2dda9b822f2e3bc043abc7d"
       }
     },
     {
@@ -359,10 +359,10 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.22757902631869356,
+        "rmse_codes": 0.22111268145729354,
         "p99_codes": 1.0,
-        "max_codes": 7.0,
-        "fraction_pixels_over4": 2.4112654320987654e-06,
+        "max_codes": 3.0,
+        "fraction_pixels_over4": 0.0,
         "thresholds": {
           "rmse_codes": 0.75,
           "p99_codes": 3,
@@ -371,7 +371,7 @@
         },
         "accepted": true,
         "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
-        "pixels_over4": 5,
+        "pixels_over4": 0,
         "pixels_over12": 0
       },
       "worst_pixel_xy": [
@@ -381,8 +381,8 @@
       "worst_crop": "qwantani_patio_4k-strong-balanced-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/qwantani_patio_4k-strong-balanced-reference.png": "3f645e5681f51cbef78743d063bb8028a6d8b81c031cc82e468929f1edd47fd6",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-strong-balanced-optimized.png": "ad29c5cfb96910821079d46b601e5d36568a39e8544790413d962d4e75c43849",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-strong-balanced-error.png": "3761e7de7fb6a02cd41b503069385dd209030b190da5d77edd5734564fb0cfdf"
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-strong-balanced-optimized.png": "8eb52b7947a5a3c3fb15362980a1d1c25e722f2a34002c88d150eead1cd7f4ab",
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-strong-balanced-error.png": "28b3747f951dda33f504ce507894562780dea55b5a501de102dabf8b0e556a15"
       }
     },
     {
@@ -397,7 +397,121 @@
       "shadow_ev": 1.1999999999999997,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.21913362892331903,
+        "rmse_codes": 0.21811747174740836,
+        "p99_codes": 1.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+        "pixels_over4": 0,
+        "pixels_over12": 0
+      },
+      "worst_pixel_xy": [
+        27,
+        0
+      ],
+      "worst_crop": "sundowner_deck_4k-default-worst.png",
+      "full_resolution_artifacts": {
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-default-reference.png": "c04de7241c944f0e62ef9002dc42643c028506f1f7ef5ee2b1faf340eb70881d",
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-default-optimized.png": "723bd8536c0a469dc67ddef3dc5a5b0a070fca76b254807eee91a55c8b8eed83",
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-default-error.png": "b9d53f79f88f6071d4a112e5070ef5a054847b80abe599af0f8d960555833499"
+      }
+    },
+    {
+      "scene": "sundowner_deck_4k",
+      "preset": {
+        "name": "dark-shadow-lift",
+        "global_ev": -2,
+        "highlight_contrast": 0.9,
+        "shadow_contrast": 0.5
+      },
+      "highlight_ev": 0.5999999999999999,
+      "shadow_ev": 3.0,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.2683234844063237,
+        "p99_codes": 1.0,
+        "max_codes": 6.0,
+        "fraction_pixels_over4": 4.822530864197531e-07,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+        "pixels_over4": 1,
+        "pixels_over12": 0
+      },
+      "worst_pixel_xy": [
+        1395,
+        679
+      ],
+      "worst_crop": "sundowner_deck_4k-dark-shadow-lift-worst.png",
+      "full_resolution_artifacts": {
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-dark-shadow-lift-reference.png": "8544b4432626cf2cc250f6f05a6ee4ef6e4537b3eb4252da184002249feb541c",
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-dark-shadow-lift-optimized.png": "a6675ec3ac26d8934018403b5f1fabad0213fa0f86a7c0a15d1455fbd219c7ed",
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-dark-shadow-lift-error.png": "9bc7ab866fefa41f5a879d20b8665efdadc750949631672bddedc830b2bacf73"
+      }
+    },
+    {
+      "scene": "sundowner_deck_4k",
+      "preset": {
+        "name": "bright-highlight-protection",
+        "global_ev": 2,
+        "highlight_contrast": 0.5,
+        "shadow_contrast": 0.9
+      },
+      "highlight_ev": 3.0,
+      "shadow_ev": 0.5999999999999999,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.17912628743948178,
+        "p99_codes": 1.0,
+        "max_codes": 2.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+        "pixels_over4": 0,
+        "pixels_over12": 0
+      },
+      "worst_pixel_xy": [
+        648,
+        474
+      ],
+      "worst_crop": "sundowner_deck_4k-bright-highlight-protection-worst.png",
+      "full_resolution_artifacts": {
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-bright-highlight-protection-reference.png": "db6634d04cdb944c45201f4fcdfebb3ed7b726ba2e3520327622ae10ed0fa163",
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-bright-highlight-protection-optimized.png": "72eedb222e4708e7ac5c9aaddfd74b93a15605b043bb1fd16ef07b25672fee21",
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-bright-highlight-protection-error.png": "89f39d35161f070b95748845a7a7b9594b911a9b6b56ff269adbe052353cc3de"
+      }
+    },
+    {
+      "scene": "sundowner_deck_4k",
+      "preset": {
+        "name": "strong-balanced",
+        "global_ev": 0,
+        "highlight_contrast": 0.5,
+        "shadow_contrast": 0.5
+      },
+      "highlight_ev": 3.0,
+      "shadow_ev": 3.0,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.28472645660807955,
         "p99_codes": 1.0,
         "max_codes": 3.0,
         "fraction_pixels_over4": 0.0,
@@ -413,128 +527,14 @@
         "pixels_over12": 0
       },
       "worst_pixel_xy": [
-        267,
-        562
-      ],
-      "worst_crop": "sundowner_deck_4k-default-worst.png",
-      "full_resolution_artifacts": {
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-default-reference.png": "c04de7241c944f0e62ef9002dc42643c028506f1f7ef5ee2b1faf340eb70881d",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-default-optimized.png": "df60e1fc8b8d7cffa8055864153017e77e1366861f281be9dc81109e1bfc18b5",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-default-error.png": "ffe62349671ec59982efee48d49a88e40c7c95ccaf2aa02ee76a57e4c70bdc58"
-      }
-    },
-    {
-      "scene": "sundowner_deck_4k",
-      "preset": {
-        "name": "dark-shadow-lift",
-        "global_ev": -2,
-        "highlight_contrast": 0.9,
-        "shadow_contrast": 0.5
-      },
-      "highlight_ev": 0.5999999999999999,
-      "shadow_ev": 3.0,
-      "quality": {
-        "finite": true,
-        "rmse_codes": 0.2722293082977957,
-        "p99_codes": 1.0,
-        "max_codes": 11.0,
-        "fraction_pixels_over4": 3.375771604938272e-06,
-        "thresholds": {
-          "rmse_codes": 0.75,
-          "p99_codes": 3,
-          "max_codes": 12,
-          "fraction_pixels_over4": 0.001
-        },
-        "accepted": true,
-        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
-        "pixels_over4": 7,
-        "pixels_over12": 0
-      },
-      "worst_pixel_xy": [
-        1395,
-        679
-      ],
-      "worst_crop": "sundowner_deck_4k-dark-shadow-lift-worst.png",
-      "full_resolution_artifacts": {
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-dark-shadow-lift-reference.png": "8544b4432626cf2cc250f6f05a6ee4ef6e4537b3eb4252da184002249feb541c",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-dark-shadow-lift-optimized.png": "8ad29585fad63a67de80b5aec256892465542c0a81d8bfc5d2b5ccfd1ac35742",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-dark-shadow-lift-error.png": "c445b6716b1636fa27098cf1875b73f3ca8dbf9e48601e220311ae590555ebc8"
-      }
-    },
-    {
-      "scene": "sundowner_deck_4k",
-      "preset": {
-        "name": "bright-highlight-protection",
-        "global_ev": 2,
-        "highlight_contrast": 0.5,
-        "shadow_contrast": 0.9
-      },
-      "highlight_ev": 3.0,
-      "shadow_ev": 0.5999999999999999,
-      "quality": {
-        "finite": true,
-        "rmse_codes": 0.1737948102207623,
-        "p99_codes": 1.0,
-        "max_codes": 6.0,
-        "fraction_pixels_over4": 9.645061728395062e-07,
-        "thresholds": {
-          "rmse_codes": 0.75,
-          "p99_codes": 3,
-          "max_codes": 12,
-          "fraction_pixels_over4": 0.001
-        },
-        "accepted": true,
-        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
-        "pixels_over4": 2,
-        "pixels_over12": 0
-      },
-      "worst_pixel_xy": [
-        1617,
-        758
-      ],
-      "worst_crop": "sundowner_deck_4k-bright-highlight-protection-worst.png",
-      "full_resolution_artifacts": {
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-bright-highlight-protection-reference.png": "db6634d04cdb944c45201f4fcdfebb3ed7b726ba2e3520327622ae10ed0fa163",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-bright-highlight-protection-optimized.png": "42c3ead4a55343db7a2948e025b85e645141b13ecaa91d838a8824ac7b74b96b",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-bright-highlight-protection-error.png": "84a0d69d8d26ae326041674fffdb1b9d84f86a0175a60c709fdbb5d18834385c"
-      }
-    },
-    {
-      "scene": "sundowner_deck_4k",
-      "preset": {
-        "name": "strong-balanced",
-        "global_ev": 0,
-        "highlight_contrast": 0.5,
-        "shadow_contrast": 0.5
-      },
-      "highlight_ev": 3.0,
-      "shadow_ev": 3.0,
-      "quality": {
-        "finite": true,
-        "rmse_codes": 0.28656276154899185,
-        "p99_codes": 1.0,
-        "max_codes": 7.0,
-        "fraction_pixels_over4": 4.340277777777778e-06,
-        "thresholds": {
-          "rmse_codes": 0.75,
-          "p99_codes": 3,
-          "max_codes": 12,
-          "fraction_pixels_over4": 0.001
-        },
-        "accepted": true,
-        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
-        "pixels_over4": 9,
-        "pixels_over12": 0
-      },
-      "worst_pixel_xy": [
-        1384,
-        816
+        374,
+        506
       ],
       "worst_crop": "sundowner_deck_4k-strong-balanced-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/sundowner_deck_4k-strong-balanced-reference.png": "7a39fd64677c59a7e634eb551fffeaeec80fd22449d196bda856d5de42028648",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-strong-balanced-optimized.png": "c5dffb070a9505f2be2fcaafc9c11d8d3faca96a3150f0c0bbdce075f450f930",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-strong-balanced-error.png": "6faaaa5dc1238542fa880f61f89845dbb31dd70334a54ae6b83751d8965ce32c"
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-strong-balanced-optimized.png": "290802a95bba8066baa9375ba4419b74c3b5d38bbef24646b1864157b738b6be",
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-strong-balanced-error.png": "6d416caae51b4ff045cec21e1918c4b241e0ba8edc0e263f57dc09ff733ee22c"
       }
     },
     {
@@ -549,9 +549,9 @@
       "shadow_ev": 1.1999999999999997,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.21916223649467942,
+        "rmse_codes": 0.2160749130638621,
         "p99_codes": 1.0,
-        "max_codes": 3.0,
+        "max_codes": 2.0,
         "fraction_pixels_over4": 0.0,
         "thresholds": {
           "rmse_codes": 0.75,
@@ -571,8 +571,8 @@
       "worst_crop": "veranda_4k-default-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/veranda_4k-default-reference.png": "9f57c45645203edab8e9a5f9987775718ac95217436fe7aad9b9fdb8d1fbd75d",
-        "outputs/quality/parameter-matrix/veranda_4k-default-optimized.png": "6fd3ec2671959862dda1e658bbc29246761daab7b406122bd75b98c5f4e78bb9",
-        "outputs/quality/parameter-matrix/veranda_4k-default-error.png": "dd515e9bfcd361c515fb17e46b2ffb37d1f6d4f0c261907fea7dcd2948ef2c78"
+        "outputs/quality/parameter-matrix/veranda_4k-default-optimized.png": "5c8d3391715f57eec9d855253179fda9a7daaff9552158b8b2eec05081c3eca5",
+        "outputs/quality/parameter-matrix/veranda_4k-default-error.png": "6d73daa1df855cca2bb09a9b7a3ac4bf27450d112fa9785d0a7e97371c0e409c"
       }
     },
     {
@@ -587,10 +587,10 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.2983959711641494,
+        "rmse_codes": 0.29105480353801316,
         "p99_codes": 1.0,
-        "max_codes": 6.0,
-        "fraction_pixels_over4": 5.304783950617284e-06,
+        "max_codes": 3.0,
+        "fraction_pixels_over4": 0.0,
         "thresholds": {
           "rmse_codes": 0.75,
           "p99_codes": 3,
@@ -599,18 +599,18 @@
         },
         "accepted": true,
         "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
-        "pixels_over4": 11,
+        "pixels_over4": 0,
         "pixels_over12": 0
       },
       "worst_pixel_xy": [
-        1020,
-        801
+        1018,
+        791
       ],
       "worst_crop": "veranda_4k-dark-shadow-lift-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/veranda_4k-dark-shadow-lift-reference.png": "ebe82fc8515adafc6beab61abc12f501af2047fafbee7ca4316505e703cdd895",
-        "outputs/quality/parameter-matrix/veranda_4k-dark-shadow-lift-optimized.png": "f5d10778c698f59c8ace874a658a8b928f32f8d330b15c525b2f9a13d82c7b29",
-        "outputs/quality/parameter-matrix/veranda_4k-dark-shadow-lift-error.png": "cf643904dd79e44f737ee96bd660dbcd2249d099c8d32aea4f950f3b861e5786"
+        "outputs/quality/parameter-matrix/veranda_4k-dark-shadow-lift-optimized.png": "8b8d5e2585a8720b48481e1b48d7556265cac292d8cb406e3287a612a8731656",
+        "outputs/quality/parameter-matrix/veranda_4k-dark-shadow-lift-error.png": "eac57318df6148bc31f5ac29202b971bef30b14010629d96c425b962667539c9"
       }
     },
     {
@@ -625,9 +625,9 @@
       "shadow_ev": 0.5999999999999999,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.13670270151252698,
+        "rmse_codes": 0.14221537255640834,
         "p99_codes": 1.0,
-        "max_codes": 4.0,
+        "max_codes": 2.0,
         "fraction_pixels_over4": 0.0,
         "thresholds": {
           "rmse_codes": 0.75,
@@ -641,14 +641,14 @@
         "pixels_over12": 0
       },
       "worst_pixel_xy": [
-        1082,
-        450
+        1005,
+        318
       ],
       "worst_crop": "veranda_4k-bright-highlight-protection-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/veranda_4k-bright-highlight-protection-reference.png": "c4c2994b5c74913dea4bd306f021cce7a23fa4f3f05a9cd50b6071bf1c592b26",
-        "outputs/quality/parameter-matrix/veranda_4k-bright-highlight-protection-optimized.png": "35bfdfb01317536e9565dfe3d2a0c7b6be18e32d9f65993be6659411aeace87b",
-        "outputs/quality/parameter-matrix/veranda_4k-bright-highlight-protection-error.png": "a5f2be9cdd424f1ee2af634b2f28c2727f5cbca7cc42d320ac3969da914bd628"
+        "outputs/quality/parameter-matrix/veranda_4k-bright-highlight-protection-optimized.png": "0631f0c6e9c2ea454d9368b0280dca0eecff827067941221d3af71f722b76dda",
+        "outputs/quality/parameter-matrix/veranda_4k-bright-highlight-protection-error.png": "a6a8baa7ae3466a2dbff84f663dad2eca13cf4fa1ed23e2c2a30bf0de45e1fe1"
       }
     },
     {
@@ -663,20 +663,20 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.2671511922422599,
+        "rmse_codes": 0.2613015829123702,
         "p99_codes": 1.0,
-        "max_codes": 13.0,
-        "fraction_pixels_over4": 1.0127314814814815e-05,
+        "max_codes": 5.0,
+        "fraction_pixels_over4": 4.822530864197531e-07,
         "thresholds": {
           "rmse_codes": 0.75,
           "p99_codes": 3,
           "max_codes": 12,
           "fraction_pixels_over4": 0.001
         },
-        "accepted": false,
+        "accepted": true,
         "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
-        "pixels_over4": 21,
-        "pixels_over12": 2
+        "pixels_over4": 1,
+        "pixels_over12": 0
       },
       "worst_pixel_xy": [
         1285,
@@ -685,13 +685,13 @@
       "worst_crop": "veranda_4k-strong-balanced-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/veranda_4k-strong-balanced-reference.png": "1ee3d97987e34cd363b0ce285a537c5b43bc126ddd306bef546b1580e9acce79",
-        "outputs/quality/parameter-matrix/veranda_4k-strong-balanced-optimized.png": "efcce5a9182762e8d6f47689ff1d6c2d6cda078b7f5fe5015a523e58f44ffe01",
-        "outputs/quality/parameter-matrix/veranda_4k-strong-balanced-error.png": "cb56e259e2468f106e4d6f6358d2b198168a017d2eded54cc2553a43ff9b590b"
+        "outputs/quality/parameter-matrix/veranda_4k-strong-balanced-optimized.png": "4244d88a2ff7cffcec005fb643cfc8dfd80d0c41d980b24abc9fa5c8ce737feb",
+        "outputs/quality/parameter-matrix/veranda_4k-strong-balanced-error.png": "7b08761c265264ac6fde550f2a557ac634ee87f6358b487cc412724990dbdf7c"
       }
     }
   ],
-  "accepted": false,
-  "variant": "guided-fused-reconstruction",
+  "accepted": true,
+  "variant": "guided-packed-coefficients",
   "variant_config": {
     "half_aux": true,
     "compute_srgb": true,
@@ -719,7 +719,21 @@
     "guided_gather_rows": true,
     "direct_residual_weights": true,
     "gather_x": 4,
-    "gather_y": 8
+    "gather_y": 8,
+    "residual_float_from": 3,
+    "compact_tail_storage": true,
+    "tail_grid_walk": true,
+    "skip_tail_clear": true,
+    "fuse_tail_base": true,
+    "curve_log": true,
+    "gather_quad_log": true,
+    "guided_interior_fit": true,
+    "shared_input_log": true,
+    "pyramid_x": 4,
+    "pyramid_y": 16,
+    "gather_unsigned_source": true,
+    "coefficient_padding": 4,
+    "packed_half_coefficients": true
   },
   "backend": {
     "api": "D3D12",

@@ -1,3 +1,36 @@
+#ifndef GUIDED_INTERIOR_FIT
+#define GUIDED_INTERIOR_FIT 0
+#endif
+#ifndef SHARED_INPUT_LOG
+#define SHARED_INPUT_LOG 0
+#endif
+#ifndef COMPACT_TAIL_STORAGE
+#define COMPACT_TAIL_STORAGE 0
+#endif
+#ifndef GATHER_QUAD_LOG
+#define GATHER_QUAD_LOG 0
+#endif
+#ifndef GATHER_UNSIGNED_SOURCE
+#define GATHER_UNSIGNED_SOURCE 0
+#endif
+#ifndef SKIP_TAIL_CLEAR
+#define SKIP_TAIL_CLEAR 0
+#endif
+#ifndef FUSE_TAIL_BASE
+#define FUSE_TAIL_BASE 0
+#endif
+#ifndef TAIL_GRID_WALK
+#define TAIL_GRID_WALK 0
+#endif
+#ifndef FLOAT_TAIL_WEIGHTS
+#define FLOAT_TAIL_WEIGHTS 0
+#endif
+#ifndef FLOAT_TAIL_RESIDUAL
+#define FLOAT_TAIL_RESIDUAL 0
+#endif
+#ifndef COMPENSATE_RESIDUAL
+#define COMPENSATE_RESIDUAL 0
+#endif
 // The mobile residual path can consume the normalized Gaussian pair directly.
 // This retains UNORM quantization drift instead of renormalizing it at each level.
 #ifndef DIRECT_RESIDUAL_WEIGHTS
@@ -56,6 +89,12 @@
 #endif
 #ifndef GUIDED_RADIUS
 #define GUIDED_RADIUS 2
+#endif
+#ifndef PACKED_HALF_COEFFICIENTS
+#define PACKED_HALF_COEFFICIENTS 0
+#endif
+#ifndef COEFF_PAD
+#define COEFF_PAD 0
 #endif
 #ifndef SHARED_PADDING
 #define SHARED_PADDING 0
@@ -138,6 +177,12 @@
 #if GUIDED_THREADS_Y != TILE_Y && GUIDED_VERTICAL != 2
 #error Decoupled Guided threads require vertical output batching
 #endif
+#if GUIDED_INTERIOR_FIT && (GUIDED_VERTICAL != 2 || (TILE_Y % 2) != 0)
+#error Interior fitting requires two-row fitting and an even tile height
+#endif
+#if SHARED_INPUT_LOG && (!CURVE_LOG || !LOG_EXPOSURE)
+#error Shared input log requires log-domain curve and exposure storage
+#endif
 static const uint inputPitch=TILE_X+4*GUIDED_RADIUS;
 static const uint inputHeight=TILE_Y+4*GUIDED_RADIUS;
 static const uint coefficientPitch=TILE_X+2*GUIDED_RADIUS;
@@ -155,15 +200,27 @@ float sigma;
 
 void storeReducedLuma(uint2 pixel,float luminance,float guide)
 {
+#if SHARED_INPUT_LOG
+    // Reuse the pre-exposure logarithm for both storage and all three brackets.
+    float sourceLog=log2(max(luminance,1e-38));
+#endif
     #if LOG_EXPOSURE
+#if SHARED_INPUT_LOG
+    compactOutput[pixel]=float2(max(sourceLog,log2(1e-20))+globalEV,guide);
+#else
     compactOutput[pixel]=float2(log2(max(luminance,1e-20))+globalEV,guide);
+#endif
 #else
     compactOutput[pixel]=float2(luminance,guide);
 #endif
     luminance*=exp2(globalEV);
 #if CURVE_LOG
     // Share the input logarithm across all three brackets and avoid log(pow()).
+#if SHARED_INPUT_LOG
+    float3 logInputs=min(max(sourceLog+globalEV,log2(1e-38))+float3(-highlightEV,0,shadowEV),log2(zMaxInput));
+#else
     float3 logInputs=min(log2(max(luminance,1e-38))+float3(-highlightEV,0,shadowEV),log2(zMaxInput));
+#endif
     float3 numerator=exp2(logInputs*zParameters.x);
     float3 denominator=zParameters.z*exp2(logInputs*(zParameters.x*zParameters.y))+zParameters.w;
     float3 y=luminance>0 ? min(sqrt(numerator/denominator),zMaxLightness) : float3(0);
@@ -176,11 +233,24 @@ void storeReducedLuma(uint2 pixel,float luminance,float guide)
     float3 weights=exp2(logWeight-max(logWeight.x,max(logWeight.y,logWeight.z)));
     weights/=weights.x+weights.y+weights.z;
 #if RESIDUAL_PYRAMID
+    #if COMPENSATE_RESIDUAL
+    // Preserve the fine-level weighted lightness when storing residuals in half.
+    // q = half(d); (base + dot(w,d-q)) + dot(w,q) = base + dot(w,d).
+    // Coarser-level quantization remains approximate. No extra texture or pass.
+    float2 exactResidual=y.xz-y.yy;
+    half2 roundedResidual=half2(exactResidual*RESIDUAL_SCALE);
+    baseLightnessOutput[pixel]=y.y+dot(exactResidual-float2(roundedResidual)/RESIDUAL_SCALE,weights.xz);
+    #else
     baseLightnessOutput[pixel]=y.y;
+    #endif
 #if PACKED_RESIDUAL
     lightnessOutput[pixel]=float4((y.x-y.y)*RESIDUAL_SCALE,(y.z-y.y)*RESIDUAL_SCALE,weights.x-PACKED_WEIGHT_BIAS,weights.z-PACKED_WEIGHT_BIAS);
 #else
+    #if COMPENSATE_RESIDUAL
+    lightnessOutput[pixel]=float4(float2(roundedResidual),0,0);
+    #else
     lightnessOutput[pixel]=float4((y.x-y.y)*RESIDUAL_SCALE,(y.z-y.y)*RESIDUAL_SCALE,0,0);
+    #endif
     weightsOutput[pixel]=weights.xz;
 #endif
 #else
@@ -294,7 +364,13 @@ void reduce_setup_gather(uint3 tid : SV_DispatchThreadID)
     float sumL=0,sumLog=0;
     for(uint y=0;y<2;y++)for(uint x=0;x<2;x++) {
         float2 uv=(float2(tid.xy)+(float2(x,y)+.5)/2.0)/float2(w,h);
-#if HALF_GATHER
+#if GATHER_UNSIGNED_SOURCE
+        // Finite R11G11B10 samples are already nonnegative. Other source
+        // formats keep the clamped path; the host selects this specialization.
+        float4 r=fullSource.GatherRed(linearSampler,uv);
+        float4 g=fullSource.GatherGreen(linearSampler,uv);
+        float4 b=fullSource.GatherBlue(linearSampler,uv);
+#elif HALF_GATHER
         // Opt-in only for finite R11G11B10 input: every channel value is exactly
         // representable in half. Products and luminance sums still use FP32.
         half4 r=half4(max(fullSource.GatherRed(linearSampler,uv),0.0));
@@ -306,7 +382,16 @@ void reduce_setup_gather(uint3 tid : SV_DispatchThreadID)
         float4 b=max(fullSource.GatherBlue(linearSampler,uv),0.0);
 #endif
         float4 luminance=float4(r)*.2126+float4(g)*.7152+float4(b)*.0722;
-        sumL+=dot(luminance,float4(1));sumLog+=dot(log2(max(luminance,1e-6)),float4(1));
+        sumL+=dot(luminance,float4(1));
+#if GATHER_QUAD_LOG
+        // Finite R11G11B10 input: each clamped luminance is in [1e-6,65535].
+        // The four-value product stays normal in FP32 (1e-24 .. 1.85e19).
+        // Preserve mean log luminance with one log per quad, modulo rounding.
+        float4 positive=max(luminance,1e-6);
+        sumLog+=log2((positive.x*positive.y)*(positive.z*positive.w));
+#else
+        sumLog+=dot(log2(max(luminance,1e-6)),float4(1));
+#endif
     }
     storeReducedLuma(tid.xy,sumL/16.0,sumLog/16.0);
 }
@@ -599,12 +684,32 @@ void guided_moments(uint3 tid : SV_DispatchThreadID)
 // inverse queries are performed once per low-resolution pixel. Moment sums
 // remain FP32 in the retained separable configuration.
 groupshared float2 fusedInputs[inputPitch*inputHeight];
-#if SEPARABLE_GUIDED && REUSE_SHARED
+#if SEPARABLE_GUIDED && REUSE_SHARED && COEFF_PAD == 0 && !PACKED_HALF_COEFFICIENTS
 // Every input read finishes before the row-moment barrier. Coefficients fit
 // inside the larger input tile and can reuse its shared-memory allocation.
 #define fusedCoefficients fusedInputs
 #else
-groupshared float2 fusedCoefficients[coefficientPitch*coefficientHeight];
+// Physical row padding changes shared-memory addressing only; filter support
+// and floating-point accumulation order use the logical coefficientPitch.
+#if PACKED_HALF_COEFFICIENTS
+// Round fitted coefficients once, then pack their native half bits into one
+// shared word. Unpack to float before the existing FP32 window accumulation.
+groupshared uint packedCoefficients[(coefficientPitch+COEFF_PAD)*coefficientHeight];
+void storeCoefficient(uint i,float2 v) {
+    half2 rounded=half2(v);
+    packedCoefficients[i]=uint(asuint16(rounded.x)) | (uint(asuint16(rounded.y))<<16);
+}
+float2 loadCoefficient(uint i) {
+    uint packed=packedCoefficients[i];
+    return float2(f16tof32(packed&65535),f16tof32(packed>>16));
+}
+#else
+groupshared float2 fusedCoefficients[(coefficientPitch+COEFF_PAD)*coefficientHeight];
+#endif
+#endif
+#if !PACKED_HALF_COEFFICIENTS
+void storeCoefficient(uint i,float2 v) { fusedCoefficients[i]=v; }
+float2 loadCoefficient(uint i) { return fusedCoefficients[i]; }
 #endif
 #if SEPARABLE_GUIDED
 static const uint momentPitch=coefficientPitch+SHARED_PADDING;
@@ -775,6 +880,29 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     GroupMemoryBarrierWithGroupSync();
 #endif
 #if GUIDED_VERTICAL == 2
+#if GUIDED_INTERIOR_FIT
+    // All six cached rows are in bounds here. Keep the original clamped path
+    // for border tiles; no sampling, precision or summation order changes.
+    bool interior=all(origin>=int2(GUIDED_RADIUS)) && all(origin+int2(TILE_X+GUIDED_RADIUS,TILE_Y+GUIDED_RADIUS)<=int2(w,h));
+    if(interior) {
+        for(uint task=lane;task<coefficientPitch*((coefficientHeight+1)/2);task+=TILE_X*GUIDED_THREADS_Y) {
+            uint col=task%coefficientPitch,row=(task/coefficientPitch)*2;
+            float4 cached[6];
+            [unroll] for(uint k=0;k<6;k++)cached[k]=rowMoments[(row+k)*momentPitch+col];
+            [unroll] for(uint j=0;j<2;j++) {
+                float4 moments=0;
+                [unroll] for(uint k=0;k<5;k++)moments+=cached[j+k];
+                moments/=25.0;
+                float variance=max(moments.z-moments.x*moments.x,0.0);
+                half covariance=half(moments.w-moments.x*moments.y);
+                half denominator=half(variance+0.04);
+                half aa=covariance/denominator;
+                storeCoefficient((row+j)*(coefficientPitch+COEFF_PAD)+col,float2(float(aa),moments.y-float(aa)*(moments.x+anchor)));
+            }
+        }
+    } else
+#endif
+    {
     // Two adjacent vertical windows share six rows. Preserve summation order.
     for(uint task=lane;task<coefficientPitch*((coefficientHeight+1)/2);task+=TILE_X*GUIDED_THREADS_Y) {
         uint col=task%coefficientPitch,row=(task/coefficientPitch)*2;
@@ -801,8 +929,9 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
             half covariance=half(moments.w-moments.x*moments.y);
             half denominator=half(variance+0.04);
             half aa=covariance/denominator;
-            fusedCoefficients[(row+j)*coefficientPitch+col]=float2(float(aa),moments.y-float(aa)*(moments.x+anchor));
+            storeCoefficient((row+j)*(coefficientPitch+COEFF_PAD)+col,float2(float(aa),moments.y-float(aa)*(moments.x+anchor)));
         }
+    }
     }
 #else
     for(uint i=lane; i<coefficientPitch*coefficientHeight; i+=TILE_X*GUIDED_THREADS_Y)
@@ -842,7 +971,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
         half covariance=half(meanGE-meanG*meanE);
         half denominator=half(variance+0.04);
         half a=covariance/denominator;
-        fusedCoefficients[i]=float2(float(a),meanE-float(a)*(meanG+center));
+        storeCoefficient((i/coefficientPitch)*(coefficientPitch+COEFF_PAD)+i%coefficientPitch,float2(float(a),meanE-float(a)*(meanG+center)));
     }
 #endif
     GroupMemoryBarrierWithGroupSync();
@@ -853,7 +982,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
         uint row=chunk/coefficientChunks,col=(chunk%coefficientChunks)*GUIDED_BATCH;
         float2 values[GUIDED_BATCH+2*GUIDED_RADIUS];
         [unroll] for(uint x=0;x<GUIDED_BATCH+2*GUIDED_RADIUS;x++)
-            values[x]=fusedCoefficients[row*coefficientPitch+min(col+x,coefficientPitch-1)];
+            values[x]=loadCoefficient(row*(coefficientPitch+COEFF_PAD)+min(col+x,coefficientPitch-1));
         float2 sum=0;
         [unroll] for(uint j=0;j<GUIDED_BATCH;j++) {
 #if GUIDED_SLIDING
@@ -873,7 +1002,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     for(uint i=lane;i<TILE_X*coefficientHeight;i+=TILE_X*GUIDED_THREADS_Y) {
         uint row=i/TILE_X,col=i%TILE_X;
         float2 sum=0;
-        for(uint x=0;x<=2*GUIDED_RADIUS;x++)sum+=fusedCoefficients[row*coefficientPitch+col+x];
+        for(uint x=0;x<=2*GUIDED_RADIUS;x++)sum+=loadCoefficient(row*(coefficientPitch+COEFF_PAD)+col+x);
 #if SHARED_PADDING
         storeRowCoefficients(row*rowCoefficientPitch+col,sum);
 #else
@@ -907,16 +1036,23 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     float2 sum=0;
     for(int y=-GUIDED_RADIUS; y<=GUIDED_RADIUS; ++y)
         for(int x=-GUIDED_RADIUS; x<=GUIDED_RADIUS; ++x)
-            sum+=fusedCoefficients[(localID.y+y+GUIDED_RADIUS)*coefficientPitch+localID.x+x+GUIDED_RADIUS];
+            sum+=loadCoefficient((localID.y+y+GUIDED_RADIUS)*(coefficientPitch+COEFF_PAD)+localID.x+x+GUIDED_RADIUS);
 #endif
 #if GUIDED_VERTICAL != 2
     averagedOutput[tid.xy]=sum/float((2*GUIDED_RADIUS+1)*(2*GUIDED_RADIUS+1));
 #endif
 }
 
+// Schedule pyramid sampling independently of reconstruction kernels.
+#ifndef PYRAMID_X
+#define PYRAMID_X WORK_X
+#endif
+#ifndef PYRAMID_Y
+#define PYRAMID_Y WORK_Y
+#endif
 // Both packed pyramids use the same four bilinear coordinates and arithmetic.
 [shader("compute")]
-[numthreads(WORK_X,WORK_Y,1)]
+[numthreads(PYRAMID_X,PYRAMID_Y,1)]
 void downsample_compact(uint3 tid : SV_DispatchThreadID)
 {
     uint w,h,iw,ih;
@@ -942,12 +1078,22 @@ void downsample_compact(uint3 tid : SV_DispatchThreadID)
 // Optional small pyramid tail in one workgroup. The base is at most 32x16;
 // all mip pixels together fit 683 entries. This is an approximate candidate:
 // shared-memory bilinear interpolation replaces hardware texture interpolation.
+#if COMPACT_TAIL_STORAGE && RESIDUAL_PYRAMID
+// Separate components avoid the unused zw channels and four-float LDS stride.
+groupshared float tailResidual0[683];
+groupshared float tailResidual1[683];
+float4 loadTailLightness(uint i) { return float4(tailResidual0[i],tailResidual1[i],0,0); }
+void storeTailLightness(uint i,float4 value) { tailResidual0[i]=value.x;tailResidual1[i]=value.y; }
+#else
 groupshared float4 tailLightness[683];
+float4 loadTailLightness(uint i) { return tailLightness[i]; }
+void storeTailLightness(uint i,float4 value) { tailLightness[i]=value; }
+#endif
 groupshared float2 tailWeights[683];
 groupshared float tailResult[683];
 uint tailLevels;
 struct TailSample { float4 lightness; float2 weights; float reconstruction; };
-TailSample sampleTail(uint offset,uint2 size,float2 uv)
+TailSample sampleTail(uint offset,uint2 size,float2 uv,bool readResult=true)
 {
     float2 pos=uv*float2(size)-0.5;
     int2 base=int2(floor(pos));float2 f=pos-float2(base);
@@ -955,9 +1101,9 @@ TailSample sampleTail(uint offset,uint2 size,float2 uv)
     uint a=offset+p0.y*size.x+p0.x,b=offset+p0.y*size.x+p1.x;
     uint c=offset+p1.y*size.x+p0.x,d=offset+p1.y*size.x+p1.x;
     TailSample value;
-    value.lightness=lerp(lerp(tailLightness[a],tailLightness[b],f.x),lerp(tailLightness[c],tailLightness[d],f.x),f.y);
+    value.lightness=lerp(lerp(loadTailLightness(a),loadTailLightness(b),f.x),lerp(loadTailLightness(c),loadTailLightness(d),f.x),f.y);
     value.weights=lerp(lerp(tailWeights[a],tailWeights[b],f.x),lerp(tailWeights[c],tailWeights[d],f.x),f.y);
-    value.reconstruction=lerp(lerp(tailResult[a],tailResult[b],f.x),lerp(tailResult[c],tailResult[d],f.x),f.y);
+    value.reconstruction=readResult ? lerp(lerp(tailResult[a],tailResult[b],f.x),lerp(tailResult[c],tailResult[d],f.x),f.y) : 0.0;
     return value;
 }
 [shader("compute")]
@@ -967,40 +1113,91 @@ void tail_reconstruct(uint3 local : SV_GroupThreadID)
     uint w,h;reconstructionOutput.GetDimensions(w,h);
     uint lane=local.y*TAIL_X+local.x;
     uint levelOffset=0;uint2 currentSize=uint2(w,h);
-    for(uint i=lane;i<w*h;i+=TAIL_X*8){uint2 p=uint2(i%w,i/w);tailLightness[i]=fineLuminance[p];tailWeights[i]=layerWeights[p];tailResult[i]=0;}
+    #if TAIL_GRID_WALK
+    for(uint y=local.y;y<h;y+=8)for(uint x=local.x;x<w;x+=TAIL_X) {
+        uint i=y*w+x;uint2 p=uint2(x,y);
+    #else
+    for(uint i=lane;i<w*h;i+=TAIL_X*8){uint2 p=uint2(i%w,i/w);
+    #endif
+        storeTailLightness(i,fineLuminance[p]);tailWeights[i]=layerWeights[p];
+#if !SKIP_TAIL_CLEAR
+        tailResult[i]=0;
+#endif
+    }
     GroupMemoryBarrierWithGroupSync();
     for(uint m=1;m<tailLevels;m++) {
         uint2 previous=currentSize;uint previousOffset=levelOffset;
         currentSize=max(previous/2,uint2(1));levelOffset+=previous.x*previous.y;
         uint2 size=currentSize;uint outputOffset=levelOffset;
+        #if TAIL_GRID_WALK
+        for(uint y=local.y;y<size.y;y+=8)for(uint x=local.x;x<size.x;x+=TAIL_X) {
+            uint i=y*size.x+x;uint2 pixel=uint2(x,y);
+        #else
         for(uint i=lane;i<size.x*size.y;i+=TAIL_X*8) {
-            float2 uv=(float2(i%size.x,i/size.x)+.5)/float2(size),texel=1.0/float2(previous);
-            TailSample a=sampleTail(previousOffset,previous,uv+texel*float2(-1,-1));
-            TailSample b=sampleTail(previousOffset,previous,uv+texel*float2(1,-1));
-            TailSample c=sampleTail(previousOffset,previous,uv+texel*float2(-1,1));
-            TailSample d=sampleTail(previousOffset,previous,uv+texel*float2(1,1));
+            uint2 pixel=uint2(i%size.x,i/size.x);
+        #endif
+            float2 uv=(float2(pixel)+.5)/float2(size),texel=1.0/float2(previous);
+            // Reconstruction starts only after the downsample pyramid is complete.
+            TailSample a=sampleTail(previousOffset,previous,uv+texel*float2(-1,-1),false);
+            TailSample b=sampleTail(previousOffset,previous,uv+texel*float2(1,-1),false);
+            TailSample c=sampleTail(previousOffset,previous,uv+texel*float2(-1,1),false);
+            TailSample d=sampleTail(previousOffset,previous,uv+texel*float2(1,1),false);
             uint index=outputOffset+i;
 #if RESIDUAL_PYRAMID
             // Preserve the retained pyramid's per-level RG16F / RG16_UNORM storage.
             float2 residual=(((a.lightness.xy+b.lightness.xy)+c.lightness.xy)+d.lightness.xy)*.25;
-            tailLightness[index]=float4(float2(half2(residual)),0,0);
+            #if FLOAT_TAIL_RESIDUAL
+            storeTailLightness(index,float4(residual,0,0));
+            #else
+            storeTailLightness(index,float4(float2(half2(residual)),0,0));
+            #endif
             float2 weights=(((a.weights+b.weights)+c.weights)+d.weights)*.25;
+            #if FLOAT_TAIL_WEIGHTS
+            tailWeights[index]=weights;
+            #else
             tailWeights[index]=floor(saturate(weights)*65535.0+0.5)/65535.0;
+            #endif
 #else
-            tailLightness[index]=((a.lightness+b.lightness)+c.lightness+d.lightness)*.25;
+            storeTailLightness(index,((a.lightness+b.lightness)+c.lightness+d.lightness)*.25);
             tailWeights[index]=float2(half2(((a.weights+b.weights)+c.weights+d.weights)*.25));
 #endif
+#if !SKIP_TAIL_CLEAR
             tailResult[index]=0;
+#endif
+#if FUSE_TAIL_BASE && RESIDUAL_PYRAMID && DIRECT_RESIDUAL_WEIGHTS
+            // The last downsample already owns the coarsest texel. Evaluate its
+            // weighted base here using the stored (rounded) values, then publish
+            // it with the existing barrier instead of a separate reverse step.
+            if(m==tailLevels-1) {
+                float2 baseWeights=tailWeights[index];
+                float2 contribution=loadTailLightness(index).xy*baseWeights;
+                tailResult[index]=contribution.x+contribution.y;
+            }
+#endif
         }
         GroupMemoryBarrierWithGroupSync();
     }
-    for(int m=int(tailLevels)-1;m>=0;m--) {
+    int firstReverse=int(tailLevels)-1;
+#if FUSE_TAIL_BASE && RESIDUAL_PYRAMID && DIRECT_RESIDUAL_WEIGHTS
+    if(firstReverse>0) {
+        firstReverse--;
+        uint2 size=max(uint2(w,h)>>firstReverse,uint2(1));
+        levelOffset-=size.x*size.y;
+    }
+#endif
+    for(int m=firstReverse;m>=0;m--) {
         uint2 size=max(uint2(w,h)>>m,uint2(1));uint outputOffset=levelOffset;
         uint2 coarseSize=max(size/2,uint2(1));uint coarseOffset=levelOffset+size.x*size.y;
         bool coarsest=m==int(tailLevels)-1;
+        #if TAIL_GRID_WALK
+        for(uint y=local.y;y<size.y;y+=8)for(uint x=local.x;x<size.x;x+=TAIL_X) {
+            uint i=y*size.x+x;uint2 pixel=uint2(x,y);
+        #else
         for(uint i=lane;i<size.x*size.y;i+=TAIL_X*8) {
-            uint index=outputOffset+i;float4 fine=tailLightness[index];float3 detail=fine.rgb;float previous=0;
-            if(!coarsest){TailSample coarse=sampleTail(coarseOffset,coarseSize,(float2(i%size.x,i/size.x)+.5)/float2(size));detail-=coarse.lightness.rgb;previous=coarse.reconstruction;}
+            uint2 pixel=uint2(i%size.x,i/size.x);
+        #endif
+            uint index=outputOffset+i;float4 fine=loadTailLightness(index);float3 detail=fine.rgb;float previous=0;
+            if(!coarsest){TailSample coarse=sampleTail(coarseOffset,coarseSize,(float2(pixel)+.5)/float2(size));detail-=coarse.lightness.rgb;previous=coarse.reconstruction;}
 #if RESIDUAL_PYRAMID
             float2 weights=tailWeights[index];
             #if !DIRECT_RESIDUAL_WEIGHTS
@@ -1012,7 +1209,7 @@ void tail_reconstruct(uint3 local : SV_GroupThreadID)
             float3 weights=float3(fine.a,tailWeights[index]);weights/=max(weights.x+weights.y+weights.z,1e-20);
             float3 contribution=detail*weights;float value=(contribution.x+contribution.y+contribution.z)+previous;
 #endif
-            if(m==0)reconstructionOutput[uint2(i%w,i/w)]=value;
+            if(m==0)reconstructionOutput[pixel]=value;
             else tailResult[index]=value;
         }
         if(m>0)GroupMemoryBarrierWithGroupSync();

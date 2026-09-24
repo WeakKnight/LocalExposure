@@ -1,6 +1,6 @@
 # Implementation Notes
 
-Start with the core files below. Tests, profiling tools, and historical experiments are kept outside the main reading path.
+Start with the core files below. Tests and profiling tools are kept outside the main reading path.
 
 | Read in order | Purpose |
 | --- | --- |

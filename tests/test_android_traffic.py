@@ -6,7 +6,7 @@ from tools.profiling.android.traffic import estimate
 
 class TrafficTests(unittest.TestCase):
     def setUp(self):
-        self.manifest=json.loads(Path('docs/performance/baselines/adreno830-game-formats.json').read_text())['manifest']
+        self.manifest=json.loads((Path(__file__).parent/'fixtures/android-traffic-manifest.json').read_text())
 
     def test_baseline_formats_cancel_from_local_increment(self):
         original=estimate(self.manifest)

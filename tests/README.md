@@ -12,6 +12,11 @@ Run from the repository root:
 - `test_guided_batch`: short-window reuse versus the unchanged Guided kernel, including FP32 coefficient readback and nearly constant guides.
 - `test_compact`, `test_residual_fusion`: fused GPU/reference parity and an independent algebraic check of residual pyramid reconstruction.
 - `test_android_benchmark`, `test_android_traffic`, `test_quality`: production measurement separation, bandwidth accounting and fixed image-quality gates.
+- `test_mixed_residual`, `test_tail_grid`: mixed-format mip bindings/traffic and exact tail traversal/storage parity, including odd and thin sizes.
+- `test_log_initialization`: log-domain exposure initialization at black, HDR limits, odd dimensions and asymmetric exposure brackets.
+- `test_unsigned_gather`: signed source textures retain per-sample clamping; unsigned initialization parity is covered by `test_log_initialization`.
+- `test_guided_coefficient_layout`: exact Guided coefficient parity across physical row pitches, including flat guides, edges and thin/odd sizes.
+- `test_guided_interior`: exact coefficient parity for interior/border tiles, thin and odd images, and nearly constant guides, in both FP32 and packed-half modes.
 
 Approximate mobile candidates also use the [same-phone image and desktop temporal stress workflow](../docs/performance/android.md#foreground-graphics-context-measurement). Passing unit tests alone does not establish phone performance or perceptual quality.
 

@@ -110,8 +110,10 @@ def estimate(manifest, fps=45):
         elif entry in ('reconstruct','reconstruct_compact'):
             read('fineLuminance', n)
             if 'layerWeights' in descriptors:read('layerWeights', n)
-            mip = descriptors['fineLuminance']['mip']
-            if mip < resources['luminance']['levels']-1:
+            fine, coarse = descriptors['fineLuminance'], descriptors.get('coarseLuminance')
+            # A split pyramid can cross texture resources at its format boundary.
+            # Only the coarsest logical level aliases its own coarse view.
+            if coarse and (fine['resource'], fine['mip']) != (coarse['resource'], coarse['mip']):
                 read('coarseLuminance', n, True); read('previousResult', n, True)
             write('reconstructionOutput')
         elif entry == 'convert_exposure':

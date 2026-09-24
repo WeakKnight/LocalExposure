@@ -21,10 +21,33 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def prepare(out, width, height, image, ev=0., source_format='rgba32_float', output_format='rgba16_float', compact=False, fused_guided=False, variant="lossless"):
+def split_residual_pyramid(manifest, first_float):
+    """Keep fine residual mips in half, remap only the small coarse tail to FP32."""
+    if first_float < 1:
+        raise ValueError('The mixed residual pyramid must retain at least mip 0 in half')
+    fine = next(r for r in manifest['resources'] if r['name'] == 'luminance')
+    if first_float >= fine['levels']:
+        return
+    if fine['format_name'] != 'rg16_float':
+        raise ValueError('Mixed residual storage requires an RG16F residual pyramid')
+    coarse = dict(fine, name='coarse_residual', width=max(1, fine['width'] >> first_float),
+                  height=max(1, fine['height'] >> first_float), levels=fine['levels'] - first_float,
+                  format=103, format_name='rg32_float', bpp=8, dump=False)
+    coarse.pop('file', None)
+    fine['levels'] = first_float
+    manifest['resources'].append(coarse)
+    for stage in manifest['passes']:
+        for descriptor in stage['descriptors']:
+            if descriptor.get('resource') == 'luminance' and descriptor['mip'] >= first_float:
+                descriptor.update(resource='coarse_residual', mip=descriptor['mip'] - first_float)
+
+
+def prepare(out, width, height, image, ev=0., source_format='rgba32_float', output_format='rgba16_float', compact=False, fused_guided=False, variant="lossless", *, highlight_ev=1.2, shadow_ev=1.2, sigma=.2):
     from .quality import VARIANTS
-    variant_config=VARIANTS[variant]
+    variant_config=dict(VARIANTS[variant])
     if variant_config.get('half_gather') and source_format!='r11g11b10_float':raise ValueError('Half gather requires finite R11G11B10 input')
+    if variant_config.get('gather_quad_log') and source_format!='r11g11b10_float':raise ValueError('Quad log reduction requires finite R11G11B10 input')
+    if variant_config.get('gather_unsigned_source') and source_format!='r11g11b10_float':raise ValueError('Unsigned gather requires finite R11G11B10 input')
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     with OpenEXR.File(str(image), separate_channels=True) as exr:
@@ -48,12 +71,15 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
     elif source_format!='rgba32_float':
         raise ValueError('Unsupported HDR source format')
     enc = device.create_command_encoder()
-    mapper.prepare_weights(enc, source, ev, 1.2, 1.2, .2)
+    mapper.prepare_weights(enc, source, ev, highlight_ev, shadow_ev, sigma)
     mapper.prepare_result(enc, source, ev)
     device.submit_command_buffer(enc.finish())
     # The original viewer entry provides the independent final-color reference.
     mapper.final_color.to_numpy()  # Wait for the desktop reference dispatches.
     curve = mapper.curve
+    if variant_config.get("residual_snorm"):
+        # Bound normalized residuals even when the fitted curve slightly exceeds SDR white.
+        variant_config["residual_scale"] = 1.0 / max(1.0, curve.max_lightness)
     resources = []
     def resource(name, tex, data=None, dump=False, one_d=False):
         fmt = str(tex.format).split('.')[-1]
@@ -89,7 +115,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
     elif output_format!='rgba16_float':
         raise ValueError('Unsupported output format')
     manifest = dict(schema=1, width=width, height=height, resources=resources, passes=[],
-                    config=dict(globalEV=ev, highlightEV=1.2, shadowEV=1.2, sigma=.2, fusion_scale=4,source_format=source_format,output_format=output_format),
+                    config=dict(globalEV=ev, highlightEV=highlight_ev, shadowEV=shadow_ev, sigma=sigma, fusion_scale=4,source_format=source_format,output_format=output_format),
                     calibration=curve.report, image=dict(path=str(image.resolve()), sha256=sha(image)),
                     reference_backend=str(device.info), shaders={p.name: sha(p) for p in (ROOT/'shaders').glob('*.slang')})
     manifest['benchmark_shaders']={p.name:sha(p) for p in Path(__file__).parent.glob('*.slang')}
@@ -115,17 +141,30 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
         if module in ('present','joint'): flags[1]='compute' if entry.endswith('_compute') else ('vertex' if entry=='fullscreen_vertex' else 'fragment')
         if module in ('fusion_compact','present'):
             flags += [f"-DWORK_X={variant_config.get('work_x',8)}",f"-DWORK_Y={variant_config.get('work_y',8)}"]
+            flags += [f"-DPYRAMID_X={variant_config.get('pyramid_x',variant_config.get('work_x',8))}",f"-DPYRAMID_Y={variant_config.get('pyramid_y',variant_config.get('work_y',8))}"]
         if module=='fusion_compact':
+            flags += [f"-DFUSE_TAIL_BASE={int(variant_config.get('fuse_tail_base',False))}"]
+            flags += [f"-DSKIP_TAIL_CLEAR={int(variant_config.get('skip_tail_clear',False))}"]
+            flags += [f"-DCOMPACT_TAIL_STORAGE={int(variant_config.get('compact_tail_storage',False))}"]
+            flags += [f"-DTAIL_GRID_WALK={int(variant_config.get('tail_grid_walk',False))}"]
+            flags += [f"-DFLOAT_TAIL_WEIGHTS={int(variant_config.get('float_tail_weights',False))}"]
+            flags += [f"-DFLOAT_TAIL_RESIDUAL={int(variant_config.get('float_tail_residual',False))}"]
+            flags += [f"-DCOMPENSATE_RESIDUAL={int(variant_config.get('compensate_residual',False))}"]
             flags += [f"-DHALF_ROW_COEFFICIENTS={int(variant_config.get('half_row_coefficients',False))}"]
             flags += [f"-DREUSE_MOMENT_STORAGE={int(variant_config.get('reuse_moment_storage',False))}"]
             flags += [f"-DDIRECT_BATCH={variant_config.get('direct_batch',2)}", f"-DTAIL_X={variant_config.get('tail_x',8)}"]
             flags += [f"-DDIRECT_RESIDUAL_WEIGHTS={int(variant_config.get('direct_residual_weights',False))}"]
             flags += [f"-DGUIDED_GATHER_ROWS={int(variant_config.get('guided_gather_rows',False))}"]
+            flags += [f"-DGATHER_QUAD_LOG={int(variant_config.get('gather_quad_log',False))}"]
+            flags += [f"-DGATHER_UNSIGNED_SOURCE={int(variant_config.get('gather_unsigned_source',False))}"]
+            flags += [f"-DGUIDED_INTERIOR_FIT={int(variant_config.get('guided_interior_fit',False))}",f"-DSHARED_INPUT_LOG={int(variant_config.get('shared_input_log',False))}"]
             flags += [f"-DGUIDED_DIRECT_MOMENTS={int(variant_config.get('guided_direct_moments',False))}"]
             flags += [f"-DGUIDED_STATIC_WINDOWS={int(variant_config.get('guided_static_windows',False))}"]
             flags += [f"-DGUIDED_VERTICAL={variant_config.get('guided_vertical',1)}",f"-DGUIDED_THREADS_Y={variant_config.get('guided_threads_y',variant_config.get('tile_y',16))}"]
             flags += [f"-DGUIDED_BATCH={variant_config.get('guided_batch',1)}",f"-DGUIDED_SLIDING={int(variant_config.get('guided_sliding',False))}"]
             flags += [f"-DWAVE_REDUCTION={int(variant_config.get('wave_reduction',False))}"]
+            flags += [f"-DPACKED_HALF_COEFFICIENTS={int(variant_config.get('packed_half_coefficients',False))}"]
+            flags += [f"-DCOEFF_PAD={variant_config.get('coefficient_padding',0)}"]
             flags += [f"-DSHARED_PADDING={variant_config.get('shared_padding',0)}",f"-DHALF_MOMENT_PRODUCTS={int(variant_config.get('half_moment_products',False))}",f"-DREDUCTION_GRID={variant_config.get('reduction_grid',4)}",f"-DGUIDED_RADIUS={variant_config.get('guided_radius',2)}",f"-DCACHED_BASELINE={int(variant_config.get('cached_baseline',False))}",f"-DLOG_EXPOSURE={int(variant_config.get('log_exposure',False))}",f"-DTILE_X={variant_config.get('tile_x',16)}",f"-DTILE_Y={variant_config.get('tile_y',16)}",f"-DSEPARABLE_GUIDED={int(variant_config.get('separable_guided',False))}",f"-DREDUCTION_LOAD={int(variant_config.get('reduction_load',False))}",f"-DREUSE_SHARED={int(variant_config.get('reuse_shared',False))}",f"-DSINGLE_WEIGHT={int(variant_config.get('single_weight',False))}",f"-DPRECOMPUTED_EV={int(variant_config.get('precomputed_ev',False))}",f"-DCURVE_LOG={int(variant_config.get('curve_log',False))}",f"-DRESIDUAL_PYRAMID={int(variant_config.get('residual_pyramid',False))}",f"-DPACKED_RESIDUAL={int(variant_config.get('packed_residual',False))}",f"-DPACKED_WEIGHT_BIAS={variant_config.get('packed_weight_bias',0.0)}",f"-DRESIDUAL_SCALE={variant_config.get('residual_scale',1.0)}",f"-DMOMENT_INPUT={int(variant_config.get('moment_input',False))}",f"-DLOG_PRODUCT={int(variant_config.get('log_product',False))}",f"-DSCALAR_REDUCTION={int(variant_config.get('scalar_reduction',False))}",f"-DHALF_GATHER={int(variant_config.get('half_gather',False))}",f"-DGATHER_X={variant_config.get('gather_x',8)}",f"-DGATHER_Y={variant_config.get('gather_y',8)}"]
         cmd = [str(exe), str(path), '-I',str(ROOT/'shaders'), '-entry', entry, *flags,
                '-target', 'spirv', '-o', str(out/f'{entry}.spv'),
@@ -136,7 +175,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
         reflections[entry] = json.loads((out/f'{entry}.reflection.json').read_text())
         manifest['commands'].append(cmd)
     cb = {k: v for k, v in curve.bindings().items() if k not in ('inverseLut', 'inverseSampler')}
-    cb.update(globalEV=ev, highlightEV=1.2, shadowEV=1.2, sigma=.2, reductionRows=4, guided=True)
+    cb.update(globalEV=ev, highlightEV=highlight_ev, shadowEV=shadow_ev, sigma=sigma, reductionRows=4, guided=True)
     def view(name, mip=0):
         return dict(resource=name, mip=mip)
     def add(entry, label, w, h, bindings, constants=None, baseline=False):
@@ -328,7 +367,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
                 file=out/(r['name']+'.reference.bin')
                 np.fromfile(file,np.float32).astype(np.float16).tofile(file)
     if variant_config.get('residual_pyramid'):
-        next(r for r in resources if r['name']=='luminance').update(**(dict(format=103,format_name='rg32_float',bpp=8) if variant_config.get('residual_float') else dict(format=83,format_name='rg16_float',bpp=4)))
+        next(r for r in resources if r['name']=='luminance').update(**(dict(format=78,format_name='rg16_snorm',bpp=4) if variant_config.get('residual_snorm') else dict(format=103,format_name='rg32_float',bpp=8) if variant_config.get('residual_float') else dict(format=83,format_name='rg16_float',bpp=4)))
         next(r for r in resources if r['name']=='weights').update(format=77,format_name='rg16_unorm',bpp=4)
         lum=np.fromfile(out/'luminance.reference.bin',np.float32).reshape(-1,4)
         weights=np.fromfile(out/'weights.reference.bin',np.float32).reshape(-1,2)
@@ -336,7 +375,13 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
             next(r for r in resources if r['name']=='luminance').update(format=97,format_name='rgba16_float',bpp=8)
             resources[:]=[r for r in resources if r['name']!='weights']
             np.stack([(lum[:,0]-lum[:,1])*variant_config.get('residual_scale',1),(lum[:,2]-lum[:,1])*variant_config.get('residual_scale',1),lum[:,3]-variant_config.get('packed_weight_bias',0),weights[:,1]-variant_config.get('packed_weight_bias',0)],axis=-1).astype(np.float16).tofile(out/'luminance.reference.bin')
-        else:np.stack([(lum[:,0]-lum[:,1])*variant_config.get('residual_scale',1),(lum[:,2]-lum[:,1])*variant_config.get('residual_scale',1)],axis=-1).astype(np.float32 if variant_config.get('residual_float') else np.float16).tofile(out/'luminance.reference.bin')
+        else:
+            residual=np.stack([lum[:,0]-lum[:,1],lum[:,2]-lum[:,1]],axis=-1)*variant_config.get('residual_scale',1)
+            if variant_config.get('residual_snorm'):
+                residual=np.rint(np.clip(residual,-1,1)*32767).astype(np.int16)
+            else:
+                residual=residual.astype(np.float32 if variant_config.get('residual_float') else np.float16)
+            residual.tofile(out/'luminance.reference.bin')
         np.rint(np.clip(np.stack([lum[:,3],weights[:,1]],axis=-1),0,1)*65535).astype(np.uint16).tofile(out/'weights.reference.bin')
         if variant_config.get('packed_snorm'):
             next(r for r in resources if r['name']=='luminance').update(format=92,format_name='rgba16_snorm',bpp=8)
@@ -356,6 +401,8 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
     if variant_config.get('readonly_input'):
         for r in resources:
             if r['name'] in ('source','inverse'):r['sampled_only']=True
+    if 'residual_float_from' in variant_config:
+        split_residual_pyramid(manifest, variant_config['residual_float_from'])
     manifest['files'] = {p.name:sha(p) for p in out.iterdir() if p.suffix in ('.bin','.spv')}
     (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     draws=sum('attachment' in p for p in manifest['passes'] if not p['baseline'])

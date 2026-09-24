@@ -9,6 +9,7 @@ Run from the repository root:
 - `test_pyramid`, `test_guided`, `test_zcurve`, `test_precision`: algorithm and numerical coverage (GPU required).
 - `test_reduction`, `test_average`, `test_fit`, `test_rounds`: bitwise checks against frozen pre-optimization shaders (GPU required).
 - `test_mobile_profile`, `test_mali_profile`: offline-report parsing and workflow checks.
+- `test_guided_batch`: short-window reuse versus the unchanged Guided kernel, including FP32 coefficient readback and nearly constant guides.
 - `test_compact`, `test_residual_fusion`: fused GPU/reference parity and an independent algebraic check of residual pyramid reconstruction.
 - `test_android_benchmark`, `test_android_traffic`, `test_quality`: production measurement separation, bandwidth accounting and fixed image-quality gates.
 

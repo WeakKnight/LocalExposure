@@ -57,7 +57,7 @@ def estimate(manifest, fps=45):
             if 'weightsOutput' in descriptors:write('weightsOutput')
             if 'baseLightnessOutput' in descriptors:write('baseLightnessOutput')
         elif entry in ('reduce_setup','reduce_setup_cooperative','reduce_setup_gather'):
-            gather=entry=='reduce_setup_gather' and manifest['width']==4*p['width'] and manifest['height']==4*p['height']
+            gather=(entry=='reduce_setup_gather' or (entry=='reduce_setup_cooperative' and manifest['config'].get('variant_settings',{}).get('wave_reduction'))) and manifest['width']==4*p['width'] and manifest['height']==4*p['height']
             read('fullSource', n*(12 if gather else manifest['config'].get('variant_settings',{}).get('reduction_grid',4)**2), True); write('compactOutput'); write('lightnessOutput')
             if 'weightsOutput' in descriptors:write('weightsOutput')
             if 'baseLightnessOutput' in descriptors:write('baseLightnessOutput')

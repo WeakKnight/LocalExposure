@@ -64,3 +64,13 @@ VARIANTS = {
     'radius1': {'guided_radius': 1},
     'mobile': {'half_aux': True, 'reduction_grid': 2, 'guided_radius': 1},
 }
+
+# Research only: image gate passed, but foreground timing regressed.
+# See docs/performance/experiments/wave-operations.md; not a retained optimization.
+VARIANTS["wave-reduction"] = {**VARIANTS["gather-reduction"], "cooperative_reduction": True, "wave_reduction": True}
+
+# Short-window register reuse: batch2 has modest phone gains and remains opt-in.
+# Batch4/sliding4 did not improve the chain. See guided-window-reuse.md.
+for batch in (2,4):
+    VARIANTS[f"guided-batch{batch}"] = {**VARIANTS["gather-reduction"], "guided_batch": batch}
+VARIANTS["guided-sliding4"] = {**VARIANTS["guided-batch4"], "guided_sliding": True}

@@ -4,6 +4,15 @@
 // The legacy graph remains the independent numerical reference.
 #include "guided.slang"
 #include "zcurve.slang"
+#ifndef GUIDED_BATCH
+#define GUIDED_BATCH 1
+#endif
+#ifndef GUIDED_SLIDING
+#define GUIDED_SLIDING 0
+#endif
+#ifndef WAVE_REDUCTION
+#define WAVE_REDUCTION 0
+#endif
 #ifndef REDUCTION_GRID
 #define REDUCTION_GRID 4
 #endif
@@ -263,6 +272,31 @@ void reduce_setup_cooperative(uint3 local : SV_GroupThreadID,uint3 group : SV_Gr
     uint w,h;compactOutput.GetDimensions(w,h);
     uint2 pixel=group.xy*uint2(8,8)+uint2(local.x/4,local.y);
     uint column=local.x%4,lane=local.y*32+local.x;
+#if WAVE_REDUCTION
+    // Four consecutive lanes each integrate a 2x2 quad. Validate the mapping
+    // instead of assuming a subgroup width or implementation-specific ordering.
+    uint waveLane=WaveGetLaneIndex();
+    uint first=WaveReadLaneFirst(lane);
+    bool ordered=WaveActiveAllTrue(lane==first+waveLane);
+    uint sw,sh;fullSource.GetDimensions(sw,sh);
+    if(!ordered || (first&3)!=0 || (WaveActiveCountBits(true)&3)!=0 ||
+       WaveGetLaneCount()<4 || sw!=w*4 || sh!=h*4) {
+        if(column==0) reduceSampled(uint3(pixel,0));
+        return;
+    }
+    float2 uv=(float2(pixel)+(float2(column&1,column>>1)+.5)/2.0)/float2(w,h);
+    float4 r=max(fullSource.GatherRed(linearSampler,uv),0.0);
+    float4 g=max(fullSource.GatherGreen(linearSampler,uv),0.0);
+    float4 b=max(fullSource.GatherBlue(linearSampler,uv),0.0);
+    float4 luminance=r*.2126+g*.7152+b*.0722;
+    float2 partial=float2(dot(luminance,float4(1)),dot(log2(max(luminance,1e-6)),float4(1)));
+    uint cluster=waveLane&~3u;
+    float2 total=WaveReadLaneAt(partial,cluster);
+    total+=WaveReadLaneAt(partial,cluster+1);
+    total+=WaveReadLaneAt(partial,cluster+2);
+    total+=WaveReadLaneAt(partial,cluster+3);
+    if(column==0 && pixel.x<w && pixel.y<h) storeReducedLuma(pixel,total.x/16.0,total.y/16.0);
+#else
     float4 sum=0;
     for(uint y=0;y<4;y++) {
         float2 uv=(float2(pixel)+(float2(column,y)+.5)/4.0)/float2(w,h);
@@ -275,6 +309,7 @@ void reduce_setup_cooperative(uint3 local : SV_GroupThreadID,uint3 group : SV_Gr
         sum=((reductionPartials[lane]+reductionPartials[lane+1])+reductionPartials[lane+2])+reductionPartials[lane+3];
         storeReduced(pixel,sum/16.0);
     }
+#endif
 }
 
 Texture2D<float4> fineLuminance;
@@ -486,6 +521,34 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     // FP32 moments around one tile anchor avoid large absolute-log products.
     // Keep the original 5x5 support; only the arithmetic grouping changes.
     float anchor=fusedInputs[(2*GUIDED_RADIUS)*inputPitch+2*GUIDED_RADIUS].x;
+#if GUIDED_BATCH > 1
+    // Each lane owns a short run of adjacent windows. Cache their overlapping
+    // inputs in registers; preserve the tile anchor and FP32 moment products.
+    static const uint chunks=(coefficientPitch+GUIDED_BATCH-1)/GUIDED_BATCH;
+    for(uint chunk=lane;chunk<chunks*inputHeight;chunk+=TILE_X*TILE_Y) {
+        uint row=chunk/chunks,col=(chunk%chunks)*GUIDED_BATCH;
+        float4 values[GUIDED_BATCH+2*GUIDED_RADIUS];
+        [unroll] for(uint x=0;x<GUIDED_BATCH+2*GUIDED_RADIUS;x++) {
+            float2 v=fusedInputs[row*inputPitch+min(col+x,inputPitch-1)];
+            float g=v.x-anchor,e=v.y;
+            values[x]=float4(g,e,g*g,g*e);
+        }
+        float4 sum=0;
+        [unroll] for(uint j=0;j<GUIDED_BATCH;j++) {
+#if GUIDED_SLIDING
+            if(j==0) {
+                [unroll] for(uint x=0;x<=2*GUIDED_RADIUS;x++)sum+=values[x];
+            } else {
+                sum-=values[j-1];sum+=values[j+2*GUIDED_RADIUS];
+            }
+#else
+            sum=0;
+            [unroll] for(uint x=0;x<=2*GUIDED_RADIUS;x++)sum+=values[j+x];
+#endif
+            if(col+j<coefficientPitch)rowMoments[row*momentPitch+col+j]=sum;
+        }
+    }
+#else
     for(uint i=lane;i<coefficientPitch*inputHeight;i+=TILE_X*TILE_Y)
     {
         uint row=i/coefficientPitch, col=i%coefficientPitch;
@@ -506,6 +569,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
         rowMoments[i]=moments;
 #endif
     }
+#endif
     GroupMemoryBarrierWithGroupSync();
 #endif
 #endif
@@ -550,6 +614,29 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
     }
     GroupMemoryBarrierWithGroupSync();
 #if SEPARABLE_GUIDED
+#if GUIDED_BATCH > 1
+    static const uint coefficientChunks=(TILE_X+GUIDED_BATCH-1)/GUIDED_BATCH;
+    for(uint chunk=lane;chunk<coefficientChunks*coefficientHeight;chunk+=TILE_X*TILE_Y) {
+        uint row=chunk/coefficientChunks,col=(chunk%coefficientChunks)*GUIDED_BATCH;
+        float2 values[GUIDED_BATCH+2*GUIDED_RADIUS];
+        [unroll] for(uint x=0;x<GUIDED_BATCH+2*GUIDED_RADIUS;x++)
+            values[x]=fusedCoefficients[row*coefficientPitch+min(col+x,coefficientPitch-1)];
+        float2 sum=0;
+        [unroll] for(uint j=0;j<GUIDED_BATCH;j++) {
+#if GUIDED_SLIDING
+            if(j==0) {
+                [unroll] for(uint x=0;x<=2*GUIDED_RADIUS;x++)sum+=values[x];
+            } else {
+                sum-=values[j-1];sum+=values[j+2*GUIDED_RADIUS];
+            }
+#else
+            sum=0;
+            [unroll] for(uint x=0;x<=2*GUIDED_RADIUS;x++)sum+=values[j+x];
+#endif
+            if(col+j<TILE_X)rowCoefficients[row*rowCoefficientPitch+col+j]=sum;
+        }
+    }
+#else
     for(uint i=lane;i<TILE_X*coefficientHeight;i+=TILE_X*TILE_Y) {
         uint row=i/TILE_X,col=i%TILE_X;
         float2 sum=0;
@@ -560,6 +647,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
         rowCoefficients[i]=sum;
 #endif
     }
+#endif
     GroupMemoryBarrierWithGroupSync();
     if(tid.x>=w || tid.y>=h) return;
     float2 sum=0;

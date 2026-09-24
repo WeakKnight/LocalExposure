@@ -1,0 +1,2053 @@
+{
+  "device": "NX789J / SM8750 / Adreno 830",
+  "a730": {
+    "gather-reduction": {
+      "command": [
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+        "-api=Vulkan",
+        "-arch=a730",
+        "-cs",
+        "-entry_point_cs",
+        "reconstruct_guided",
+        "D:\\Github\\LocalExposure\\outputs\\android\\guided-batch\\gather-reduction\\bundle\\reconstruct_guided.spv",
+        "-dump=all"
+      ],
+      "returncode": 0,
+      "sections": {
+        "Main Shader Stats": {
+          "Total instruction count": [
+            523.0
+          ],
+          "ALU instruction count - 32 bit": [
+            180.0
+          ],
+          "ALU instruction count - 16 bit": [
+            30.0
+          ],
+          "Complex instruction count - 32 bit": [
+            1.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            6.0
+          ],
+          "Barrier and fence Instruction count": [
+            13.0
+          ],
+          "Short latency sync instruction count": [
+            25.0
+          ],
+          "Long latency sync instruction count": [
+            7.0
+          ],
+          "Texture read instruction count": [
+            3.0
+          ],
+          "Memory read instruction count": [
+            19.0
+          ],
+          "Memory write instruction count": [
+            7.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            232.0
+          ],
+          "Full precision register footprint per shader instance": [
+            10.0
+          ],
+          "Half precision register footprint per shader instance": [
+            18.0
+          ],
+          "Overall register footprint per shader instance": [
+            10.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            3.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            75.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            46.2
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            34.8
+          ],
+          "Cycles with long latency sync instructions": [
+            96.0
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            58.2
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            25.9
+          ],
+          "Cycles with Complex instructions": [
+            2.2
+          ],
+          "Cycles with Memory instructions": [
+            5.8
+          ],
+          "Cycles with Texture instructions": [
+            7.0
+          ]
+        }
+      }
+    },
+    "guided-batch2": {
+      "command": [
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+        "-api=Vulkan",
+        "-arch=a730",
+        "-cs",
+        "-entry_point_cs",
+        "reconstruct_guided",
+        "D:\\Github\\LocalExposure\\outputs\\android\\guided-batch\\guided-batch2\\bundle\\reconstruct_guided.spv",
+        "-dump=all"
+      ],
+      "returncode": 0,
+      "sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            45.0
+          ],
+          "ALU instruction count - 32 bit": [
+            2.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            0.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            4.0
+          ],
+          "Long latency sync instruction count": [
+            0.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            6.0
+          ],
+          "Miscellaneous instruction count": [
+            32.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            618.0
+          ],
+          "ALU instruction count - 32 bit": [
+            236.0
+          ],
+          "ALU instruction count - 16 bit": [
+            37.0
+          ],
+          "Complex instruction count - 32 bit": [
+            3.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            8.0
+          ],
+          "Barrier and fence Instruction count": [
+            13.0
+          ],
+          "Short latency sync instruction count": [
+            19.0
+          ],
+          "Long latency sync instruction count": [
+            8.0
+          ],
+          "Texture read instruction count": [
+            3.0
+          ],
+          "Memory read instruction count": [
+            23.0
+          ],
+          "Memory write instruction count": [
+            9.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            259.0
+          ],
+          "Full precision register footprint per shader instance": [
+            8.0
+          ],
+          "Half precision register footprint per shader instance": [
+            14.0
+          ],
+          "Overall register footprint per shader instance": [
+            8.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            1.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            75.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            44.9
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            21.9
+          ],
+          "Cycles with long latency sync instructions": [
+            95.4
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            43.1
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            36.7
+          ],
+          "Cycles with Complex instructions": [
+            8.3
+          ],
+          "Cycles with Memory instructions": [
+            9.3
+          ],
+          "Cycles with Texture instructions": [
+            9.1
+          ]
+        }
+      }
+    },
+    "guided-batch4": {
+      "command": [
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+        "-api=Vulkan",
+        "-arch=a730",
+        "-cs",
+        "-entry_point_cs",
+        "reconstruct_guided",
+        "D:\\Github\\LocalExposure\\outputs\\android\\guided-batch\\guided-batch4\\bundle\\reconstruct_guided.spv",
+        "-dump=all"
+      ],
+      "returncode": 0,
+      "sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            53.0
+          ],
+          "ALU instruction count - 32 bit": [
+            2.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            0.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            5.0
+          ],
+          "Long latency sync instruction count": [
+            0.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            6.0
+          ],
+          "Miscellaneous instruction count": [
+            39.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            720.0
+          ],
+          "ALU instruction count - 32 bit": [
+            310.0
+          ],
+          "ALU instruction count - 16 bit": [
+            41.0
+          ],
+          "Complex instruction count - 32 bit": [
+            3.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            8.0
+          ],
+          "Barrier and fence Instruction count": [
+            13.0
+          ],
+          "Short latency sync instruction count": [
+            23.0
+          ],
+          "Long latency sync instruction count": [
+            8.0
+          ],
+          "Texture read instruction count": [
+            3.0
+          ],
+          "Memory read instruction count": [
+            27.0
+          ],
+          "Memory write instruction count": [
+            13.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            271.0
+          ],
+          "Full precision register footprint per shader instance": [
+            8.0
+          ],
+          "Half precision register footprint per shader instance": [
+            14.0
+          ],
+          "Overall register footprint per shader instance": [
+            8.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            1.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            75.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            49.7
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            22.9
+          ],
+          "Cycles with long latency sync instructions": [
+            94.8
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            41.6
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            39.0
+          ],
+          "Cycles with Complex instructions": [
+            8.0
+          ],
+          "Cycles with Memory instructions": [
+            10.0
+          ],
+          "Cycles with Texture instructions": [
+            8.6
+          ]
+        }
+      }
+    },
+    "guided-sliding4": {
+      "command": [
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\aoc-7.0.15\\installed\\aoc.exe",
+        "-api=Vulkan",
+        "-arch=a730",
+        "-cs",
+        "-entry_point_cs",
+        "reconstruct_guided",
+        "D:\\Github\\LocalExposure\\outputs\\android\\guided-batch\\guided-sliding4\\bundle\\reconstruct_guided.spv",
+        "-dump=all"
+      ],
+      "returncode": 0,
+      "sections": {
+        "Shader Preamble Stats": {
+          "Total instruction count": [
+            53.0
+          ],
+          "ALU instruction count - 32 bit": [
+            2.0
+          ],
+          "ALU instruction count - 16 bit": [
+            0.0
+          ],
+          "Complex instruction count - 32 bit": [
+            0.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            1.0
+          ],
+          "Barrier and fence Instruction count": [
+            0.0
+          ],
+          "Short latency sync instruction count": [
+            5.0
+          ],
+          "Long latency sync instruction count": [
+            0.0
+          ],
+          "Texture read instruction count": [
+            0.0
+          ],
+          "Memory read instruction count": [
+            0.0
+          ],
+          "Memory write instruction count": [
+            6.0
+          ],
+          "Miscellaneous instruction count": [
+            39.0
+          ]
+        },
+        "Main Shader Stats": {
+          "Total instruction count": [
+            705.0
+          ],
+          "ALU instruction count - 32 bit": [
+            268.0
+          ],
+          "ALU instruction count - 16 bit": [
+            41.0
+          ],
+          "Complex instruction count - 32 bit": [
+            3.0
+          ],
+          "Complex instruction count - 16 bit": [
+            0.0
+          ],
+          "Flow control instruction count": [
+            8.0
+          ],
+          "Barrier and fence Instruction count": [
+            13.0
+          ],
+          "Short latency sync instruction count": [
+            25.0
+          ],
+          "Long latency sync instruction count": [
+            8.0
+          ],
+          "Texture read instruction count": [
+            3.0
+          ],
+          "Memory read instruction count": [
+            27.0
+          ],
+          "Memory write instruction count": [
+            13.0
+          ],
+          "Ray intersection instruction count": [
+            0.0
+          ],
+          "Miscellaneous instruction count": [
+            296.0
+          ],
+          "Full precision register footprint per shader instance": [
+            8.0
+          ],
+          "Half precision register footprint per shader instance": [
+            14.0
+          ],
+          "Overall register footprint per shader instance": [
+            8.0
+          ],
+          "Scratch memory usage per shader instance": [
+            0.0
+          ],
+          "Loop count": [
+            1.0
+          ],
+          "Output component count": [
+            0.0
+          ],
+          "Input component count": [
+            0.0
+          ],
+          "ALU fiber occupancy percentage": [
+            75.0
+          ]
+        },
+        "Latency Hiding Stats": {
+          "Cycles with short latency sync instructions": [
+            50.3
+          ],
+          "Cycles with exposed short latency sync instructions": [
+            24.7
+          ],
+          "Cycles with long latency sync instructions": [
+            94.7
+          ],
+          "Cycles with exposed long latency sync instructions": [
+            42.8
+          ]
+        },
+        "Performance Stats": {
+          "Cycles with ALU instructions": [
+            36.9
+          ],
+          "Cycles with Complex instructions": [
+            7.9
+          ],
+          "Cycles with Memory instructions": [
+            9.6
+          ],
+          "Cycles with Texture instructions": [
+            8.5
+          ]
+        }
+      }
+    }
+  },
+  "foreground": {
+    "gather-reduction-joint": {
+      "summary": {
+        "fusion": {
+          "gpu_ms": {
+            "count": 540,
+            "median": 4.592812387870788,
+            "p95": 4.9202498798767085,
+            "min": 1.9682812019462586,
+            "max": 5.044010293521881,
+            "mean": 4.666544253354645
+          },
+          "cpu_ms": {
+            "count": 540,
+            "median": 5.708151,
+            "p95": 6.193291349999999,
+            "min": 2.551614,
+            "max": 8.38026,
+            "mean": 5.695958705555555
+          },
+          "frame_work_wall_ms": {
+            "count": 540,
+            "median": 7.5845835,
+            "p95": 8.56778145,
+            "min": 3.892083,
+            "max": 10.514948,
+            "mean": 7.584247225925925
+          }
+        },
+        "baseline": {
+          "gpu_ms": {
+            "count": 540,
+            "median": 2.525937438331604,
+            "p95": 2.7456848288000106,
+            "min": 2.4359895238609313,
+            "max": 2.815729097923279,
+            "mean": 2.5789947287029267
+          },
+          "cpu_ms": {
+            "count": 540,
+            "median": 3.5987765,
+            "p95": 4.03822925,
+            "min": 2.948907,
+            "max": 4.792135,
+            "mean": 3.613787998148148
+          },
+          "frame_work_wall_ms": {
+            "count": 540,
+            "median": 5.5090885,
+            "p95": 6.4847448,
+            "min": 3.670781,
+            "max": 8.176667,
+            "mean": 5.547514731481482
+          }
+        },
+        "increment_ms": 2.0668749495391845,
+        "same_output_as_headless": true,
+        "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+      },
+      "rounds": {
+        "0": {
+          "fusion": 4.596562387779236,
+          "baseline": 2.508229105430603
+        },
+        "1": {
+          "baseline": 2.5394530630016328,
+          "fusion": 4.592551971210479
+        },
+        "2": {
+          "fusion": 4.592812387870788,
+          "baseline": 2.520312438468933
+        }
+      }
+    },
+    "guided-batch2-joint": {
+      "summary": {
+        "fusion": {
+          "gpu_ms": {
+            "count": 540,
+            "median": 4.573489471675873,
+            "p95": 4.869937381105041,
+            "min": 1.9365103693885803,
+            "max": 10.495989327083588,
+            "mean": 4.613551584895324
+          },
+          "cpu_ms": {
+            "count": 540,
+            "median": 5.628906,
+            "p95": 6.1421012500000005,
+            "min": 2.518125,
+            "max": 11.738906,
+            "mean": 5.628867577777777
+          },
+          "frame_work_wall_ms": {
+            "count": 540,
+            "median": 7.5049220000000005,
+            "p95": 8.54403125,
+            "min": 3.715937,
+            "max": 13.914688,
+            "mean": 7.49732917962963
+          }
+        },
+        "baseline": {
+          "gpu_ms": {
+            "count": 540,
+            "median": 2.525937438331604,
+            "p95": 2.750471287016487,
+            "min": 2.430624940658569,
+            "max": 2.8296353475837708,
+            "mean": 2.578195828259468
+          },
+          "cpu_ms": {
+            "count": 540,
+            "median": 3.6163800000000004,
+            "p95": 4.055414,
+            "min": 2.934584,
+            "max": 4.566667,
+            "mean": 3.6268820611111114
+          },
+          "frame_work_wall_ms": {
+            "count": 540,
+            "median": 5.538099,
+            "p95": 6.513848799999999,
+            "min": 3.718594,
+            "max": 7.435365,
+            "mean": 5.574413862962963
+          }
+        },
+        "increment_ms": 2.047552033344269,
+        "same_output_as_headless": true,
+        "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+      },
+      "rounds": {
+        "0": {
+          "fusion": 4.567499888488769,
+          "baseline": 2.49752598069191
+        },
+        "1": {
+          "baseline": 2.5175780635356904,
+          "fusion": 4.537551972553253
+        },
+        "2": {
+          "fusion": 4.6369269701271065,
+          "baseline": 2.6170832694396973
+        }
+      }
+    },
+    "guided-batch4-joint": {
+      "summary": {
+        "fusion": {
+          "gpu_ms": {
+            "count": 540,
+            "median": 4.724114467998504,
+            "p95": 5.026033731460762,
+            "min": 2.004999951049805,
+            "max": 7.912864390148163,
+            "mean": 4.771348456042862
+          },
+          "cpu_ms": {
+            "count": 540,
+            "median": 5.8111195,
+            "p95": 6.385286549999999,
+            "min": 2.927604,
+            "max": 8.595469,
+            "mean": 5.800587468518518
+          },
+          "frame_work_wall_ms": {
+            "count": 540,
+            "median": 7.7007295,
+            "p95": 8.72829665,
+            "min": 4.677812,
+            "max": 9.922396,
+            "mean": 7.669507175925926
+          }
+        },
+        "baseline": {
+          "gpu_ms": {
+            "count": 540,
+            "median": 2.50666660546875,
+            "p95": 2.7529556619558333,
+            "min": 2.430260357334137,
+            "max": 2.8735415965118407,
+            "mean": 2.5764709054620747
+          },
+          "cpu_ms": {
+            "count": 540,
+            "median": 3.587943,
+            "p95": 4.0751804,
+            "min": 2.916875,
+            "max": 5.090885,
+            "mean": 3.6134473259259257
+          },
+          "frame_work_wall_ms": {
+            "count": 540,
+            "median": 5.487786,
+            "p95": 6.468744399999999,
+            "min": 3.655416,
+            "max": 9.130104,
+            "mean": 5.520676105555555
+          }
+        },
+        "increment_ms": 2.2174478625297542,
+        "same_output_as_headless": true,
+        "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+      },
+      "rounds": {
+        "0": {
+          "fusion": 4.673619677564622,
+          "baseline": 2.499348897314072
+        },
+        "1": {
+          "baseline": 2.500520772285461,
+          "fusion": 4.783255091554642
+        },
+        "2": {
+          "fusion": 4.7537498839416505,
+          "baseline": 2.51903639683342
+        }
+      }
+    },
+    "guided-sliding4-joint": {
+      "summary": {
+        "fusion": {
+          "gpu_ms": {
+            "count": 540,
+            "median": 4.6821613440227505,
+            "p95": 5.01244779429245,
+            "min": 2.003645784416199,
+            "max": 5.081145709281921,
+            "mean": 4.751245640175629
+          },
+          "cpu_ms": {
+            "count": 540,
+            "median": 5.803046999999999,
+            "p95": 6.27923925,
+            "min": 2.612656,
+            "max": 7.466198,
+            "mean": 5.765483231481483
+          },
+          "frame_work_wall_ms": {
+            "count": 540,
+            "median": 7.693906,
+            "p95": 8.6876925,
+            "min": 3.489062,
+            "max": 10.312656,
+            "mean": 7.654412781481482
+          }
+        },
+        "baseline": {
+          "gpu_ms": {
+            "count": 540,
+            "median": 2.5964843116092684,
+            "p95": 2.757484307678604,
+            "min": 2.4368228571739197,
+            "max": 2.8518749303741453,
+            "mean": 2.5841759592863087
+          },
+          "cpu_ms": {
+            "count": 540,
+            "median": 3.590338,
+            "p95": 4.014898349999999,
+            "min": 2.942396,
+            "max": 4.897136,
+            "mean": 3.6196502722222226
+          },
+          "frame_work_wall_ms": {
+            "count": 540,
+            "median": 5.508020999999999,
+            "p95": 6.440356849999999,
+            "min": 3.666562,
+            "max": 7.737552,
+            "mean": 5.541610825925926
+          }
+        },
+        "increment_ms": 2.085677032413482,
+        "same_output_as_headless": true,
+        "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+      },
+      "rounds": {
+        "0": {
+          "fusion": 4.669400927667618,
+          "baseline": 2.602890561452866
+        },
+        "1": {
+          "baseline": 2.61273431121254,
+          "fusion": 4.675182177526474
+        },
+        "2": {
+          "fusion": 4.704296760149003,
+          "baseline": 2.5610155624752045
+        }
+      }
+    },
+    "guided-batch2-repeat": {
+      "summary": {
+        "fusion": {
+          "gpu_ms": {
+            "count": 1800,
+            "median": 4.5724478050346375,
+            "p95": 4.856070193943596,
+            "min": 1.9390103693275451,
+            "max": 10.24822891646576,
+            "mean": 4.6305061369505305
+          },
+          "cpu_ms": {
+            "count": 1800,
+            "median": 5.663698,
+            "p95": 6.1966722,
+            "min": 2.776302,
+            "max": 11.256667,
+            "mean": 5.668480666111111
+          },
+          "frame_work_wall_ms": {
+            "count": 1800,
+            "median": 7.5609635,
+            "p95": 8.64533855,
+            "min": 4.414896,
+            "max": 12.676302,
+            "mean": 7.575162900555555
+          }
+        },
+        "baseline": {
+          "gpu_ms": {
+            "count": 1800,
+            "median": 2.5119791053390506,
+            "p95": 2.7559530577159883,
+            "min": 2.43182285729599,
+            "max": 2.810937431373596,
+            "mean": 2.5779870898386386
+          },
+          "cpu_ms": {
+            "count": 1800,
+            "median": 3.604635,
+            "p95": 4.02821615,
+            "min": 2.921145,
+            "max": 5.800573,
+            "mean": 3.6184719666666667
+          },
+          "frame_work_wall_ms": {
+            "count": 1800,
+            "median": 5.5261195,
+            "p95": 6.455984299999999,
+            "min": 3.592813,
+            "max": 8.160729,
+            "mean": 5.545267042222222
+          }
+        },
+        "increment_ms": 2.060468699695587,
+        "same_output_as_headless": true,
+        "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+      },
+      "rounds": {
+        "0": {
+          "fusion": 4.54718738898468,
+          "baseline": 2.5169009802188875
+        },
+        "1": {
+          "baseline": 2.51374993862915,
+          "fusion": 4.6050259292392735
+        },
+        "2": {
+          "fusion": 4.560286346998215,
+          "baseline": 2.5064322304744717
+        }
+      }
+    },
+    "gather-reduction-repeat": {
+      "summary": {
+        "fusion": {
+          "gpu_ms": {
+            "count": 1800,
+            "median": 4.651979053092957,
+            "p95": 4.914494671683884,
+            "min": 2.1910936965065004,
+            "max": 8.08927063584137,
+            "mean": 4.697106569352321
+          },
+          "cpu_ms": {
+            "count": 1800,
+            "median": 5.729844,
+            "p95": 6.22210395,
+            "min": 3.173385,
+            "max": 8.757292,
+            "mean": 5.729748125555555
+          },
+          "frame_work_wall_ms": {
+            "count": 1800,
+            "median": 7.6246875,
+            "p95": 8.634861449999999,
+            "min": 4.464011,
+            "max": 10.671406,
+            "mean": 7.647282751666666
+          }
+        },
+        "baseline": {
+          "gpu_ms": {
+            "count": 1800,
+            "median": 2.5100780637187956,
+            "p95": 2.744541599661255,
+            "min": 2.431145773979187,
+            "max": 5.445468617053986,
+            "mean": 2.576836106070442
+          },
+          "cpu_ms": {
+            "count": 1800,
+            "median": 3.5998175,
+            "p95": 4.039859600000001,
+            "min": 2.895573,
+            "max": 5.951354,
+            "mean": 3.622294647222222
+          },
+          "frame_work_wall_ms": {
+            "count": 1800,
+            "median": 5.512969,
+            "p95": 6.450749999999999,
+            "min": 3.635989,
+            "max": 10.257188,
+            "mean": 5.543446397777778
+          }
+        },
+        "increment_ms": 2.141900989374161,
+        "same_output_as_headless": true,
+        "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+      },
+      "rounds": {
+        "0": {
+          "fusion": 4.61494780399704,
+          "baseline": 2.51315098031044
+        },
+        "1": {
+          "baseline": 2.5148697302684786,
+          "fusion": 4.653098844732284
+        },
+        "2": {
+          "fusion": 4.666822802730561,
+          "baseline": 2.5005988972835542
+        }
+      }
+    }
+  },
+  "validation": {
+    "gather-reduction-phone-retry": {
+      "passed": true,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.22359205980494687,
+        "p99_codes": 1.0,
+        "max_codes": 8.0,
+        "fraction_pixels_over4": 1.4467592592592593e-05,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "same_device": {
+        "luminance": {
+          "bitwise_equal": false,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        },
+        "weights": {
+          "bitwise_equal": false,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        },
+        "averaged": {
+          "bitwise_equal": false,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        },
+        "final": {
+          "bitwise_equal": false,
+          "max_unorm_steps": 8,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        }
+      },
+      "desktop_within_thresholds": false,
+      "stages": {
+        "luminance": {
+          "finite": true,
+          "max_abs": 0.0001220703125,
+          "rmse": 6.660438518312114e-05,
+          "p99_abs": 0.0001220703125
+        },
+        "weights": {
+          "finite": true,
+          "max_abs": 1.5259021896724123e-05,
+          "rmse": 8.370598263070401e-07,
+          "p99_abs": 0.0
+        },
+        "averaged": {
+          "finite": true,
+          "max_abs": 0.59375,
+          "rmse": 0.01611420562487621,
+          "p99_abs": 0.0615234375
+        },
+        "final": {
+          "finite": true,
+          "max_abs": 0.035294117647058865,
+          "rmse": 0.0007260371056781712,
+          "p99_abs": 0.00392156862745098
+        }
+      },
+      "omitted_checks": [
+        "exposure EV portability (intermediate removed by fusion)"
+      ],
+      "thresholds": {
+        "final_max_abs": 0.01,
+        "final_rmse": 0.001,
+        "exposure_max_ev": 0.05,
+        "exposure_rmse_ev": 0.01
+      },
+      "note": "Acceptance: finite stages; same-phone core stages bitwise, RGBA16F final bitwise, sRGB8 final at most one UNORM step versus viewer compute + hardware-sRGB reference. Desktop thresholds are a separate portability check. Mip-0 readback of every stage."
+    },
+    "guided-batch2-phone-retry": {
+      "passed": true,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.22359205980494687,
+        "p99_codes": 1.0,
+        "max_codes": 8.0,
+        "fraction_pixels_over4": 1.4467592592592593e-05,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "same_device": {
+        "luminance": {
+          "bitwise_equal": false,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        },
+        "weights": {
+          "bitwise_equal": false,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        },
+        "averaged": {
+          "bitwise_equal": false,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        },
+        "final": {
+          "bitwise_equal": false,
+          "max_unorm_steps": 8,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        }
+      },
+      "desktop_within_thresholds": false,
+      "stages": {
+        "luminance": {
+          "finite": true,
+          "max_abs": 0.0001220703125,
+          "rmse": 6.660438518312114e-05,
+          "p99_abs": 0.0001220703125
+        },
+        "weights": {
+          "finite": true,
+          "max_abs": 1.5259021896724123e-05,
+          "rmse": 8.370598263070401e-07,
+          "p99_abs": 0.0
+        },
+        "averaged": {
+          "finite": true,
+          "max_abs": 0.59375,
+          "rmse": 0.01611420562487621,
+          "p99_abs": 0.0615234375
+        },
+        "final": {
+          "finite": true,
+          "max_abs": 0.035294117647058865,
+          "rmse": 0.0007260371056781712,
+          "p99_abs": 0.00392156862745098
+        }
+      },
+      "omitted_checks": [
+        "exposure EV portability (intermediate removed by fusion)"
+      ],
+      "thresholds": {
+        "final_max_abs": 0.01,
+        "final_rmse": 0.001,
+        "exposure_max_ev": 0.05,
+        "exposure_rmse_ev": 0.01
+      },
+      "note": "Acceptance: finite stages; same-phone core stages bitwise, RGBA16F final bitwise, sRGB8 final at most one UNORM step versus viewer compute + hardware-sRGB reference. Desktop thresholds are a separate portability check. Mip-0 readback of every stage."
+    },
+    "guided-batch4-phone-retry": {
+      "passed": true,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.22359205980494687,
+        "p99_codes": 1.0,
+        "max_codes": 8.0,
+        "fraction_pixels_over4": 1.4467592592592593e-05,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "same_device": {
+        "luminance": {
+          "bitwise_equal": false,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        },
+        "weights": {
+          "bitwise_equal": false,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        },
+        "averaged": {
+          "bitwise_equal": false,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        },
+        "final": {
+          "bitwise_equal": false,
+          "max_unorm_steps": 8,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        }
+      },
+      "desktop_within_thresholds": false,
+      "stages": {
+        "luminance": {
+          "finite": true,
+          "max_abs": 0.0001220703125,
+          "rmse": 6.660438518312114e-05,
+          "p99_abs": 0.0001220703125
+        },
+        "weights": {
+          "finite": true,
+          "max_abs": 1.5259021896724123e-05,
+          "rmse": 8.370598263070401e-07,
+          "p99_abs": 0.0
+        },
+        "averaged": {
+          "finite": true,
+          "max_abs": 0.59375,
+          "rmse": 0.01611420562487621,
+          "p99_abs": 0.0615234375
+        },
+        "final": {
+          "finite": true,
+          "max_abs": 0.035294117647058865,
+          "rmse": 0.0007260371056781712,
+          "p99_abs": 0.00392156862745098
+        }
+      },
+      "omitted_checks": [
+        "exposure EV portability (intermediate removed by fusion)"
+      ],
+      "thresholds": {
+        "final_max_abs": 0.01,
+        "final_rmse": 0.001,
+        "exposure_max_ev": 0.05,
+        "exposure_rmse_ev": 0.01
+      },
+      "note": "Acceptance: finite stages; same-phone core stages bitwise, RGBA16F final bitwise, sRGB8 final at most one UNORM step versus viewer compute + hardware-sRGB reference. Desktop thresholds are a separate portability check. Mip-0 readback of every stage."
+    },
+    "guided-sliding4-phone-retry": {
+      "passed": true,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.22359673291708315,
+        "p99_codes": 1.0,
+        "max_codes": 8.0,
+        "fraction_pixels_over4": 1.4467592592592593e-05,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "same_device": {
+        "luminance": {
+          "bitwise_equal": false,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        },
+        "weights": {
+          "bitwise_equal": false,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        },
+        "averaged": {
+          "bitwise_equal": false,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        },
+        "final": {
+          "bitwise_equal": false,
+          "max_unorm_steps": 8,
+          "accepted": true,
+          "acceptance_mode": "approximate; image quality gate and finite intermediates"
+        }
+      },
+      "desktop_within_thresholds": false,
+      "stages": {
+        "luminance": {
+          "finite": true,
+          "max_abs": 0.0001220703125,
+          "rmse": 6.660438518312114e-05,
+          "p99_abs": 0.0001220703125
+        },
+        "weights": {
+          "finite": true,
+          "max_abs": 1.5259021896724123e-05,
+          "rmse": 8.370598263070401e-07,
+          "p99_abs": 0.0
+        },
+        "averaged": {
+          "finite": true,
+          "max_abs": 0.59375,
+          "rmse": 0.01611366189886473,
+          "p99_abs": 0.0615234375
+        },
+        "final": {
+          "finite": true,
+          "max_abs": 0.035294117647058865,
+          "rmse": 0.0007260434899878672,
+          "p99_abs": 0.00392156862745098
+        }
+      },
+      "omitted_checks": [
+        "exposure EV portability (intermediate removed by fusion)"
+      ],
+      "thresholds": {
+        "final_max_abs": 0.01,
+        "final_rmse": 0.001,
+        "exposure_max_ev": 0.05,
+        "exposure_rmse_ev": 0.01
+      },
+      "note": "Acceptance: finite stages; same-phone core stages bitwise, RGBA16F final bitwise, sRGB8 final at most one UNORM step versus viewer compute + hardware-sRGB reference. Desktop thresholds are a separate portability check. Mip-0 readback of every stage."
+    }
+  },
+  "stress": {
+    "stress-17x9": {
+      "accepted": true,
+      "config": {
+        "width": 17,
+        "height": 9,
+        "game_format": true,
+        "bracket_ev": 1.2,
+        "sigma": 0.2,
+        "variants": [
+          "guided-batch2",
+          "guided-batch4",
+          "guided-sliding4"
+        ]
+      },
+      "worst_temporal_codes": 1.0
+    },
+    "stress-513x289": {
+      "accepted": true,
+      "config": {
+        "width": 513,
+        "height": 289,
+        "game_format": true,
+        "bracket_ev": 1.2,
+        "sigma": 0.2,
+        "variants": [
+          "guided-batch2",
+          "guided-batch4",
+          "guided-sliding4"
+        ]
+      },
+      "worst_temporal_codes": 2.0
+    },
+    "stress-even": {
+      "accepted": true,
+      "config": {
+        "width": 512,
+        "height": 288,
+        "game_format": true,
+        "bracket_ev": 1.2,
+        "sigma": 0.2,
+        "variants": [
+          "guided-batch2",
+          "guided-batch4",
+          "guided-sliding4"
+        ]
+      },
+      "worst_temporal_codes": 2.0
+    }
+  },
+  "scene_parity": [
+    {
+      "scene": "veranda",
+      "variant": "guided-batch2",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.003079660809178257,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "veranda",
+      "variant": "guided-batch4",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.003079660809178257,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "veranda",
+      "variant": "guided-sliding4",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.003887235098089506,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "abandoned_tiled_room",
+      "variant": "guided-batch2",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0027486902979254437,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "abandoned_tiled_room",
+      "variant": "guided-batch4",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0027486902979254437,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "abandoned_tiled_room",
+      "variant": "guided-sliding4",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.004410314556309641,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "qwantani_patio",
+      "variant": "guided-batch2",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.002196026152894708,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "qwantani_patio",
+      "variant": "guided-batch4",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.002196026152894708,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "qwantani_patio",
+      "variant": "guided-sliding4",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.003257233166544048,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "sundowner_deck",
+      "variant": "guided-batch2",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0034952937200327544,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "sundowner_deck",
+      "variant": "guided-batch4",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0034952937200327544,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    },
+    {
+      "scene": "sundowner_deck",
+      "variant": "guided-sliding4",
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.004692855308498447,
+        "p99_codes": 0.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "finite": true
+    }
+  ],
+  "direct_parity": [
+    {
+      "variant": "guided-batch2",
+      "width": 128,
+      "height": 72,
+      "bracket": 1.2,
+      "sigma": 0.2,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-batch4",
+      "width": 128,
+      "height": 72,
+      "bracket": 1.2,
+      "sigma": 0.2,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-sliding4",
+      "width": 128,
+      "height": 72,
+      "bracket": 1.2,
+      "sigma": 0.2,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-batch2",
+      "width": 128,
+      "height": 72,
+      "bracket": 3,
+      "sigma": 0.05,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-batch4",
+      "width": 128,
+      "height": 72,
+      "bracket": 3,
+      "sigma": 0.05,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-sliding4",
+      "width": 128,
+      "height": 72,
+      "bracket": 3,
+      "sigma": 0.05,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-batch2",
+      "width": 131,
+      "height": 77,
+      "bracket": 1.2,
+      "sigma": 0.2,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-batch4",
+      "width": 131,
+      "height": 77,
+      "bracket": 1.2,
+      "sigma": 0.2,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-sliding4",
+      "width": 131,
+      "height": 77,
+      "bracket": 1.2,
+      "sigma": 0.2,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.000244140625,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-batch2",
+      "width": 131,
+      "height": 77,
+      "bracket": 3,
+      "sigma": 0.05,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-batch4",
+      "width": 131,
+      "height": 77,
+      "bracket": 3,
+      "sigma": 0.05,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-sliding4",
+      "width": 131,
+      "height": 77,
+      "bracket": 3,
+      "sigma": 0.05,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-batch2",
+      "width": 17,
+      "height": 9,
+      "bracket": 1.2,
+      "sigma": 0.2,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-batch4",
+      "width": 17,
+      "height": 9,
+      "bracket": 1.2,
+      "sigma": 0.2,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-sliding4",
+      "width": 17,
+      "height": 9,
+      "bracket": 1.2,
+      "sigma": 0.2,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-batch2",
+      "width": 17,
+      "height": 9,
+      "bracket": 3,
+      "sigma": 0.05,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-batch4",
+      "width": 17,
+      "height": 9,
+      "bracket": 3,
+      "sigma": 0.05,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    },
+    {
+      "variant": "guided-sliding4",
+      "width": 17,
+      "height": 9,
+      "bracket": 3,
+      "sigma": 0.05,
+      "quality": {
+        "finite": true,
+        "rmse_codes": 0.0,
+        "p99_codes": 0.0,
+        "max_codes": 0.0,
+        "fraction_pixels_over4": 0.0,
+        "thresholds": {
+          "rmse_codes": 0.75,
+          "p99_codes": 3,
+          "max_codes": 12,
+          "fraction_pixels_over4": 0.001
+        },
+        "accepted": true,
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+      },
+      "coeff_max": 0.0,
+      "coeff_finite": true
+    }
+  ],
+  "decision": "Keep guided-batch2 as opt-in promising candidate; do not replace default. Reject batch4 and sliding4 as optimizations. Sequential repeats show variable magnitude; no guaranteed speedup."
+}

@@ -47,6 +47,15 @@ Compared with round two, the four 4K assets (global EV -1, default Fusion settin
 
 ## Current verification
 
+The optimized mobile preset additionally stores low-resolution log-luminance/guide
+and EV/guide in RG16F, and horizontal Guided coefficient sums in shared half2.
+These are measured approximations: absolute-guide quantization can lose small
+differences. Moments, variance, intercept construction, vertical sums and fused
+reconstruction stay FP32; the independent viewer keeps its reference precision.
+See the [current mobile validation and parameter limits](performance/README.md)
+and [maintained image comparisons](image-comparison.md). The shader compile option
+preserves the old benchmark control; it is not a viewer precision switch.
+
 ```powershell
 .venv/Scripts/python.exe -m unittest tests.test_pyramid tests.test_guided tests.test_zcurve tests.test_precision
 ```

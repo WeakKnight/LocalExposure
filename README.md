@@ -16,7 +16,7 @@ Exposure fusion supplies the foundation. Our work focuses on turning it into a p
 - **Fuse lightness, apply exposure to HDR.** Blend three synthetic exposures across a Laplacian pyramid, reconstruct the desired lightness, then recover a local exposure multiplier. The final RGB image passes through the real tone mapper.
 - **Calibrate the brightness response.** Fit a monotone Z curve to the tone mapper's neutral response and bake its inverse into a **2 KiB, 1024-entry R16F LUT**. Exposure recovery takes one filtered lookup instead of an iterative search. This approximates neutral luminance, not arbitrary color interactions.
 - **Do the heavy work on 1/16 of the pixels.** Fusion runs at quarter width and height. Guided upsampling uses full-resolution luminance to align exposure changes with image edges and reduce halos.
-- **Store exposure differences, preserve the baseline.** The optimized mobile graph keeps the middle-exposure lightness in FP32 and stores two signed differences in RG16F, with compact weights, Gather reduction, and fused passes. Precision is spent where reconstruction needs it.
+- **Store exposure differences, preserve the baseline.** The optimized mobile graph keeps the middle-exposure lightness in FP32 and stores two signed differences in RG16F. Compact intermediates, Gather reduction, and local reconstruction of three pyramid levels reduce memory traffic and synchronization.
 
 ## Keeping the optimized result faithful
 

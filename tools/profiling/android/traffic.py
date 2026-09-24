@@ -70,6 +70,15 @@ def estimate(manifest, fps=45):
             read('fullSource', n*(12 if gather else manifest['config'].get('variant_settings',{}).get('reduction_grid',4)**2), True); write('compactOutput'); write('lightnessOutput')
             if 'weightsOutput' in descriptors:write('weightsOutput')
             if 'baseLightnessOutput' in descriptors:write('baseLightnessOutput')
+        elif entry == 'reconstruct_ev_fused':
+            groups=((p['width']+15)//16)*((p['height']+15)//16)
+            # Recompute the mip-2 / mip-1 halos once per 16x16 output tile.
+            read('mip2Luminance',groups*49);read('mip3Luminance',groups*49,True)
+            read('mip2Weights',groups*49);read('previousResult',groups*49,True)
+            read('coarseLuminance',groups*100);read('mip2Luminance',groups*100,True)
+            read('mip1Weights',groups*100)
+            read('fineLuminance',n);read('coarseLuminance',n,True);read('layerWeights',n)
+            read('compactSource',n);read('inverseLut',n,True);read('baseLightness',n);write('compactOutput')
         elif entry == 'reconstruct_ev':
             read('fineLuminance',n);read('coarseLuminance',n,True);read('previousResult',n,True)
             if 'layerWeights' in descriptors:read('layerWeights',n)

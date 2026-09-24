@@ -103,6 +103,8 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
     if variant_config.get('joint_upsample'):modules.update(apply_joint_compute='joint')
     if compact:
         modules.update(reduce_setup_gather='fusion_compact', guided_moments='fusion_compact', reduce_horizontal='fusion_compact', reduce_setup_vertical='fusion_compact', reduce_setup_cooperative='fusion_compact', tail_reconstruct='fusion_compact', reconstruct_ev='fusion_compact', reduce_setup='fusion_compact', reconstruct_exposure='fusion_compact', fit_compact='fusion_compact', reconstruct_compact='fusion_compact', reconstruct_guided='fusion_compact', downsample_compact='fusion_compact')
+    if compact or fused_guided:
+        modules['reconstruct_ev_fused'] = 'fusion_compact'
     reflections = {}
     exe = compiler()
     manifest['slangc_sha256'] = sha(exe)
@@ -114,6 +116,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
         if module in ('fusion_compact','present'):
             flags += [f"-DWORK_X={variant_config.get('work_x',8)}",f"-DWORK_Y={variant_config.get('work_y',8)}"]
         if module=='fusion_compact':
+            flags += [f"-DHALF_ROW_COEFFICIENTS={int(variant_config.get('half_row_coefficients',False))}"]
             flags += [f"-DDIRECT_BATCH={variant_config.get('direct_batch',2)}", f"-DTAIL_X={variant_config.get('tail_x',8)}"]
             flags += [f"-DGUIDED_DIRECT_MOMENTS={int(variant_config.get('guided_direct_moments',False))}"]
             flags += [f"-DGUIDED_STATIC_WINDOWS={int(variant_config.get('guided_static_windows',False))}"]
@@ -236,6 +239,10 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
         while tail_mip<levels-1 and (max(1,w>>tail_mip)>variant_config.get('tail_max_width',32) or max(1,h>>tail_mip)>variant_config.get('tail_max_height',16)):tail_mip+=1
         use_tail=variant_config.get('tail_fusion') and tail_mip<levels-1
         manifest['config']['tail_mip']=tail_mip if use_tail else None
+        fuse_fine = (variant_config.get('fused_fine_reconstruction', False)
+                     and variant_config.get('residual_pyramid') and variant_config.get('precomputed_ev')
+                     and levels > 3 and (not use_tail or tail_mip >= 3))
+        manifest['config']['fused_fine_reconstruction'] = bool(fuse_fine)
         for mip in range(1,tail_mip+1 if use_tail else levels):
             add('downsample_compact',f'pyramids_mip{mip}',max(1,w>>mip),max(1,h>>mip),
                 dict(coarseLuminance=view('luminance',mip-1),layerWeights=view('weights',mip-1),
@@ -246,6 +253,8 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
             # Logical image size is retained, but one 8x8 workgroup covers all pixels.
             manifest['passes'][-1]['dispatch_groups']=[1,1,1]
         for mip in reversed(range(1,tail_mip if use_tail else levels)):
+            if fuse_fine and mip < 3:
+                continue
             add('reconstruct_compact',f'reconstruct_mip{mip}',max(1,w>>mip),max(1,h>>mip),
                 dict(fineLuminance=view('luminance',mip),coarseLuminance=view('luminance',min(mip+1,levels-1)),
                      layerWeights=view('weights',mip),previousResult=view('exposure') if mip==levels-1 else view('reconstructed',mip+1),
@@ -264,9 +273,11 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
             manifest['passes']=[]
             if variant_config.get('precomputed_ev'):
                 resources.append(dict(name='guide_ev',width=w,height=h,levels=1,format=103,format_name='rg32_float',bpp=8,one_d=False,dump=False))
-                add('reconstruct_ev','reconstruct_ev',w,h,dict(compactSource=view('compact'),compactOutput=view('guide_ev'),
+                add('reconstruct_ev_fused' if fuse_fine else 'reconstruct_ev','reconstruct_ev',w,h,dict(compactSource=view('compact'),compactOutput=view('guide_ev'),
                     fineLuminance=view('luminance'),coarseLuminance=view('luminance',min(1,levels-1)),layerWeights=view('weights'),
-                    previousResult=view('reconstructed',min(1,levels-1)),inverseLut=view('inverse'),**(dict(baseLightness=view('base_lightness')) if variant_config.get('residual_pyramid') else {})),dict(isCoarsest=levels==1))
+                    previousResult=view('reconstructed',3 if fuse_fine else min(1,levels-1)),inverseLut=view('inverse'),
+                    **(dict(mip1Weights=view('weights',1),mip2Weights=view('weights',2),mip2Luminance=view('luminance',2),mip3Luminance=view('luminance',3)) if fuse_fine else {}),
+                    **(dict(baseLightness=view('base_lightness')) if variant_config.get('residual_pyramid') else {})),dict(isCoarsest=levels==1))
             if variant_config.get('moment_input'):
                 resources.append(dict(name='moments',width=w,height=h,levels=1,format=109,format_name='rgba32_float',bpp=16,one_d=False,dump=False))
                 add('guided_moments','guided_moments',w,h,dict(compactSource=view('guide_ev'),momentOutput=view('moments')))

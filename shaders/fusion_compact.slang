@@ -1,6 +1,9 @@
 #ifndef DIRECT_BATCH
 #define DIRECT_BATCH 2
 #endif
+#ifndef HALF_ROW_COEFFICIENTS
+#define HALF_ROW_COEFFICIENTS 0
+#endif
 #ifndef TAIL_X
 #define TAIL_X 8
 #endif
@@ -460,6 +463,68 @@ void reconstruct_ev(uint3 tid : SV_DispatchThreadID)
     compactOutput[tid.xy]=float2(ev,lg.y);
 }
 
+// Fuse fine reconstruction levels 2 -> 1 -> 0 and exposure recovery.
+// The host supplies reconstructed mip 3 and only selects this path when that
+// level exists outside the fused tail. Every pyramid level is still included.
+// A 16x16 output tile needs a 10x10 mip-1 halo and a 7x7 mip-2 halo. Recompute
+// overlapping halos to replace two global writes/reads and dispatch barriers.
+// Shared results remain FP32. Software bilinear can differ from texture filtering.
+Texture2D<float2> mip1Weights;
+Texture2D<float4> mip2Luminance;
+Texture2D<float2> mip2Weights;
+Texture2D<float4> mip3Luminance;
+groupshared float mip2Result[49];
+groupshared float mip1Result[100];
+[shader("compute")]
+[numthreads(16,16,1)]
+void reconstruct_ev_fused(uint3 tid : SV_DispatchThreadID, uint3 local : SV_GroupThreadID, uint3 group : SV_GroupID)
+{
+    uint w,h,pw,ph;compactOutput.GetDimensions(w,h);coarseLuminance.GetDimensions(pw,ph);
+    int2 origin=int2(group.xy*16);
+    int2 mip1Origin=int2(floor((float2(origin)+.5)*float2(pw,ph)/float2(w,h)-.5));
+    uint lane=local.y*16+local.x;
+    uint gw,gh;mip2Luminance.GetDimensions(gw,gh);
+    int2 mip2Origin=int2(floor((float2(mip1Origin)+.5)*float2(gw,gh)/float2(pw,ph)-.5));
+    if(lane<49) {
+        int2 p=clamp(mip2Origin+int2(lane%7,lane/7),int2(0),int2(gw-1,gh-1));
+        float2 uv=(float2(p)+.5)/float2(gw,gh);
+        float2 detail=mip2Luminance[p].xy-mip3Luminance.SampleLevel(linearSampler,uv,0).xy;
+        float2 weights=mip2Weights[p];
+        weights/=max(weights.x+weights.y+max(1.0-weights.x-weights.y,0.0),1e-20);
+        float2 contribution=detail*weights;
+        mip2Result[lane]=contribution.x+contribution.y+previousResult.SampleLevel(linearSampler,uv,0);
+    }
+    GroupMemoryBarrierWithGroupSync();
+    if(lane<100) {
+        int2 p=clamp(mip1Origin+int2(lane%10,lane/10),int2(0),int2(pw-1,ph-1));
+        float2 uv=(float2(p)+.5)/float2(pw,ph);
+        float2 detail=coarseLuminance[p].xy-mip2Luminance.SampleLevel(linearSampler,uv,0).xy;
+        float2 weights=mip1Weights[p];
+        weights/=max(weights.x+weights.y+max(1.0-weights.x-weights.y,0.0),1e-20);
+        float2 contribution=detail*weights;
+        float2 pos=uv*float2(gw,gh)-.5;
+        int2 ip=int2(floor(pos))-mip2Origin;float2 f=frac(pos);uint index=ip.y*7+ip.x;
+        float previous=lerp(lerp(mip2Result[index],mip2Result[index+1],f.x),lerp(mip2Result[index+7],mip2Result[index+8],f.x),f.y);
+        mip1Result[lane]=contribution.x+contribution.y+previous;
+    }
+    GroupMemoryBarrierWithGroupSync();
+    if(tid.x>=w || tid.y>=h)return;
+    float2 uv=(float2(tid.xy)+.5)/float2(w,h);
+    float2 pos=uv*float2(pw,ph)-.5;
+    int2 ip=int2(floor(pos))-mip1Origin;
+    float2 f=frac(pos);
+    uint index=ip.y*10+ip.x;
+    float previous=lerp(lerp(mip1Result[index],mip1Result[index+1],f.x),lerp(mip1Result[index+10],mip1Result[index+11],f.x),f.y);
+    float2 detail=fineLuminance[tid.xy].xy-coarseLuminance.SampleLevel(linearSampler,uv,0).xy;
+    float2 weights=layerWeights[tid.xy];
+    weights/=max(weights.x+weights.y+max(1.0-weights.x-weights.y,0.0),1e-20);
+    float2 contribution=detail*weights;
+    float baseline=baseLightness[tid.xy];
+    float lightness=(contribution.x+contribution.y+previous)/RESIDUAL_SCALE+baseline;
+    float2 lg=compactSource[tid.xy];
+    compactOutput[tid.xy]=float2(compactEV(lightness,lg,baseline),lg.y);
+}
+
 [shader("compute")]
 [numthreads(8,8,1)]
 void reconstruct_exposure(uint3 tid : SV_DispatchThreadID)
@@ -523,7 +588,21 @@ groupshared float2 fusedCoefficients[coefficientPitch*coefficientHeight];
 static const uint momentPitch=coefficientPitch+SHARED_PADDING;
 static const uint rowCoefficientPitch=TILE_X+SHARED_PADDING;
 groupshared float4 rowMoments[momentPitch*inputHeight];
+#if HALF_ROW_COEFFICIENTS
+// Round only the horizontal coefficient sums. Moments, variance, fitted
+// intercepts and the final vertical accumulation retain FP32 arithmetic.
+groupshared half2 rowCoefficients[rowCoefficientPitch*coefficientHeight];
+#else
 groupshared float2 rowCoefficients[rowCoefficientPitch*coefficientHeight];
+#endif
+void storeRowCoefficients(uint index, float2 value)
+{
+#if HALF_ROW_COEFFICIENTS
+    rowCoefficients[index]=half2(value);
+#else
+    rowCoefficients[index]=value;
+#endif
+}
 #endif
 
 [shader("compute")]
@@ -717,7 +796,7 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
             sum=0;
             [unroll] for(uint x=0;x<=2*GUIDED_RADIUS;x++)sum+=values[j+x];
 #endif
-            if(col+j<TILE_X)rowCoefficients[row*rowCoefficientPitch+col+j]=sum;
+            if(col+j<TILE_X)storeRowCoefficients(row*rowCoefficientPitch+col+j,sum);
         }
     }
 #else
@@ -726,9 +805,9 @@ void reconstruct_guided(uint3 tid : SV_DispatchThreadID, uint3 localID : SV_Grou
         float2 sum=0;
         for(uint x=0;x<=2*GUIDED_RADIUS;x++)sum+=fusedCoefficients[row*coefficientPitch+col+x];
 #if SHARED_PADDING
-        rowCoefficients[row*rowCoefficientPitch+col]=sum;
+        storeRowCoefficients(row*rowCoefficientPitch+col,sum);
 #else
-        rowCoefficients[i]=sum;
+        storeRowCoefficients(i,sum);
 #endif
     }
 #endif

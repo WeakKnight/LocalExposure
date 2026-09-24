@@ -1,6 +1,6 @@
 """Explicit profiling presets; experimental entries are not runtime defaults.
 
-Default mobile algorithm: guided-direct-tail. Frozen control: gather-reduction.
+Default mobile algorithm: guided-fused-reconstruction. Frozen control: gather-reduction.
 Output integration alternatives:
 gather-work16 and gather-fragment. See docs/performance/archive/twohour-optimization.md.
 The remaining presets preserve experiments and independent historical controls.
@@ -93,4 +93,8 @@ VARIANTS["guided-direct-single-moment"] = {**VARIANTS["guided-direct-moments"], 
 VARIANTS["guided-direct-tail"] = {**VARIANTS["guided-direct-single-moment"], "guided_threads_y": 32,
     "tail_fusion": True, "tail_max_width": 16, "tail_max_height": 8, "tail_x": 16}
 
-DEFAULT_VARIANT = "guided-direct-tail"
+VARIANTS["guided-fused-reconstruction"] = {**VARIANTS["guided-direct-tail"],
+    "fused_fine_reconstruction": True, "half_guide": True, "half_compact": True,
+    "half_row_coefficients": True}
+
+DEFAULT_VARIANT = "guided-fused-reconstruction"

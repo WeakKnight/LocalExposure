@@ -1,0 +1,477 @@
+{
+  "schema": 1,
+  "date": "2026-09-24",
+  "status": "achieved",
+  "target_increment_ms": 1.59,
+  "device": "NX789J / SM8750 / Adreno 830",
+  "driver": "Process-local Qualcomm 512.842.6; Vulkan 1.4.295",
+  "workload": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 45,
+    "hdr": "R11G11B10_FLOAT",
+    "output": "RGBA8_SRGB via UNORM compute view",
+    "graphics_hdr_producer": true,
+    "joint_submission": true,
+    "tile_memory": false,
+    "presentation_and_visualization_excluded": true,
+    "warmup_per_block": 60,
+    "frames_per_block": 600,
+    "rounds": 3
+  },
+  "variant": "guided-fused-reconstruction",
+  "settings": {
+    "half_aux": true,
+    "compute_srgb": true,
+    "cached_baseline": true,
+    "log_exposure": true,
+    "separable_guided": true,
+    "precomputed_ev": true,
+    "residual_pyramid": true,
+    "gather_reduction": true,
+    "guided_vertical": 2,
+    "guided_threads_y": 32,
+    "guided_static_windows": true,
+    "guided_batch": 2,
+    "guided_direct_moments": true,
+    "direct_batch": 1,
+    "tail_fusion": true,
+    "tail_max_width": 16,
+    "tail_max_height": 8,
+    "tail_x": 16,
+    "fused_fine_reconstruction": true,
+    "half_guide": true,
+    "half_compact": true,
+    "half_row_coefficients": true
+  },
+  "changes": [
+    "Reconstruct levels 2, 1 and 0 plus EV recovery in one 16x16 group; keep all levels, recompute halos, retain FP32 shared reconstruction.",
+    "Use RG16F for compact log-luminance/guide and recovered EV/guide.",
+    "Store horizontal coefficient sums in shared half2; retain FP32 moments, variance, fitted intercepts and final vertical accumulation."
+  ],
+  "production_dispatches": {
+    "before": 14,
+    "after": 12
+  },
+  "control": {
+    "artifact": "outputs\\android\\goal159\\control-long",
+    "samples_per_path": 1800,
+    "fusion_ms": 4.127135315906525,
+    "baseline_ms": 2.441614523723602,
+    "increment_ms": 1.6855207921829227,
+    "same_output_as_headless": true,
+    "round_increments_ms": [
+      1.6851562088584902,
+      1.6858853755073548,
+      1.685286417188645
+    ],
+    "diagnostic_ms": {
+      "reduce_setup": 0.628359359659195,
+      "pyramids_mip1": 0.1223958303451538,
+      "pyramids_mip2": 0.04619791553878784,
+      "pyramids_mip3": 0.02528645771598816,
+      "pyramids_mip4": 0.018802082874298097,
+      "pyramids_mip5": 0.01765624956893921,
+      "tail_from_mip5": 0.05723958193588257,
+      "reconstruct_mip4": 0.02020833283996582,
+      "reconstruct_mip3": 0.021484374475479125,
+      "reconstruct_mip2": 0.02515624938583374,
+      "reconstruct_mip1": 0.05005208211135864,
+      "reconstruct_ev": 0.18934895371055604,
+      "reconstruct_guided": 0.4938541546096802,
+      "apply_exposure_production": 2.121484323205948
+    }
+  },
+  "repeats": [
+    {
+      "artifact": "outputs\\android\\goal159\\retained-long",
+      "samples_per_path": 1800,
+      "fusion_ms": 4.030312401603699,
+      "baseline_ms": 2.44213535704422,
+      "increment_ms": 1.5881770445594792,
+      "same_output_as_headless": true,
+      "round_increments_ms": [
+        1.587656211238861,
+        1.5885416278839104,
+        1.5881249612274173
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6278124846725464,
+        "pyramids_mip1": 0.12124999703979492,
+        "pyramids_mip2": 0.04604166554260254,
+        "pyramids_mip3": 0.025572916042327882,
+        "pyramids_mip4": 0.018463541215896606,
+        "pyramids_mip5": 0.017656249568939207,
+        "tail_from_mip5": 0.05742187359809875,
+        "reconstruct_mip4": 0.02028645783805847,
+        "reconstruct_mip3": 0.021354166145324704,
+        "reconstruct_ev": 0.17565103737831117,
+        "reconstruct_guided": 0.46927082187652586,
+        "apply_exposure_production": 2.130364531322479
+      }
+    },
+    {
+      "artifact": "outputs\\android\\goal159\\retained-repeat",
+      "samples_per_path": 1800,
+      "fusion_ms": 4.031744693235398,
+      "baseline_ms": 2.443281190349579,
+      "increment_ms": 1.5884635028858187,
+      "same_output_as_headless": true,
+      "round_increments_ms": [
+        1.5876301695728299,
+        1.5884635028858183,
+        1.5893489195308685
+      ],
+      "diagnostic_ms": {
+        "reduce_setup": 0.6300781096172333,
+        "pyramids_mip1": 0.1223958303451538,
+        "pyramids_mip2": 0.04598958221054077,
+        "pyramids_mip3": 0.025624999374389647,
+        "pyramids_mip4": 0.019635416187286377,
+        "pyramids_mip5": 0.017760416233062744,
+        "tail_from_mip5": 0.057473956930160525,
+        "reconstruct_mip4": 0.02067708282852173,
+        "reconstruct_mip3": 0.021770832801818848,
+        "reconstruct_ev": 0.1774999956665039,
+        "reconstruct_guided": 0.4701822801876068,
+        "apply_exposure_production": 2.130807239645004
+      }
+    }
+  ],
+  "improvement_percent": 5.758296767814109,
+  "traffic": {
+    "before_bytes_per_frame": 19175408,
+    "after_bytes_per_frame": 16616528,
+    "gbps_45": 0.74774376,
+    "expanded_bytes_per_frame": 79961280,
+    "note": "Algorithm traffic estimates including Fusion intermediates, not DRAM measurements or power claims."
+  },
+  "desktop_scenes": [
+    {
+      "scene": "veranda",
+      "reference": {
+        "accepted": true,
+        "rmse_codes": 0.21916223649467942,
+        "p99_codes": 1.0,
+        "max_codes": 3.0,
+        "fraction_pixels_over4": 0.0
+      },
+      "previous_default": {
+        "accepted": true,
+        "rmse_codes": 0.20560559951382726,
+        "p99_codes": 1.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0
+      }
+    },
+    {
+      "scene": "abandoned_tiled_room",
+      "reference": {
+        "accepted": true,
+        "rmse_codes": 0.21820662966659074,
+        "p99_codes": 1.0,
+        "max_codes": 2.0,
+        "fraction_pixels_over4": 0.0
+      },
+      "previous_default": {
+        "accepted": true,
+        "rmse_codes": 0.2038349219626574,
+        "p99_codes": 1.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0
+      }
+    },
+    {
+      "scene": "qwantani_patio",
+      "reference": {
+        "accepted": true,
+        "rmse_codes": 0.2025017146703811,
+        "p99_codes": 1.0,
+        "max_codes": 3.0,
+        "fraction_pixels_over4": 0.0
+      },
+      "previous_default": {
+        "accepted": true,
+        "rmse_codes": 0.1956867556253118,
+        "p99_codes": 1.0,
+        "max_codes": 2.0,
+        "fraction_pixels_over4": 0.0
+      }
+    },
+    {
+      "scene": "sundowner_deck",
+      "reference": {
+        "accepted": true,
+        "rmse_codes": 0.21913692998753573,
+        "p99_codes": 1.0,
+        "max_codes": 3.0,
+        "fraction_pixels_over4": 0.0
+      },
+      "previous_default": {
+        "accepted": true,
+        "rmse_codes": 0.20437442188539068,
+        "p99_codes": 1.0,
+        "max_codes": 1.0,
+        "fraction_pixels_over4": 0.0
+      }
+    }
+  ],
+  "phone_scenes": [
+    {
+      "scene": "veranda",
+      "reference": {
+        "accepted": true,
+        "rmse_codes": 0.22399933230812452,
+        "p99_codes": 1.0,
+        "max_codes": 8.0,
+        "fraction_pixels_over4": 1.0609567901234568e-05
+      },
+      "previous_default": {
+        "accepted": true,
+        "rmse_codes": 0.2073689097042615,
+        "p99_codes": 1.0,
+        "max_codes": 2.0,
+        "fraction_pixels_over4": 0.0
+      }
+    },
+    {
+      "scene": "abandoned_tiled_room",
+      "reference": {
+        "accepted": true,
+        "rmse_codes": 0.21913766355060865,
+        "p99_codes": 1.0,
+        "max_codes": 6.0,
+        "fraction_pixels_over4": 1.6878858024691356e-05
+      },
+      "previous_default": {
+        "accepted": true,
+        "rmse_codes": 0.20513008080591283,
+        "p99_codes": 1.0,
+        "max_codes": 2.0,
+        "fraction_pixels_over4": 0.0
+      }
+    },
+    {
+      "scene": "qwantani_patio",
+      "reference": {
+        "accepted": true,
+        "rmse_codes": 0.22840290798167523,
+        "p99_codes": 1.0,
+        "max_codes": 5.0,
+        "fraction_pixels_over4": 9.645061728395062e-07
+      },
+      "previous_default": {
+        "accepted": true,
+        "rmse_codes": 0.2001345837046916,
+        "p99_codes": 1.0,
+        "max_codes": 3.0,
+        "fraction_pixels_over4": 0.0
+      }
+    },
+    {
+      "scene": "sundowner_deck",
+      "reference": {
+        "accepted": true,
+        "rmse_codes": 0.22364920885484746,
+        "p99_codes": 1.0,
+        "max_codes": 8.0,
+        "fraction_pixels_over4": 1.0609567901234568e-05
+      },
+      "previous_default": {
+        "accepted": true,
+        "rmse_codes": 0.2079664980241085,
+        "p99_codes": 1.0,
+        "max_codes": 4.0,
+        "fraction_pixels_over4": 0.0
+      }
+    }
+  ],
+  "stress": [
+    {
+      "artifact": "outputs\\android\\goal159\\retained-odd.json",
+      "accepted": true,
+      "cases": 43,
+      "width": 513,
+      "height": 289,
+      "bracket": 1.2,
+      "max_temporal_codes": 2.0
+    },
+    {
+      "artifact": "outputs\\android\\goal159\\retained-even.json",
+      "accepted": true,
+      "cases": 43,
+      "width": 512,
+      "height": 288,
+      "bracket": 1.2,
+      "max_temporal_codes": 2.0
+    },
+    {
+      "artifact": "outputs\\android\\goal159\\retained-bracket3.json",
+      "accepted": true,
+      "cases": 43,
+      "width": 513,
+      "height": 289,
+      "bracket": 3.0,
+      "max_temporal_codes": 2.0
+    }
+  ],
+  "limits": [
+    "Validated sigma .2, default +/-1.2 EV and desktop +/-3 EV stress. Absolute-guide half quantization is an approximation; no all-input precision bound.",
+    "Prior RG16F limits at narrow sigma / wider brackets still require separate validation. See goal169.json.",
+    "Desktop temporal checks are synthetic, not phone animation captures. Phone results are not Snapdragon 8 Gen 1 measurements."
+  ],
+  "offline": {
+    "target": "Adreno 730",
+    "tool": "AOC 7.0.15",
+    "entries": {
+      "reconstruct_ev_fused": {
+        "registers": 6.0,
+        "scratch": 0.0
+      },
+      "reconstruct_guided": {
+        "registers": 9.0,
+        "scratch": 0.0
+      }
+    },
+    "note": "Zero scratch for the two investigated kernels. AOC occupancy above 100% is not used as a valid measurement."
+  },
+  "experiments": {
+    "no_half_row_storage_long_increment_ms": 1.5969530860118861,
+    "rejected": "Larger Guided groups, SoA shared storage, gather product-log and gather group reshapes; larger fused tiles or a fourth fused level also regressed relative to selected configuration.",
+    "screen_summaries": [
+      {
+        "name": "combined-input16-phone",
+        "increment_ms": 1.5860937112770084
+      },
+      {
+        "name": "combined16-phone",
+        "increment_ms": 1.610729127342224
+      },
+      {
+        "name": "fused-grand-phone",
+        "increment_ms": 1.628411418577195
+      },
+      {
+        "name": "fused-grand24-phone",
+        "increment_ms": 1.6352343350772856
+      },
+      {
+        "name": "fused-grand32-phone",
+        "increment_ms": 1.6363020433845517
+      },
+      {
+        "name": "fused-great-phone",
+        "increment_ms": 1.6330207934646603
+      },
+      {
+        "name": "fused-parent-phone",
+        "increment_ms": 1.6377864183483126
+      },
+      {
+        "name": "fused-parent24-phone",
+        "increment_ms": 1.6442447515239715
+      },
+      {
+        "name": "fused-parent32-phone",
+        "increment_ms": 1.6439322515316013
+      },
+      {
+        "name": "gather-product-phone",
+        "increment_ms": 1.6850520421943656
+      },
+      {
+        "name": "gather16x16-phone",
+        "increment_ms": 1.7223957912826537
+      },
+      {
+        "name": "gather32x2-phone",
+        "increment_ms": 1.707447874980926
+      },
+      {
+        "name": "gather32x4-phone",
+        "increment_ms": 1.7289322494564057
+      },
+      {
+        "name": "gather8x16-phone",
+        "increment_ms": 1.6861718338336935
+      },
+      {
+        "name": "half-both-phone",
+        "increment_ms": 1.6726301674976347
+      },
+      {
+        "name": "half-coeff-phone",
+        "increment_ms": 1.6752343341007236
+      },
+      {
+        "name": "half-guide-current-phone",
+        "increment_ms": 1.667604125953675
+      },
+      {
+        "name": "half-input-current-phone",
+        "increment_ms": 1.6459114181499483
+      },
+      {
+        "name": "half-rows-phone",
+        "increment_ms": 1.6712760008640295
+      },
+      {
+        "name": "soa-all-phone",
+        "increment_ms": 2.1253905731105807
+      },
+      {
+        "name": "soa-coeff-phone",
+        "increment_ms": 1.8177343306217195
+      },
+      {
+        "name": "soa-moments-phone",
+        "increment_ms": 1.9611978687858587
+      },
+      {
+        "name": "tile32x16-phone",
+        "increment_ms": 3.0800520081367493
+      },
+      {
+        "name": "tile32x8-phone",
+        "increment_ms": 1.8786457874679563
+      },
+      {
+        "name": "tile8x32-phone",
+        "increment_ms": 1.692083292022705
+      }
+    ]
+  },
+  "validation": {
+    "unit_tests": 14,
+    "clean_rebuild_identical_to_measured_spirv": {
+      "apply_srgb_compute": true,
+      "baseline_srgb_compute": true,
+      "downsample_compact": true,
+      "reconstruct_compact": true,
+      "reconstruct_ev_fused": true,
+      "reconstruct_guided": true,
+      "reduce_setup_gather": true,
+      "tail_reconstruct": true
+    },
+    "production_spirv_sha256": {
+      "apply_srgb_compute": "dbb70387c0cc4fa0a9a7b7925bc34dac796ebabd556955929cf52d873cfab859",
+      "baseline_srgb_compute": "eddb4100384f6a89e05124f05fdeb9cff58c55c4a67ad1e6d662341a67f96acd",
+      "downsample_compact": "8bd242be6e765e21bcbd883aabec83392f7cc04dfb17c85d5451e77720908b88",
+      "reconstruct_compact": "2fa2dc61d16bc901fc7922452ade0c2502f4050f9632547ef525e7b83ee1d99f",
+      "reconstruct_ev_fused": "0c90a9702dade84056da59488782123fe730b4a55bfd6dfd549beada788f4acd",
+      "reconstruct_guided": "ba4d9f80575fedf9649c429fe62b243ae5513f737541e0ee00e6ffafb851a5de",
+      "reduce_setup_gather": "e6fc398ea4d24fa6ea30703d8ae461e8ec026f329c5466349ad22f59d8234803",
+      "tail_reconstruct": "1cbf09739b2a0e45a7e1575d374b90c0f8f23f52fafdea80402efbbad22831e1"
+    },
+    "source_sha256": {
+      "shaders/fusion_compact.slang": "f8dd9f242cd38a534e0e0372d788469379eeaa7ff94c3fa98c93fb7bf6185c8d",
+      "tools/profiling/android/prepare.py": "de185ccb4ad3648c5b13e5593066485bdc207d991247f79053d6297cd4faee6c",
+      "tools/profiling/android/quality_sweep.py": "bec201382c351c8246794cac9aa57ef2fa90b898462525bc3ca8f5edd7a0ddeb",
+      "tools/profiling/android/variants.py": "3786f52bd62ecfe7b0e56cd8744bc880e1e1fe572fa69a84baebd8740b8ee625",
+      "tools/profiling/android/traffic.py": "40e0dd5903b78d51d69851eb6b0a13bedf1ba0cd63254a60d28f1f4968a6c370"
+    },
+    "images": "docs/images/comparison/manifest.json"
+  },
+  "raw_artifacts": "outputs\\android\\goal159",
+  "phone_quality_note": "Headless comparisons use the system driver on the same phone. Both timed Veranda foreground runs with the process-local driver byte-match the retained headless output."
+}

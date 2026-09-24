@@ -1,11 +1,13 @@
 # Mobile performance
 
-The mobile default is `guided-direct-tail`: quarter-resolution residual Fusion,
-512-thread Guided workgroups producing 16x16 tiles, and a fused small pyramid tail.
-The tail retains every level and per-level RG16F / RG16_UNORM quantization; it uses
-software bilinear interpolation. At 1080p, production dispatches fall from 20 to 14.
-The viewer remains the independent reference. `guided-direct-moments` preserves
-the previous mobile default; `lossless` selects the original algorithm.
+The mobile default is `guided-fused-reconstruction`: quarter-resolution residual
+Fusion, a fused small pyramid tail, and local reconstruction of the three finest
+levels. All pyramid levels remain included. Log-luminance/guide and EV/guide use
+RG16F; Guided horizontal coefficient sums use half storage, with FP32 moments,
+variance and final accumulation. At 1080p, production dispatches fall from 14 to 12.
+Small images fall back to separate reconstruction when the required levels are
+unavailable. The viewer remains the independent reference; `guided-direct-tail`
+preserves the previous mobile default and `lossless` selects the original algorithm.
 
 ## Current results
 
@@ -14,17 +16,18 @@ in one submission, 45 FPS. Measured on **Adreno 830**, process-local driver 512.
 
 | Path | Complete chain | Local Exposure increment |
 |---|---:|---:|
-| Previous default (matched repeat) | 4.226 ms | 1.782 ms |
-| Current default | 4.129 ms | 1.685 ms |
+| Previous default | 4.127 ms | 1.685 ms |
+| Current default | 4.030 ms | 1.588 ms |
 
-Two long repeats measured **1.6853 / 1.6854 ms**, meeting the 1.69 ms target;
-Local Exposure improved **5.4%** against the matched control. Each repeat sampled
-1,800 frames per path. Four desktop HDR scenes differ by at most two sRGB8 codes
-from the previous default, and all four same-phone reference gates pass.
+Two retained long repeats measured **1.5882 / 1.5885 ms**, meeting the 1.59 ms
+target; all six round medians remained below 1.59 ms. Local Exposure improved
+**5.8%** against the matched control. Each repeat sampled 1,800 frames per path.
+Four desktop HDR scenes differ by at most two sRGB8 codes from the previous
+default, and all four same-phone reference gates pass.
 These are single-device results, not Snapdragon 8 Gen 1 measurements.
-[Measurements, quality limits and rejected experiments](baselines/goal169.json).
+[Measurements, quality limits and rejected experiments](baselines/goal159.json).
 
-Estimated incremental texture traffic is **19.18 MB/frame**, or **0.863 GB/s at
+Estimated incremental texture traffic is **16.62 MB/frame**, or **0.748 GB/s at
 45 FPS**. This includes Fusion intermediates; it is not measured DRAM traffic.
 See [bandwidth accounting](bandwidth.md).
 
@@ -38,10 +41,11 @@ Tile memory is experimental: the tested placement improved the complete chain
 by only about 0.048 ms and also changed baseline timing. The observed setup-pass
 reduction is not an isolated, proven tile-memory benefit.
 
-Default sigma 0.2 / ±1.2 EV and the tested ±3 EV sweep pass. At ±6 EV, a 513x289
-moving edge fails the fixed gate in both previous and current defaults. Narrow
-weights (sigma 0.05 / ±3 EV) also have a known RG16F limitation; RG32F fixed that
-older case. Do not generalize these image checks to every parameter or scene.
+Default sigma 0.2 / ±1.2 EV and the tested ±3 EV sweep pass. Validation of this
+revision is limited to that range. The previous default already failed a 513x289
+moving-edge gate at ±6 EV. Narrow weights (sigma 0.05 / ±3 EV) also have a known
+RG16F limitation; RG32F fixed that older case. Do not generalize these image checks
+to every parameter or scene.
 
 ## Tools
 

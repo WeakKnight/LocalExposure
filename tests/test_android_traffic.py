@@ -29,6 +29,23 @@ class TrafficTests(unittest.TestCase):
         self.manifest['passes'][0]['entry']='future_pass'
         with self.assertRaises(ValueError): estimate(self.manifest)
 
+    def test_fused_reconstruction_counts_halos_and_deduplicates_bound_mips(self):
+        m=copy.deepcopy(self.manifest)
+        m['resources']=[dict(name=name,width=32,height=32,levels=6,bpp=4)
+                        for name in ('luminance','weights','recon','compact','base','guide','source','baseline')]
+        m['resources'].append(dict(name='inverse',width=1024,height=1,levels=1,bpp=2,one_d=True))
+        bindings={'fineLuminance':('luminance',0),'coarseLuminance':('luminance',1),
+                  'mip2Luminance':('luminance',2),'mip3Luminance':('luminance',3),
+                  'layerWeights':('weights',0),'mip1Weights':('weights',1),'mip2Weights':('weights',2),
+                  'previousResult':('recon',3),'compactSource':('compact',0),
+                  'baseLightness':('base',0),'compactOutput':('guide',0),'inverseLut':('inverse',0)}
+        m['passes']=[dict(entry='reconstruct_ev_fused',label='fused',width=32,height=32,
+            baseline=False,descriptors=[dict(name=k,resource=v[0],mip=v[1]) for k,v in bindings.items()])]
+        row=estimate(m)['rows'][0]
+        self.assertEqual(row['write_bytes'],32*32*4)
+        self.assertEqual(row['read_sweep_bytes'],(1024+256+64+16)*4+(1024+256+64)*4+16*4+2*1024*4+2048)
+        self.assertEqual(row['expanded_read_bytes'],4*49*(4+16+4+16)+4*100*(4+16+4)+1024*(4+16+4+4+4+4))
+
     def test_direct_moments_counts_repeated_loads_but_same_resource_sweep(self):
         m=copy.deepcopy(self.manifest)
         m['resources'] += [dict(name='guide_ev',width=17,height=17,levels=1,bpp=8),

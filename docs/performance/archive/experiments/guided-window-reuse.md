@@ -73,7 +73,7 @@ Bandwidth is unchanged and the 1.5 ms target remains unmet. A further redesign
 could amortize vertical windows or decouple output tiles from thread counts;
 those changes were not implemented in this round.
 
-[Portable compiler, validation and timing records](../baselines/guided-window-reuse.json)
+[Portable compiler, validation and timing records](../../baselines/guided-window-reuse.json)
 
 ## Validation
 

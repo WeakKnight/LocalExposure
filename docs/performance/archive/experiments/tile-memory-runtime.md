@@ -35,7 +35,7 @@ Additional foreground guided-placement checks on abandoned_tiled_room,
 qwantani_patio and sundowner_deck were also byte-identical (four scenes total
 including veranda). These short scene checks are quality checks, not performance
 measurements. Tile intermediates themselves were not directly read back.
-See the [machine-readable results](../baselines/tile-memory-runtime.json).
+See the [machine-readable results](../../baselines/tile-memory-runtime.json).
 An initial transfer-usage attempt was rejected and is excluded from timings.
 The standard system-loader binary also compiled; 8 benchmark/traffic tests passed.
 

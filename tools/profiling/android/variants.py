@@ -2,7 +2,7 @@
 
 Default mobile algorithm: guided-vertical2-t256. Frozen control: gather-reduction.
 Output integration alternatives:
-gather-work16 and gather-fragment. See docs/performance/twohour-optimization.md.
+gather-work16 and gather-fragment. See docs/performance/archive/twohour-optimization.md.
 The remaining presets preserve experiments and independent historical controls.
 """
 
@@ -67,7 +67,7 @@ VARIANTS = {
 }
 
 # Research only: image gate passed, but foreground timing regressed.
-# See docs/performance/experiments/wave-operations.md; not a retained optimization.
+# See docs/performance/archive/experiments/wave-operations.md; not a retained optimization.
 VARIANTS["wave-reduction"] = {**VARIANTS["gather-reduction"], "cooperative_reduction": True, "wave_reduction": True}
 
 # Short-window register reuse: batch2 has modest phone gains and remains opt-in.

@@ -69,7 +69,7 @@ these direct substitutions. The default production graph remains unchanged.
 
 ## Evidence and reproduction
 
-- [Portable measurements and validation](../baselines/wave-operations.json)
+- [Portable measurements and validation](../../baselines/wave-operations.json)
 - [Archived experimental patch](wave-operations.patch), based on commit
   `b0561c8b038db0ac6f97df1922f44caa28601fe9`. Apply only to a clean checkout of
   that commit when investigating the failed Guided experiment.

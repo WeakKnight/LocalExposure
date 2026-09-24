@@ -47,11 +47,11 @@ Each scene uses 60 warmups per block and 360 samples per workload, with alternat
 
 P99 error is one 8-bit code in every scene. Only one pixel exceeds four codes in each of the patio and deck images; neither exceeds five. The other two scenes have no pixel over four. All outputs are finite.
 
-The [incremental sweep ledger](baselines/adreno830-mobile-traffic.md) gives **22.799448 MB/frame / 1.025975 GB/s at 45 FPS**. This excludes matched tonemap traffic and is not measured DRAM bandwidth. The bandwidth accounting target is met; the earlier compute-only GPU result is superseded for game-integration purposes by the graphics-context finding above.
+The [incremental sweep ledger](../baselines/adreno830-mobile-traffic.md) gives **22.799448 MB/frame / 1.025975 GB/s at 45 FPS**. This excludes matched tonemap traffic and is not measured DRAM bandwidth. The bandwidth accounting target is met; the earlier compute-only GPU result is superseded for game-integration purposes by the graphics-context finding above.
 
 The matched original-graph compute-output control on the abandoned room measures 1.2502 ms full chain, 0.3792 ms tonemap, and **0.8710 ms incremental**. The retained graph reduces that increment to **0.6029 ms** (about 30.8%). The much larger difference from earlier fragment-output timings is a backend/path effect, not solely Fusion algorithm savings. Its underlying driver/power/scheduling cause has not been isolated, and it must not be extrapolated to an engine that keeps fragment output.
 
-All **45 tests pass**. The six retained compute entries compile for **Adreno 730 with zero scratch usage**, but no 8 Gen 1 device was measured. Raw timing blocks, manifests, image hashes, quality reports and the rejected screening results are archived in [the phone snapshot](baselines/adreno830-mobile-goal.json); compiler data is in [the A730 snapshot](baselines/adreno730-mobile-goal.json).
+All **45 tests pass**. The six retained compute entries compile for **Adreno 730 with zero scratch usage**, but no 8 Gen 1 device was measured. Raw timing blocks, manifests, image hashes, quality reports and the rejected screening results are archived in [the phone snapshot](../baselines/adreno830-mobile-goal.json); compiler data is in [the A730 snapshot](../baselines/adreno730-mobile-goal.json).
 
 ## Image comparisons
 
@@ -59,25 +59,25 @@ Each strip shows the original same-phone result, retained candidate and absolute
 
 ### abandoned_tiled_room
 
-![abandoned_tiled_room comparison](../images/mobile-goal/abandoned_tiled_room-comparison.png)
+![abandoned_tiled_room comparison](../../images/mobile-goal/abandoned_tiled_room-comparison.png)
 
-![abandoned_tiled_room worst-error crop](../images/mobile-goal/abandoned_tiled_room-worst-crop.png)
+![abandoned_tiled_room worst-error crop](../../images/mobile-goal/abandoned_tiled_room-worst-crop.png)
 
 ### qwantani_patio
 
-![qwantani_patio comparison](../images/mobile-goal/qwantani_patio-comparison.png)
+![qwantani_patio comparison](../../images/mobile-goal/qwantani_patio-comparison.png)
 
-![qwantani_patio worst-error crop](../images/mobile-goal/qwantani_patio-worst-crop.png)
+![qwantani_patio worst-error crop](../../images/mobile-goal/qwantani_patio-worst-crop.png)
 
 ### sundowner_deck
 
-![sundowner_deck comparison](../images/mobile-goal/sundowner_deck-comparison.png)
+![sundowner_deck comparison](../../images/mobile-goal/sundowner_deck-comparison.png)
 
-![sundowner_deck worst-error crop](../images/mobile-goal/sundowner_deck-worst-crop.png)
+![sundowner_deck worst-error crop](../../images/mobile-goal/sundowner_deck-worst-crop.png)
 
 ### veranda
 
-![veranda comparison](../images/mobile-goal/veranda-comparison.png)
+![veranda comparison](../../images/mobile-goal/veranda-comparison.png)
 
-![veranda worst-error crop](../images/mobile-goal/veranda-worst-crop.png)
+![veranda worst-error crop](../../images/mobile-goal/veranda-worst-crop.png)
 

@@ -25,7 +25,7 @@ extra barrier. It is not an exact additive decomposition of the original frame,
 nor does its cost equal an achievable optimization saving. Frequency is not
 locked. A final control brackets the candidates to check drift.
 
-See [portable measurements](../baselines/bottleneck-diagnosis.json) for complete
+See [portable measurements](../../baselines/bottleneck-diagnosis.json) for complete
 chain timings, per-block medians, diagnostics and source/result hashes.
 
 | Run order | Producer + Fusion + tonemap ms | Producer + baseline ms | Difference ms |

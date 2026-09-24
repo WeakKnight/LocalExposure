@@ -18,7 +18,7 @@ The lossless production candidate reaches the **1.2 GB/s texture-sweep accountin
 
 The full chain improves by about 14.8%. The increment improves descriptively by about 19.1%, but the baseline varies with stock power behavior. Older compute-output timing and this sRGB graphics-output timing are different contracts; an approximately 2 ms historical increment cannot replace the measured control above.
 
-The sweep model charges each input mip once per pass and every output write. This assumes within-pass reuse and ignores cross-pass reuse. Its 35.1% reduction is **not a measured DRAM reduction**. Expanded texel-slot accounting falls only from 164.3580 to 161.0093 MB/frame: fusion eliminates stored intermediates while introducing halo recomputation. Cache behavior determines actual memory traffic. See the [candidate ledger](baselines/adreno830-fused-traffic.md) and [original ledger](baselines/adreno830-local-exposure-traffic.md).
+The sweep model charges each input mip once per pass and every output write. This assumes within-pass reuse and ignores cross-pass reuse. Its 35.1% reduction is **not a measured DRAM reduction**. Expanded texel-slot accounting falls only from 164.3580 to 161.0093 MB/frame: fusion eliminates stored intermediates while introducing halo recomputation. Cache behavior determines actual memory traffic. See the [candidate ledger](../baselines/adreno830-fused-traffic.md) and [original ledger](../baselines/adreno830-local-exposure-traffic.md).
 
 ## Changes
 
@@ -35,7 +35,7 @@ The largest remaining diagnostic costs are fused reconstruction/guided (~1.39 ms
 
 All 42 regression tests pass. The new test compares every packed pyramid mip and final averaged coefficients against the original graph on tiny, odd, partial-tile, high-dynamic-range and extreme-EV inputs. The current 1080p phone run is bitwise equal at all retained readbacks, including the final sRGB image. The phone reference executes the **entire original graph**, outside timing. Removed intermediate exposure/coefficient images are not separately checked in that run. The pre-existing desktop portability warning remains; no error threshold was widened.
 
-Adreno 730 offline compilation reports **zero scratch usage** for all four final production kernels. This is a compiler check, not an 8 Gen 1 runtime result. Raw samples, validation, manifests and compiler records are archived in [the phone comparison](baselines/adreno830-fusion-compaction.json) and [the A730 compiler snapshot](baselines/adreno730-fusion-compaction.json).
+Adreno 730 offline compilation reports **zero scratch usage** for all four final production kernels. This is a compiler check, not an 8 Gen 1 runtime result. Raw samples, validation, manifests and compiler records are archived in [the phone comparison](../baselines/adreno830-fusion-compaction.json) and [the A730 compiler snapshot](../baselines/adreno730-fusion-compaction.json).
 
 ```powershell
 # Optimized production candidate; original graph remains the viewer/control.

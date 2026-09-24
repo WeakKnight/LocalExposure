@@ -16,7 +16,7 @@ system partition change, global driver setting or clock override was used.
 The community driver package is **not an official Qualcomm installer**. Its
 metadata says extracted from GameHub, author StevenMX, Android API minimum 35.
 It was downloaded from [AdrenoToolsDrivers v842.6](https://github.com/K11MCH1/AdrenoToolsDrivers/releases/tag/v842.6).
-The [portable result](../baselines/custom-driver-8426.json) records its URL, archive
+The [portable result](../../baselines/custom-driver-8426.json) records its URL, archive
 SHA-256, every driver-library hash, libadrenotools commit and actual queried driver.
 The binaries stay under ignored `.tools/`; they are not redistributed in this repo.
 

@@ -63,11 +63,11 @@ The 16-repeat duration is 15.955× the single duration. The large-grid cost is p
 
 A 16-dispatch tone batch measured 9.30469 ms total (~0.5815 ms per dispatch), versus 0.9662 ms for single submissions in that audit sequence. This further demonstrates sensitivity to batching, idle gaps and resource reuse; it is not an interchangeable replacement for the original paced number.
 
-Raw normal/calibrated samples, clock pairs, query ticks, checks and tool hashes are in [the timer audit snapshot](baselines/adreno830-timer-audit.json). Local artifacts: `outputs/android/timer-audit-repro/`. The checks verify these captures, not every possible driver or profiler situation.
+Raw normal/calibrated samples, clock pairs, query ticks, checks and tool hashes are in [the timer audit snapshot](../baselines/adreno830-timer-audit.json). Local artifacts: `outputs/android/timer-audit-repro/`. The checks verify these captures, not every possible driver or profiler situation.
 
 ## Reproduce
 
-First create a normal [benchmark bundle](android.md), then:
+First create a normal [benchmark bundle](../android.md), then:
 
 ```powershell
 # Continuous-load production rerun.
@@ -87,4 +87,4 @@ First create a normal [benchmark bundle](android.md), then:
 .\.venv\Scripts\python.exe -m tools.profiling.android.timer_audit --bundle outputs/android/onegroup/empty_probe-0ms --out outputs/android/timer-audit
 ```
 
-Evidence snapshot: [diagnostic results and raw samples](baselines/adreno830-tonemap-diagnosis.json). Local complete artifacts are in `outputs/android/tonemap-controls`, `tonemap-half-controls`, `tonemap-empty-onegroup`, `tonemap-empty-quartergroups`, `tonemap-groups16` and `adreno830-unpaced-diagnosis`. No production precision, format, shader arithmetic or group-size optimization is claimed here.
+Evidence snapshot: [diagnostic results and raw samples](../baselines/adreno830-tonemap-diagnosis.json). Local complete artifacts are in `outputs/android/tonemap-controls`, `tonemap-half-controls`, `tonemap-empty-onegroup`, `tonemap-empty-quartergroups`, `tonemap-groups16` and `adreno830-unpaced-diagnosis`. No production precision, format, shader arithmetic or group-size optimization is claimed here.

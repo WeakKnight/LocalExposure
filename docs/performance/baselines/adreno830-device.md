@@ -1,6 +1,6 @@
 # Adreno 830: first device benchmark
 
-Follow-up: [controlled tonemap diagnosis](../tonemap-diagnosis.md) found nearly equal copy/tonemap costs and strong pacing sensitivity. The original numbers below remain valid for their stated paced setup; they are not fixed or peak GPU throughput.
+Follow-up: [controlled tonemap diagnosis](../archive/tonemap-diagnosis.md) found nearly equal copy/tonemap costs and strong pacing sensitivity. The original numbers below remain valid for their stated paced setup; they are not fixed or peak GPU throughput.
 
 Measured on the attached **NX789J / SM8750 / Adreno (TM) 830**, Android 15. **This is not an 8 Gen 1 / Adreno 730 result.** [Workflow](../android.md) · [Raw samples, source hashes and validation](adreno830-device.json).
 

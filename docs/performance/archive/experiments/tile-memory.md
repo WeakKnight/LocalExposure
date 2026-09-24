@@ -17,7 +17,7 @@ The device does advertise `VK_QCOM_tile_properties`; that extension does not
 enable explicit tile-memory allocation. This result describes this installed
 driver, not all Adreno 830 devices, and establishes nothing about Adreno 730.
 
-[Raw capability record](../baselines/tile-memory-capabilities.json) includes the
+[Raw capability record](../../baselines/tile-memory-capabilities.json) includes the
 firmware fingerprint, driver version, full extension list and heap flags.
 
 ### Instance / SDK cross-check
@@ -36,7 +36,7 @@ and identified the same Qualcomm driver: build `0fd63a2c96`, `I5538b87673`, date
 driver's exposed capabilities, not missing application SDK definitions. It does
 not prove whether a newer driver can enable the feature on this GPU.
 
-[Instance audit record](../baselines/tile-memory-instance-audit.json).
+[Instance audit record](../../baselines/tile-memory-instance-audit.json).
 
 ```console
 python -m tools.profiling.android.tile_memory --api max --surface --out outputs/android/tile-memory/instance-recheck

@@ -1,12 +1,12 @@
-# Performance baselines
+# Measurement records
 
-Device measurements: [Adreno 830 production runtime](adreno830-device.md), with raw samples and numerical-validation caveats. This phone is separate from the Adreno 730 optimization target.
+JSON files preserve compiler/device identity, hashes, settings and measurements.
+Recorded absolute paths describe the original run and are intentionally unchanged.
 
-Current implementation snapshots:
+- [Current retained optimization](guided-vertical-reuse.json).
+- [Bottleneck diagnosis](bottleneck-diagnosis.json) and [dependency graph](dependency-review.json).
+- [Tile-memory experiment](tile-memory-runtime.json).
 
-- [Adreno 730](a730-ten-rounds.md): primary optimization target (Snapdragon 8 Gen 1).
-- [Immortalis-G720](g720-ten-rounds.md): secondary architecture check.
-
-[Adreno 750](a750-aoc.md) is an earlier reference target snapshot, not the latest shader revision. Each report has a JSON sidecar with compiler identity, source hashes and commands. Source hashes determine which revision was measured.
-
-`archive/` contains older baselines, kept for reproducibility. Recorded commands and absolute paths in JSON describe the original run and are intentionally not rewritten during repository reorganization. Use the current [profiling guide](../README.md) for commands to run today.
+Other files and `archive/` contain earlier snapshots, including viewer-derived
+offline reports. They are not interchangeable with current production phone
+measurements. Start with the [performance guide](../README.md) for current conclusions.

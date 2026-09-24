@@ -2,7 +2,7 @@
 
 These are ten tested candidates, **not ten proven speedups**. Two changes are retained; eight were rejected, deferred or reverted. No phone timings have been collected. Each candidate starts from the same frozen pre-experiment shaders, so its result is not confused with earlier candidates. Retained changes were then combined and validated again.
 
-Toolchain: Slang 2026.12, SPIR-V 1.3, AOC 7.0.15 / E17.52.07.00, `a730`. The previous baseline is [a730-fit-tile](../baselines/archive/a730-fit-tile.md); the combined result is [a730-ten-rounds](../baselines/a730-ten-rounds.md). [Machine-readable per-round results](ten-rounds-results.json) preserve AOC sections, including preamble and performance projections.
+Toolchain: Slang 2026.12, SPIR-V 1.3, AOC 7.0.15 / E17.52.07.00, `a730`. The previous baseline is [a730-fit-tile](../../baselines/archive/a730-fit-tile.md); the combined result is [a730-ten-rounds](../../baselines/a730-ten-rounds.md). [Machine-readable per-round results](ten-rounds-results.json) preserve AOC sections, including preamble and performance projections.
 
 | Round | Candidate | Main instructions, before -> candidate | Decision |
 |---|---|---:|---|

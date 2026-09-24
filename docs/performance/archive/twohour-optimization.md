@@ -4,7 +4,7 @@ Session: 2026-09-24, 00:06–02:06 Hong Kong time. Target: no obvious image degr
 
 The retained algorithm is `--variant gather-reduction`. It keeps quarter-width/quarter-height Fusion, the full 4x4 source integration and both 5x5 guided windows. It reduces nominal incremental texture traffic to **19.178 MB/frame, or 0.863 GB/s at 45 FPS**. The original graph was 39.901 MB/frame / 1.796 GB/s; the candidate at the start of this session was 22.799 MB/frame / 1.026 GB/s. These values include Fusion intermediates and exclude the matched tonemap input/output traffic. They are **not measured DRAM bandwidth**.
 
-The retained compute-output configuration measured **2.143 ms incremental GPU time in the sustained joint-submission test**, including the same graphics HDR producer in both compared intervals. Separate-submission core measurements across four scenes were 1.95–2.04 ms; those use a different timestamp scope. The bandwidth target is met under the accounting model; **the 1.5 ms timing target remains unmet**. Matched starting-candidate results and output-backend comparisons are recorded below and in the [portable archive](baselines/adreno830-twohour.json).
+The retained compute-output configuration measured **2.143 ms incremental GPU time in the sustained joint-submission test**, including the same graphics HDR producer in both compared intervals. Separate-submission core measurements across four scenes were 1.95–2.04 ms; those use a different timestamp scope. The bandwidth target is met under the accounting model; **the 1.5 ms timing target remains unmet**. Matched starting-candidate results and output-backend comparisons are recorded below and in the [portable archive](../baselines/adreno830-twohour.json).
 
 ## Measured results
 
@@ -92,11 +92,11 @@ The FP32-residual alternative also passed a Veranda phone comparison (RMSE 0.177
 
 Original production graph / optimized graph / absolute difference ×8. Both first panels have Local Exposure enabled:
 
-![Veranda comparison](../images/twohour/veranda-comparison.png)
+![Veranda comparison](../../images/twohour/veranda-comparison.png)
 
-![Qwantani Patio worst-error crop](../images/twohour/qwantani_patio-worst-crop.png)
+![Qwantani Patio worst-error crop](../../images/twohour/qwantani_patio-worst-crop.png)
 
-Additional [Abandoned Tiled Room](../images/twohour/abandoned_tiled_room-comparison.png), [Qwantani Patio](../images/twohour/qwantani_patio-comparison.png), and [Sundowner Deck](../images/twohour/sundowner_deck-comparison.png) comparisons are available with matching worst-error crops in the same directory.
+Additional [Abandoned Tiled Room](../../images/twohour/abandoned_tiled_room-comparison.png), [Qwantani Patio](../../images/twohour/qwantani_patio-comparison.png), and [Sundowner Deck](../../images/twohour/sundowner_deck-comparison.png) comparisons are available with matching worst-error crops in the same directory.
 
 ## Rejected experiments and tradeoffs
 
@@ -122,10 +122,10 @@ The JSON archive contains individual presets, quality results and measured graph
 
 The remaining low-resolution work is concentrated in guided filtering and source integration. Separate diagnostic intervals on the retained configuration measured about 0.852 ms for the guided tile, 0.587 ms for reduction/setup, and 0.189 ms for reconstruction/inverse EV. These instrumented intervals include dependency effects and must not be added to predict the uninstrumented chain. The output-backend tradeoff above is also material. Further gains need to address these costs while preserving edge behavior; simply shrinking windows or narrowing more arithmetic failed quality checks.
 
-The six retained compute entrypoints compile for A730 with **zero scratch**. AOC reports register footprints 13 / 6 / 3 / 4 / 10 / 3 for Gather setup, downsample, reconstruction, inverse EV, guided filtering and final output respectively. Gather and guided occupancy estimates are 87% and 75%; other entries are 100%. These vendor estimates do not establish 8 Gen 1 frame time. The Gather shader's static instruction count includes both its regular-size and fallback branches, not the instructions dynamically executed by each pixel. See [A730 compiler records](baselines/adreno730-twohour.json) and the [16x16 output alternative](baselines/adreno730-twohour-work16.json), also with zero scratch.
+The six retained compute entrypoints compile for A730 with **zero scratch**. AOC reports register footprints 13 / 6 / 3 / 4 / 10 / 3 for Gather setup, downsample, reconstruction, inverse EV, guided filtering and final output respectively. Gather and guided occupancy estimates are 87% and 75%; other entries are 100%. These vendor estimates do not establish 8 Gen 1 frame time. The Gather shader's static instruction count includes both its regular-size and fallback branches, not the instructions dynamically executed by each pixel. See [A730 compiler records](../baselines/adreno730-twohour.json) and the [16x16 output alternative](../baselines/adreno730-twohour-work16.json), also with zero scratch.
 
 The final primary preset's six production SPIR-V binaries and matched baseline are byte-identical to the measured bundle. All 47 repository regression tests pass. Experimental shader branches remain opt-in; preset definitions are isolated in `tools/profiling/android/variants.py`.
 
-Use the [foreground workflow](android.md#foreground-graphics-context-measurement) to reproduce. `gather-reduction` is the primary compute-output configuration; `gather-work16` and `gather-fragment` expose the documented output-backend tradeoffs. The viewer and default benchmark control remain the independent original graph. Research presets are explicit and must not all be treated as accepted optimizations.
+Use the [foreground workflow](../android.md#foreground-graphics-context-measurement) to reproduce. `gather-reduction` is the primary compute-output configuration; `gather-work16` and `gather-fragment` expose the documented output-backend tradeoffs. The viewer and default benchmark control remain the independent original graph. Research presets are explicit and must not all be treated as accepted optimizations.
 
-Raw samples, SPIR-V, tool hashes, image readbacks and telemetry are under `outputs/android/twohour/` (ignored by Git). Portable results are in [adreno830-twohour.json](baselines/adreno830-twohour.json). The original [goal-mode report](mobile-goal.md) remains a historical record, with its compute-only timing limitation stated explicitly.
+Raw samples, SPIR-V, tool hashes, image readbacks and telemetry are under `outputs/android/twohour/` (ignored by Git). Portable results are in [adreno830-twohour.json](../baselines/adreno830-twohour.json). The original [goal-mode report](mobile-goal.md) remains a historical record, with its compute-only timing limitation stated explicitly.

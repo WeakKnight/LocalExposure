@@ -65,7 +65,7 @@ adjacent edges between the 20 production passes**:
 
 Downsampling reads the previous luminance/weight mip. Reconstruction reads the
 previous reconstructed coarser mip. EV reads reconstruction; Guided reads EV;
-apply reads averaged coefficients. See the [resource/mip edge list](../baselines/dependency-review.json).
+apply reads averaged coefficients. See the [resource/mip edge list](../../baselines/dependency-review.json).
 Separate mips are distinct subresources, but each next dispatch explicitly reads
 the mip just written. Simply dropping every other barrier is not correct.
 

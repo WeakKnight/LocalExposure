@@ -92,6 +92,6 @@ unchanged.
 
 The mobile benchmark defaults to `guided-vertical2-t256`. The viewer remains the
 independent reference; `gather-reduction` and `lossless` remain available as controls.
-See [portable results](../baselines/guided-vertical-reuse.json) for repeat
+See [portable results](../../baselines/guided-vertical-reuse.json) for repeat
 measurements, exact shader hashes and the retained decision. Original parameter
 limitations of RG16F residuals still apply.

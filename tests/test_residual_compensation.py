@@ -17,7 +17,7 @@ class ResidualCompensationTests(unittest.TestCase):
             session = device.create_slang_session(compiler_options={
                 'include_paths': [ROOT / 'shaders'],
                 'defines': {'RESIDUAL_PYRAMID': '1', 'COMPENSATE_RESIDUAL': str(compensate)}})
-            kernel = device.create_compute_kernel(session.load_program('fusion_compact.slang', ['reduce_setup']))
+            kernel = device.create_compute_kernel(session.load_program(str(ROOT/'tests/fixtures/fusion_compact_reference.slang'), ['reduce_setup']))
             compact = mapper.create_texture(16, 2, spy.Format.rg32_float)
             residual = mapper.create_texture(16, 2, fmt)
             weights = mapper.create_texture(16, 2, spy.Format.rg32_float)

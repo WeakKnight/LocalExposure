@@ -29,7 +29,7 @@ def sources():
              'tools/render_comparison.py', 'tools/profiling/android/quality.py',
              'tools/profiling/android/quality_sweep.py', 'tools/profiling/android/variants.py',
              'tools/profiling/android/pack_source.slang']]
-    paths += sorted((ROOT / 'shaders').glob('*.slang'))
+    paths += sorted((ROOT / 'shaders').rglob('*.slang'))
     paths += [ROOT / 'Assets' / f'{scene}_4k.exr' for scene in SCENES]
     return {p.relative_to(ROOT).as_posix(): digest(p) for p in paths}
 

@@ -23,7 +23,7 @@ class LogInitializationTests(unittest.TestCase):
                     'GATHER_UNSIGNED_SOURCE': str(int(unsigned)),
                     'LOG_EXPOSURE': '1', 'RESIDUAL_PYRAMID': '1'}})
             kernels.append(device.create_compute_kernel(session.load_program(
-                'fusion_compact.slang', ['reduce_setup_gather'])))
+                str(ROOT/'tests/fixtures/fusion_compact_reference.slang'), ['reduce_setup_gather'])))
         rng = np.random.default_rng(120)
         for width, height in ((64, 32), (65, 33), (1, 1)):
             rgba = np.exp2(rng.uniform(-35, 15.9, (height, width, 4))).astype(np.float32)

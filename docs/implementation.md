@@ -13,7 +13,18 @@ Start with the core files below. Tests and profiling tools are kept outside the 
 
 Supporting material: [documentation](README.md), [tests](../tests/README.md), and [developer tools](../tools/README.md). Profiling is optional; it is not needed to run the viewer.
 
-The optimized mobile production graph is in [shaders/fusion_compact.slang](../shaders/fusion_compact.slang), driven by the Android benchmark. The files above remain the readable, independent viewer reference.
+The Android benchmark compiles five independent stage files in `shaders/compact/`. Each file declares its own inputs, outputs, constants and shared memory; there is no umbrella shader or shared resource declaration file. The files above remain the independent viewer reference.
+
+| Stage | Responsibility |
+| --- | --- |
+| [initialize.slang](../shaders/compact/initialize.slang) | HDR reduction, three exposures and weights |
+| [pyramid.slang](../shaders/compact/pyramid.slang) | Residual and weight downsampling |
+| [tail.slang](../shaders/compact/tail.slang) | Small pyramid tail in one workgroup |
+| [reconstruct.slang](../shaders/compact/reconstruct.slang) | Residual reconstruction and inverse exposure |
+| [guided.slang](../shaders/compact/guided.slang) | Guided fitting and coefficient averaging |
+
+The host maps entry points directly to stage files in [variants.py](../tools/profiling/android/variants.py). Production keeps only two compile-time choices: unsigned input gathering and packed-half versus FP32 Guided coefficients. Public benchmark presets are the optimized default, its FP32-coefficient control, and the independent unfused `lossless` reference. Historical macro combinations live only in the frozen test fixture; they are not production options.
+
 
 `HDR → Three-exposure lightness and weights → Multiscale pyramids → Weighted Laplacian blending and coarse-to-fine reconstruction → Local exposure multiplier → HDR × Exposure → ACES → sRGB`
 

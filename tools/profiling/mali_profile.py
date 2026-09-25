@@ -112,7 +112,7 @@ def main():
         slang=dict(version=version, sha256=digest(exe)),
         malioc=dict(version=mv, files={str(p.relative_to(malioc.parent)):digest(p) for p in sorted(malioc.parent.rglob('*'))
                                      if p.suffix.lower() in ('.exe','.dll')}),
-        source_sha256={str(p.relative_to(ROOT)):digest(p) for p in sorted((ROOT/'shaders').glob('*.slang'))},
+        source_sha256={str(p.relative_to(ROOT)):digest(p) for p in sorted((ROOT/'shaders').rglob('*.slang'))},
         workload=workload(args.width,args.height), passes={})
     for module, entries in ENTRIES.items():
         for entry in entries:

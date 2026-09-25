@@ -8,7 +8,7 @@ class CompactTests(unittest.TestCase):
     def test_fused_graph_matches_legacy(self):
         device=spy.Device(enable_hot_reload=False)
         session=device.create_slang_session(compiler_options={'include_paths':[ROOT/'shaders']})
-        kernels={name:device.create_compute_kernel(session.load_program('fusion_compact.slang',[name]))
+        kernels={name:device.create_compute_kernel(session.load_program(str(ROOT/'tests/fixtures/fusion_compact_reference.slang'),[name]))
                  for name in ('reduce_setup','reconstruct_compact','reconstruct_guided','downsample_compact')}
         mapper=ToneMapper(device)
         rng=np.random.default_rng(6517)

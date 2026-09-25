@@ -21,7 +21,7 @@ class GuidedGatherTests(unittest.TestCase):
                             'REUSE_MOMENT_STORAGE': str(reuse), 'GUIDED_GATHER_ROWS': str(int(rows==16))},
             })
             kernels.append((rows, device.create_compute_kernel(
-                session.load_program('fusion_compact.slang', ['reconstruct_guided']))))
+                session.load_program(str(ROOT/'tests/fixtures/fusion_compact_reference.slang'), ['reconstruct_guided']))))
         rng = np.random.default_rng(148)
         for width, height in [(1, 1), (1, 33), (65, 1), (17, 9), (65, 33), (480,270)]:
             for smooth in (False, True):

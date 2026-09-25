@@ -37,6 +37,12 @@ Estimated incremental texture traffic, including Fusion intermediates, is
 **16.66 MB/frame / 0.750 GB/s at 45 FPS**. This is not measured DRAM bandwidth.
 [Accounting](bandwidth.md) · [Precision](../precision.md).
 
+The independent stage files retain the dispatch sequence and resource formats.
+Frozen-graph GPU regressions compare final pixels and Guided coefficients exactly.
+Resource bindings and uniform offsets come from each stage's compiler reflection.
+This is structural validation, not a new phone timing measurement.
+See the [stage map](../implementation.md).
+
 ## Quality and limits
 
 The desktop four-scene/four-preset matrix passes 16/16; Veranda strong peaks at

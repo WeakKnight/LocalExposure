@@ -215,7 +215,7 @@ def main():
                               max_levels=16, flags=FLAGS, uniform_specialization=False),
                   compiler=dict(version=version, sha256=digest(exe), url=URL, archive_sha256=SHA),
                   aoc=dict(sha256=digest(aoc), path=str(aoc)) if aoc else None,
-                  source_sha256={str(p.relative_to(ROOT)):digest(p) for p in sorted((ROOT/"shaders").glob("*.slang"))},
+                  source_sha256={str(p.relative_to(ROOT)):digest(p) for p in sorted((ROOT/"shaders").rglob("*.slang"))},
                   workload=work, passes={})
     # Remove the previous report first so a failed rerun cannot look successful.
     for filename in ("report.json", "report.md"):

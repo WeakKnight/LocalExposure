@@ -13,26 +13,20 @@ def codes(linear):
 
 class Candidate:
     def __init__(self,device,mapper,variant):
+        if variant == 'lossless':
+            raise ValueError('Use ToneMapper for the independent unfused reference')
         self.device,self.mapper,self.config=device,mapper,dict(VARIANTS[variant])
-        if self.config.get('residual_snorm'):
-            # Every lightness lies in [0,max_lightness]; normalized differences
-            # and their Gaussian averages therefore remain representable in SNORM.
-            self.config['residual_scale'] = 1.0 / max(1.0, mapper.curve.max_lightness)
-        mapping={'PACKED_HALF_COEFFICIENTS':('packed_half_coefficients',False),'COEFF_PAD':('coefficient_padding',0),'GUIDED_INTERIOR_FIT':('guided_interior_fit',False),'SHARED_INPUT_LOG':('shared_input_log',False),'GATHER_QUAD_LOG':('gather_quad_log',False),'FUSE_TAIL_BASE':('fuse_tail_base',False),'SKIP_TAIL_CLEAR':('skip_tail_clear',False),'COMPACT_TAIL_STORAGE':('compact_tail_storage',False),'TAIL_GRID_WALK':('tail_grid_walk',False),'FLOAT_TAIL_WEIGHTS':('float_tail_weights',False),'FLOAT_TAIL_RESIDUAL':('float_tail_residual',False),'COMPENSATE_RESIDUAL':('compensate_residual',False),'DIRECT_RESIDUAL_WEIGHTS':('direct_residual_weights',False),'GUIDED_GATHER_ROWS':('guided_gather_rows',False),'REUSE_MOMENT_STORAGE':('reuse_moment_storage',False),'HALF_ROW_COEFFICIENTS':('half_row_coefficients',False),'DIRECT_BATCH':('direct_batch',2),'TAIL_X':('tail_x',8),'GUIDED_DIRECT_MOMENTS':('guided_direct_moments',False),'GUIDED_STATIC_WINDOWS':('guided_static_windows',False),'GUIDED_VERTICAL':('guided_vertical',1),'GUIDED_THREADS_Y':('guided_threads_y',self.config.get('tile_y',16)),'GUIDED_BATCH':('guided_batch',1),'GUIDED_SLIDING':('guided_sliding',False),'WAVE_REDUCTION':('wave_reduction',False),'SHARED_PADDING':('shared_padding',0),'HALF_MOMENT_PRODUCTS':('half_moment_products',False),'GATHER_X':('gather_x',8),'GATHER_Y':('gather_y',8),'HALF_GATHER':('half_gather',False),'SCALAR_REDUCTION':('scalar_reduction',False),'LOG_PRODUCT':('log_product',False),'MOMENT_INPUT':('moment_input',False),'PACKED_RESIDUAL':('packed_residual',False),'RESIDUAL_PYRAMID':('residual_pyramid',False),'CURVE_LOG':('curve_log',False),'PRECOMPUTED_EV':('precomputed_ev',False),'SINGLE_WEIGHT':('single_weight',False),'REUSE_SHARED':('reuse_shared',False),'REDUCTION_LOAD':('reduction_load',False),'REDUCTION_GRID':('reduction_grid',4),'GUIDED_RADIUS':('guided_radius',2),'CACHED_BASELINE':('cached_baseline',False),'LOG_EXPOSURE':('log_exposure',False),'TILE_X':('tile_x',16),'TILE_Y':('tile_y',16),'WORK_X':('work_x',8),'WORK_Y':('work_y',8),'SEPARABLE_GUIDED':('separable_guided',False)}
-        mapping.update(PYRAMID_X=('pyramid_x',self.config.get('work_x',8)),
-                       PYRAMID_Y=('pyramid_y',self.config.get('work_y',8)))
-        defines={key:str(int(self.config.get(name,default))) for key,(name,default) in mapping.items()}
-        defines['RESIDUAL_SCALE']=str(self.config.get('residual_scale',1.0))
-        defines['PACKED_WEIGHT_BIAS']=str(self.config.get('packed_weight_bias',0.0))
+        from .variants import COMPACT_MODULES
+        defines={'PACKED_HALF_COEFFICIENTS': str(int(self.config.get('packed_half_coefficients', True)))}
         session=device.create_slang_session(compiler_options={'include_paths':[ROOT/'shaders'],'defines':defines})
-        self.kernels={name:device.create_compute_kernel(session.load_program('fusion_compact.slang',[name])) for name in ['reconstruct_ev_fused','reduce_setup_gather','guided_moments','reduce_horizontal','reduce_setup_vertical','reduce_setup_cooperative','tail_reconstruct','reconstruct_ev','reduce_setup','downsample_compact','reconstruct_compact','reconstruct_guided']}
+        self.kernels={name:device.create_compute_kernel(session.load_program(module+'.slang',[name])) for name,module in COMPACT_MODULES.items()}
         self.unsigned_gather = None
         if self.config.get('gather_unsigned_source'):
             unsigned_session = device.create_slang_session(compiler_options={
                 'include_paths': [ROOT/'shaders'],
                 'defines': {**defines, 'GATHER_UNSIGNED_SOURCE': '1'}})
             self.unsigned_gather = device.create_compute_kernel(unsigned_session.load_program(
-                'fusion_compact.slang', ['reduce_setup_gather']))
+                'compact/initialize.slang', ['reduce_setup_gather']))
         self.final=device.create_compute_kernel(session.load_program(str(Path(__file__).with_name('joint.slang')) if self.config.get('joint_upsample') else 'guided.slang',['apply_joint_linear' if self.config.get('joint_upsample') else 'apply_exposure_production']))
     def render(self,source,ev,bracket=1.2,sigma=.2,*,highlight_ev=None,shadow_ev=None):
         # Keep symmetric callers compatible; asymmetric brackets match the viewer UI.
@@ -94,7 +88,7 @@ class Candidate:
         return final.to_numpy(),(guide_ev.to_numpy() if self.config.get('joint_upsample') else avg.to_numpy())
 
 def main():
-    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--variants',nargs='+',default=['half-aux-compute','log-exposure','separable']);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--game-format',action='store_true');ap.add_argument('--width',type=int,default=513);ap.add_argument('--height',type=int,default=289);ap.add_argument('--bracket',type=float,default=1.2);ap.add_argument('--sigma',type=float,default=.2);args=ap.parse_args()
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--variants',nargs='+',default=['guided-packed-coefficients','guided-coefficient-layout']);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--game-format',action='store_true');ap.add_argument('--width',type=int,default=513);ap.add_argument('--height',type=int,default=289);ap.add_argument('--bracket',type=float,default=1.2);ap.add_argument('--sigma',type=float,default=.2);args=ap.parse_args()
     if min(args.width,args.height)<2 or not np.isfinite([args.bracket,args.sigma]).all() or args.sigma<=0:ap.error('Dimensions must exceed one, bracket must be finite, and sigma must be finite and positive')
     device=spy.Device(enable_hot_reload=False);mapper=ToneMapper(device);candidates={v:Candidate(device,mapper,v) for v in args.variants}
     rng=np.random.default_rng(711);h,w=args.height,args.width;y,x=np.mgrid[:h,:w]

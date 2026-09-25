@@ -45,6 +45,8 @@ def split_residual_pyramid(manifest, first_float):
 def prepare(out, width, height, image, ev=0., source_format='rgba32_float', output_format='rgba16_float', compact=False, fused_guided=False, variant="lossless", *, highlight_ev=1.2, shadow_ev=1.2, sigma=.2):
     from .quality import VARIANTS
     variant_config=dict(VARIANTS[variant])
+    if compact and not fused_guided:
+        raise ValueError('The retained compact graph requires fused_guided=True')
     if variant_config.get('half_gather') and source_format!='r11g11b10_float':raise ValueError('Half gather requires finite R11G11B10 input')
     if variant_config.get('gather_quad_log') and source_format!='r11g11b10_float':raise ValueError('Quad log reduction requires finite R11G11B10 input')
     if variant_config.get('gather_unsigned_source') and source_format!='r11g11b10_float':raise ValueError('Unsigned gather requires finite R11G11B10 input')
@@ -117,7 +119,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
     manifest = dict(schema=1, width=width, height=height, resources=resources, passes=[],
                     config=dict(globalEV=ev, highlightEV=highlight_ev, shadowEV=shadow_ev, sigma=sigma, fusion_scale=4,source_format=source_format,output_format=output_format),
                     calibration=curve.report, image=dict(path=str(image.resolve()), sha256=sha(image)),
-                    reference_backend=str(device.info), shaders={p.name: sha(p) for p in (ROOT/'shaders').glob('*.slang')})
+                    reference_backend=str(device.info), shaders={p.relative_to(ROOT/'shaders').as_posix(): sha(p) for p in (ROOT/'shaders').rglob('*.slang')})
     manifest['benchmark_shaders']={p.name:sha(p) for p in Path(__file__).parent.glob('*.slang')}
     modules = dict(reduce_source='guided', fit_coefficients='guided', average_coefficients='guided', apply_exposure='guided',
                    apply_exposure_production='guided', tonemap_baseline='guided',
@@ -127,10 +129,11 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
     if variant_config.get('compute_srgb'):
         modules.update(apply_srgb_compute='present',baseline_srgb_compute='present')
     if variant_config.get('joint_upsample'):modules.update(apply_joint_compute='joint')
-    if compact:
-        modules.update(reduce_setup_gather='fusion_compact', guided_moments='fusion_compact', reduce_horizontal='fusion_compact', reduce_setup_vertical='fusion_compact', reduce_setup_cooperative='fusion_compact', tail_reconstruct='fusion_compact', reconstruct_ev='fusion_compact', reduce_setup='fusion_compact', reconstruct_exposure='fusion_compact', fit_compact='fusion_compact', reconstruct_compact='fusion_compact', reconstruct_guided='fusion_compact', downsample_compact='fusion_compact')
     if compact or fused_guided:
-        modules['reconstruct_ev_fused'] = 'fusion_compact'
+        from .variants import COMPACT_MODULES
+        if variant == 'lossless':
+            raise ValueError('lossless uses the independent unfused graph; omit compact/fused_guided')
+        modules.update(COMPACT_MODULES)
     reflections = {}
     exe = compiler()
     manifest['slangc_sha256'] = sha(exe)
@@ -139,33 +142,12 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
         path=Path(__file__).with_name(module+'.slang') if module in ('present','joint') else ROOT/'shaders'/f'{module}.slang'
         flags=list(FLAGS)
         if module in ('present','joint'): flags[1]='compute' if entry.endswith('_compute') else ('vertex' if entry=='fullscreen_vertex' else 'fragment')
-        if module in ('fusion_compact','present'):
+        if module == 'present':
             flags += [f"-DWORK_X={variant_config.get('work_x',8)}",f"-DWORK_Y={variant_config.get('work_y',8)}"]
             flags += [f"-DPYRAMID_X={variant_config.get('pyramid_x',variant_config.get('work_x',8))}",f"-DPYRAMID_Y={variant_config.get('pyramid_y',variant_config.get('work_y',8))}"]
-        if module=='fusion_compact':
-            flags += [f"-DFUSE_TAIL_BASE={int(variant_config.get('fuse_tail_base',False))}"]
-            flags += [f"-DSKIP_TAIL_CLEAR={int(variant_config.get('skip_tail_clear',False))}"]
-            flags += [f"-DCOMPACT_TAIL_STORAGE={int(variant_config.get('compact_tail_storage',False))}"]
-            flags += [f"-DTAIL_GRID_WALK={int(variant_config.get('tail_grid_walk',False))}"]
-            flags += [f"-DFLOAT_TAIL_WEIGHTS={int(variant_config.get('float_tail_weights',False))}"]
-            flags += [f"-DFLOAT_TAIL_RESIDUAL={int(variant_config.get('float_tail_residual',False))}"]
-            flags += [f"-DCOMPENSATE_RESIDUAL={int(variant_config.get('compensate_residual',False))}"]
-            flags += [f"-DHALF_ROW_COEFFICIENTS={int(variant_config.get('half_row_coefficients',False))}"]
-            flags += [f"-DREUSE_MOMENT_STORAGE={int(variant_config.get('reuse_moment_storage',False))}"]
-            flags += [f"-DDIRECT_BATCH={variant_config.get('direct_batch',2)}", f"-DTAIL_X={variant_config.get('tail_x',8)}"]
-            flags += [f"-DDIRECT_RESIDUAL_WEIGHTS={int(variant_config.get('direct_residual_weights',False))}"]
-            flags += [f"-DGUIDED_GATHER_ROWS={int(variant_config.get('guided_gather_rows',False))}"]
-            flags += [f"-DGATHER_QUAD_LOG={int(variant_config.get('gather_quad_log',False))}"]
-            flags += [f"-DGATHER_UNSIGNED_SOURCE={int(variant_config.get('gather_unsigned_source',False))}"]
-            flags += [f"-DGUIDED_INTERIOR_FIT={int(variant_config.get('guided_interior_fit',False))}",f"-DSHARED_INPUT_LOG={int(variant_config.get('shared_input_log',False))}"]
-            flags += [f"-DGUIDED_DIRECT_MOMENTS={int(variant_config.get('guided_direct_moments',False))}"]
-            flags += [f"-DGUIDED_STATIC_WINDOWS={int(variant_config.get('guided_static_windows',False))}"]
-            flags += [f"-DGUIDED_VERTICAL={variant_config.get('guided_vertical',1)}",f"-DGUIDED_THREADS_Y={variant_config.get('guided_threads_y',variant_config.get('tile_y',16))}"]
-            flags += [f"-DGUIDED_BATCH={variant_config.get('guided_batch',1)}",f"-DGUIDED_SLIDING={int(variant_config.get('guided_sliding',False))}"]
-            flags += [f"-DWAVE_REDUCTION={int(variant_config.get('wave_reduction',False))}"]
-            flags += [f"-DPACKED_HALF_COEFFICIENTS={int(variant_config.get('packed_half_coefficients',False))}"]
-            flags += [f"-DCOEFF_PAD={variant_config.get('coefficient_padding',0)}"]
-            flags += [f"-DSHARED_PADDING={variant_config.get('shared_padding',0)}",f"-DHALF_MOMENT_PRODUCTS={int(variant_config.get('half_moment_products',False))}",f"-DREDUCTION_GRID={variant_config.get('reduction_grid',4)}",f"-DGUIDED_RADIUS={variant_config.get('guided_radius',2)}",f"-DCACHED_BASELINE={int(variant_config.get('cached_baseline',False))}",f"-DLOG_EXPOSURE={int(variant_config.get('log_exposure',False))}",f"-DTILE_X={variant_config.get('tile_x',16)}",f"-DTILE_Y={variant_config.get('tile_y',16)}",f"-DSEPARABLE_GUIDED={int(variant_config.get('separable_guided',False))}",f"-DREDUCTION_LOAD={int(variant_config.get('reduction_load',False))}",f"-DREUSE_SHARED={int(variant_config.get('reuse_shared',False))}",f"-DSINGLE_WEIGHT={int(variant_config.get('single_weight',False))}",f"-DPRECOMPUTED_EV={int(variant_config.get('precomputed_ev',False))}",f"-DCURVE_LOG={int(variant_config.get('curve_log',False))}",f"-DRESIDUAL_PYRAMID={int(variant_config.get('residual_pyramid',False))}",f"-DPACKED_RESIDUAL={int(variant_config.get('packed_residual',False))}",f"-DPACKED_WEIGHT_BIAS={variant_config.get('packed_weight_bias',0.0)}",f"-DRESIDUAL_SCALE={variant_config.get('residual_scale',1.0)}",f"-DMOMENT_INPUT={int(variant_config.get('moment_input',False))}",f"-DLOG_PRODUCT={int(variant_config.get('log_product',False))}",f"-DSCALAR_REDUCTION={int(variant_config.get('scalar_reduction',False))}",f"-DHALF_GATHER={int(variant_config.get('half_gather',False))}",f"-DGATHER_X={variant_config.get('gather_x',8)}",f"-DGATHER_Y={variant_config.get('gather_y',8)}"]
+        if module.startswith('compact/'):
+            flags += [f"-DGATHER_UNSIGNED_SOURCE={int(source_format == 'r11g11b10_float')}",
+                      f"-DPACKED_HALF_COEFFICIENTS={int(variant_config.get('packed_half_coefficients',True))}"]
         cmd = [str(exe), str(path), '-I',str(ROOT/'shaders'), '-entry', entry, *flags,
                '-target', 'spirv', '-o', str(out/f'{entry}.spv'),
                '-reflection-json', str(out/f'{entry}.reflection.json')]
@@ -301,14 +283,6 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
                 dict(fineLuminance=view('luminance',mip),coarseLuminance=view('luminance',min(mip+1,levels-1)),
                      layerWeights=view('weights',mip),previousResult=view('exposure') if mip==levels-1 else view('reconstructed',mip+1),
                      reconstructionOutput=view('reconstructed',mip)),dict(isCoarsest=mip==levels-1))
-        add('reconstruct_exposure','reconstruct_exposure',w,h,dict(compactSource=view('compact'),
-            fineLuminance=view('luminance'),coarseLuminance=view('luminance',min(1,levels-1)),
-            layerWeights=view('weights'),previousResult=view('reconstructed',min(1,levels-1)),
-            exposureOutput=view('exposure'),inverseLut=view('inverse'),**(dict(baseLightness=view('base_lightness')) if variant_config.get('residual_pyramid') else {})),dict(isCoarsest=levels==1))
-        add('fit_compact','fit_compact',w,h,dict(compactSource=view('compact'),lowExposure=view('exposure'),
-            coefficientOutput=view('coefficients')))
-        manifest['passes'].extend(p for p in old_passes if p['label'] in
-            ('average_coefficients','apply_exposure_production','tonemap_baseline'))
         manifest['config']['compact']=True
         if fused_guided:
             compact_passes=manifest['passes']
@@ -331,9 +305,9 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
                 manifest['passes'][-1]['dispatch_groups']=[(w+15)//16,(h+15)//16,1]
             fused_passes=manifest['passes'][:]
             manifest['passes']=[]
-            for p in compact_passes:
-                if p['entry']=='reconstruct_exposure': manifest['passes'].extend(fused_passes)
-                elif p['entry'] not in ('fit_compact','average_coefficients'): manifest['passes'].append(p)
+            manifest['passes'] = compact_passes + fused_passes
+            manifest['passes'].extend(p for p in old_passes if p['label'] in
+                ('apply_exposure_production', 'tonemap_baseline'))
             resources[:]=[r for r in resources if r['name'] not in ('exposure','coefficients')]
             for p in manifest['passes']:
                 for d in p['descriptors']:

@@ -24,7 +24,7 @@ class GuidedBatchTests(unittest.TestCase):
                             'GUIDED_BATCH': str(batch), 'GUIDED_SLIDING': str(sliding)},
             })
             kernels[name] = device.create_compute_kernel(
-                session.load_program('fusion_compact.slang', ['reconstruct_guided']))
+                session.load_program(str(ROOT/'tests/fixtures/fusion_compact_reference.slang'), ['reconstruct_guided']))
 
         rng = np.random.default_rng(48)
         for width, height in [(1, 1), (17, 9), (65, 33)]:

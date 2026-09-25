@@ -16,7 +16,7 @@ class TailGridTests(unittest.TestCase):
                     'include_paths': [ROOT / 'shaders'], 'defines': {
                         'DIRECT_RESIDUAL_WEIGHTS': str(direct), 'FUSE_TAIL_BASE': str(fuse_base), 'SKIP_TAIL_CLEAR': str(skip_clear), 'RESIDUAL_PYRAMID': '1', 'TAIL_X': str(threads_x), 'TAIL_GRID_WALK': str(grid),
                         'COMPACT_TAIL_STORAGE': str(compact), 'FLOAT_TAIL_RESIDUAL': str(residual_float), 'FLOAT_TAIL_WEIGHTS': str(weights_float)}})
-                kernels.append((device.create_compute_kernel(session.load_program('fusion_compact.slang', ['tail_reconstruct'])), threads_x))
+                kernels.append((device.create_compute_kernel(session.load_program(str(ROOT/'tests/fixtures/fusion_compact_reference.slang'), ['tail_reconstruct'])), threads_x))
             for w, h in [(32, 16), (30, 16), (15, 8), (1, 16), (16, 1), (1, 1)]:
                 with self.subTest(size=(w, h), precision=(residual_float, weights_float), direct=direct):
                     residual = rng.uniform(-.5, .5, (h, w, 2)).astype(np.float16)

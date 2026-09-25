@@ -13,7 +13,7 @@ class TailReconstructTests(unittest.TestCase):
             'defines': {'RESIDUAL_PYRAMID': '1', 'TAIL_X': '16'},
         })
         kernel = device.create_compute_kernel(session.load_program(
-            'fusion_compact.slang', ['tail_reconstruct']))
+            str(ROOT/'tests/fixtures/fusion_compact_reference.slang'), ['tail_reconstruct']))
         rng = np.random.default_rng(92)
         for w, h in [(1, 1), (1, 16), (16, 1), (15, 8), (16, 8)]:
             data = rng.uniform(-.5, .5, (h, w, 2)).astype(np.float16)

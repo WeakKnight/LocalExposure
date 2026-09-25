@@ -25,7 +25,7 @@ class GuidedCoefficientLayoutTests(unittest.TestCase):
             session = device.create_slang_session(compiler_options={
                 'include_paths': [ROOT / 'shaders'], 'defines': defines})
             kernels.append(device.create_compute_kernel(session.load_program(
-                'fusion_compact.slang', ['reconstruct_guided'])))
+                str(ROOT/'tests/fixtures/fusion_compact_reference.slang'), ['reconstruct_guided'])))
         rng = np.random.default_rng(1202)
         for width, height in ((1, 1), (65, 1), (1, 65), (17, 9), (65, 33),
                               (480, 270), (129, 73)):

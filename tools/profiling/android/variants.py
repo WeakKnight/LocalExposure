@@ -1,135 +1,64 @@
-"""Explicit profiling presets; experimental entries are not runtime defaults.
+"""Production graph and independent benchmark controls.
 
-The current mobile default is selected at the end of this module.
-Frozen control: gather-reduction.
-Output integration alternatives:
-gather-work16 and gather-fragment. Keep these independent controls for numerical and timing comparisons.
-The remaining presets preserve experiments and independent historical controls.
+Shader algorithms are fixed in shaders/compact/. These values describe resource
+formats, dispatch geometry and graph scheduling for the host.
 """
 
+PRODUCTION = {'half_aux': True,
+ 'compute_srgb': True,
+ 'cached_baseline': True,
+ 'log_exposure': True,
+ 'separable_guided': True,
+ 'precomputed_ev': True,
+ 'residual_pyramid': True,
+ 'gather_reduction': True,
+ 'guided_vertical': 2,
+ 'guided_threads_y': 16,
+ 'guided_static_windows': True,
+ 'guided_batch': 2,
+ 'guided_direct_moments': True,
+ 'direct_batch': 1,
+ 'tail_fusion': True,
+ 'tail_max_width': 16,
+ 'tail_max_height': 8,
+ 'tail_x': 16,
+ 'fused_fine_reconstruction': True,
+ 'half_guide': True,
+ 'half_compact': True,
+ 'half_row_coefficients': True,
+ 'reuse_moment_storage': True,
+ 'guided_gather_rows': True,
+ 'direct_residual_weights': True,
+ 'gather_x': 4,
+ 'gather_y': 8,
+ 'residual_float_from': 3,
+ 'compact_tail_storage': True,
+ 'tail_grid_walk': True,
+ 'skip_tail_clear': True,
+ 'fuse_tail_base': True,
+ 'curve_log': True,
+ 'gather_quad_log': True,
+ 'guided_interior_fit': True,
+ 'shared_input_log': True,
+ 'pyramid_x': 4,
+ 'pyramid_y': 16,
+ 'gather_unsigned_source': True,
+ 'coefficient_padding': 4,
+ 'packed_half_coefficients': True}
+
 VARIANTS = {
-    'lossless': {},
-    'compute-control': {'compute_srgb': True, 'unfused_control': True},
-    'cached-baseline': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True},
-    'log-exposure': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True},
-    'tile32x16': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'tile_x': 32, 'tile_y': 16},
-    'tile32x32': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'tile_x': 32, 'tile_y': 32},
-    'separable': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True},
-    'work16': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'work_x': 16, 'work_y': 16},
-    'work32x8': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'work_x': 32, 'work_y': 8},
-    'load-reduction': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'reduction_load': True},
-    'separable32x16': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'tile_x': 32, 'tile_y': 16},
-    'shared-reuse': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'reuse_shared': True},
-    'single-weight': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'single_weight': True},
-    'precomputed-ev': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True},
-    'readonly-input': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'readonly_input': True},
-    'tail-fusion': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'tail_fusion': True},
-    'weight-unorm': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'single_weight': True, 'weight_unorm': True},
-    'curve-log': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'curve_log': True},
-    'cooperative-reduction': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'cooperative_reduction': True},
-    'combined': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'single_weight': True, 'weight_unorm': True, 'precomputed_ev': True},
-    'half-guide': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'single_weight': True, 'weight_unorm': True, 'precomputed_ev': True, 'half_guide': True},
-    'half-compact': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'single_weight': True, 'weight_unorm': True, 'precomputed_ev': True, 'half_guide': True, 'half_compact': True},
-    'guided8x8': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'single_weight': True, 'weight_unorm': True, 'precomputed_ev': True, 'tile_x': 8, 'tile_y': 8},
-    'guided16x8': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'single_weight': True, 'weight_unorm': True, 'precomputed_ev': True, 'tile_x': 16, 'tile_y': 8},
-    'guided8x16': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'single_weight': True, 'weight_unorm': True, 'precomputed_ev': True, 'tile_x': 8, 'tile_y': 16},
-    'guided32x8': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'single_weight': True, 'weight_unorm': True, 'precomputed_ev': True, 'tile_x': 32, 'tile_y': 8},
-    'residual': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True},
-    'residual-packed': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'packed_residual': True},
-    'guided32x16pre': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'single_weight': True, 'weight_unorm': True, 'precomputed_ev': True, 'tile_x': 32, 'tile_y': 16},
-    'separable-reduction': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'separable_reduction': True},
-    'residual-centered': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'packed_residual': True, 'packed_weight_bias': 1/3},
-    'residual-scaled': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'residual_scale': 1024.0},
-    'residual-centered-scaled': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'packed_residual': True, 'packed_weight_bias': 1/3, 'residual_scale': 1024.0},
-    'residual-float': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'residual_float': True},
-    'moment-pass': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'moment_input': True},
-    'log-product': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'log_product': True},
-    'gather-reduction': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True},
-    'scalar-reduction': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'scalar_reduction': True, 'log_product': True},
-    'gather-half': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True, 'half_gather': True},
-    'gather-moment': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True, 'moment_input': True},
-    'joint-upsample': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True, 'joint_upsample': True},
-    'gather-snorm': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True, 'packed_residual': True, 'packed_snorm': True},
-    'gather-halfproducts': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True, 'half_moment_products': True},
-    'gather-reuse': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True, 'reuse_shared': True},
-    'gather-pad': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True, 'shared_padding': 1},
-    'gather-reuse-pad': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True, 'reuse_shared': True, 'shared_padding': 1},
-    'gather-work16': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True, 'work_x': 16, 'work_y': 16},
-    'gather-fragment': {'half_aux': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True},
-    'gather-fullcoeff': {'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True},
-    'gather-floatresidual': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True, 'residual_float': True},
-    'gather16x4': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True, 'gather_x': 16, 'gather_y': 4},
-    'gather16x8': {'half_aux': True, 'compute_srgb': True, 'cached_baseline': True, 'log_exposure': True, 'separable_guided': True, 'precomputed_ev': True, 'residual_pyramid': True, 'gather_reduction': True, 'gather_x': 16, 'gather_y': 8},
-    'half-aux-compute': {'half_aux': True, 'compute_srgb': True},
-    'half-aux': {'half_aux': True},
-    'reduction4': {'reduction_grid': 2},
-    'radius1': {'guided_radius': 1},
-    'mobile': {'half_aux': True, 'reduction_grid': 2, 'guided_radius': 1},
+    "guided-packed-coefficients": dict(PRODUCTION),
+    "guided-coefficient-layout": {**PRODUCTION, "packed_half_coefficients": False},
+    "lossless": {},
 }
-
-# Research only: image gate passed, but foreground timing regressed.
-# Experimental wave control; not a retained optimization.
-VARIANTS["wave-reduction"] = {**VARIANTS["gather-reduction"], "cooperative_reduction": True, "wave_reduction": True}
-
-# Short-window register reuse: batch2 has modest phone gains and remains opt-in.
-# Batch4/sliding4 did not improve the chain. See guided-window-reuse.md.
-for batch in (2,4):
-    VARIANTS[f"guided-batch{batch}"] = {**VARIANTS["gather-reduction"], "guided_batch": batch}
-VARIANTS["guided-sliding4"] = {**VARIANTS["guided-batch4"], "guided_sliding": True}
-
-# Vertical reuse: 256 threads is retained; 128 is a rejected experiment.
-# Same 16x16 output tile. See guided-vertical-reuse.md.
-for threads_y in (16,8):
-    VARIANTS[f"guided-vertical2-t{threads_y*16}"] = {**VARIANTS["gather-reduction"], "guided_vertical": 2, "guided_threads_y": threads_y}
-
-# Retained Guided scheduling: shared-window reuse, static register indexing,
-# then direct read-only moments to remove one workgroup publication barrier.
-VARIANTS["guided-static2"] = {**VARIANTS["guided-vertical2-t256"], "guided_static_windows": True}
-VARIANTS["guided-xy-static2"] = {**VARIANTS["guided-static2"], "guided_batch": 2}
-VARIANTS["guided-direct-moments"] = {**VARIANTS["guided-xy-static2"], "guided_direct_moments": True}
-
-# One moment per thread, then 512 threads per moment workgroup; small tails
-# retain every level and the same RG16F / UNORM quantization.
-VARIANTS["guided-direct-single-moment"] = {**VARIANTS["guided-direct-moments"], "direct_batch": 1}
-VARIANTS["guided-direct-tail"] = {**VARIANTS["guided-direct-single-moment"], "guided_threads_y": 32,
-    "tail_fusion": True, "tail_max_width": 16, "tail_max_height": 8, "tail_x": 16}
-
-VARIANTS["guided-fused-reconstruction"] = {**VARIANTS["guided-direct-tail"],
-    "fused_fine_reconstruction": True, "half_guide": True, "half_compact": True,
-    "half_row_coefficients": True, "reuse_moment_storage": True,
-    "guided_threads_y": 16, "guided_gather_rows": True, "direct_residual_weights": True, "gather_x": 4, "gather_y": 8}
-
-# Research only: better asset errors, but phone timing regresses.
-# SNORM also trades away precision for near-zero residuals; see residual-precision.md.
-VARIANTS["guided-residual-compensation"] = {**VARIANTS["guided-fused-reconstruction"], "compensate_residual": True}
-VARIANTS["guided-snorm-residual"] = {**VARIANTS["guided-fused-reconstruction"], "residual_snorm": True}
-
-# Coarse residual precision with compact, division-free shared tail traversal.
-VARIANTS["guided-coarse-precision"] = {**VARIANTS["guided-fused-reconstruction"],
-    "residual_float_from": 4, "compact_tail_storage": True, "tail_grid_walk": True}
-
-# Veranda strong-preset precision candidates; keep the mip-4 control independent.
-VARIANTS["guided-coarse3-precision"] = {**VARIANTS["guided-coarse-precision"], "residual_float_from": 3}
-VARIANTS["guided-coarse3-compensated"] = {**VARIANTS["guided-coarse3-precision"], "compensate_residual": True}
-VARIANTS["guided-veranda-precision"] = {**VARIANTS["guided-coarse3-precision"],
-    "skip_tail_clear": True, "fuse_tail_base": True}
-
-VARIANTS["guided-log-init"] = {**VARIANTS["guided-veranda-precision"],
-    "curve_log": True, "gather_quad_log": True}
-
-VARIANTS["guided-interior-fit"] = {**VARIANTS["guided-log-init"],
-    "guided_interior_fit": True, "shared_input_log": True}
-
-VARIANTS["guided-pyramid-layout"] = {**VARIANTS["guided-interior-fit"],
-    "pyramid_x": 4, "pyramid_y": 16}
-
-VARIANTS["guided-unsigned-gather"] = {**VARIANTS["guided-pyramid-layout"],
-    "gather_unsigned_source": True}
-
-VARIANTS["guided-coefficient-layout"] = {**VARIANTS["guided-unsigned-gather"],
-    "coefficient_padding": 4}
-
-VARIANTS["guided-packed-coefficients"] = {**VARIANTS["guided-coefficient-layout"],
-    "packed_half_coefficients": True}
-
 DEFAULT_VARIANT = "guided-packed-coefficients"
+COMPACT_MODULES = {
+    "reduce_setup": "compact/initialize",
+    "reduce_setup_gather": "compact/initialize",
+    "downsample_compact": "compact/pyramid",
+    "tail_reconstruct": "compact/tail",
+    "reconstruct_compact": "compact/reconstruct",
+    "reconstruct_ev": "compact/reconstruct",
+    "reconstruct_ev_fused": "compact/reconstruct",
+    "reconstruct_guided": "compact/guided",
+}

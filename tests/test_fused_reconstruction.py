@@ -3,7 +3,8 @@ import unittest
 import numpy as np
 import slangpy as spy
 from tone_mapper import ToneMapper, create_hdr_texture
-from tools.profiling.android.quality_sweep import Candidate, codes
+from tests.compact_reference import ReferenceCandidate as Candidate
+from tools.profiling.android.quality_sweep import codes
 from tools.profiling.android.quality import image_quality
 
 

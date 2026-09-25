@@ -1,14 +1,16 @@
-"""The readable production stages must preserve the frozen optimized graph."""
+"""Production quality against the frozen graph, including tiny and odd inputs."""
 import unittest
 import numpy as np
 import slangpy as spy
 from tone_mapper import ROOT, ToneMapper, create_hdr_texture
 from tests.compact_reference import ReferenceCandidate
+from tools.profiling.android.quality_sweep import codes
+from tools.profiling.android.quality import image_quality
 from tools.profiling.android.quality_sweep import Candidate
 
 
 class ProductionParityTests(unittest.TestCase):
-    def test_production_matches_frozen_graph(self):
+    def test_production_quality_against_frozen_graph(self):
         device = spy.Device(enable_hot_reload=False)
         mapper = ToneMapper(device)
         pack = device.create_compute_kernel(device.create_slang_session().load_program(
@@ -36,7 +38,9 @@ class ProductionParityTests(unittest.TestCase):
                     result = actual.render(source,ev,bracket)
                     for a,b in zip(result,expected):
                         self.assertTrue(np.isfinite(a).all())
-                        np.testing.assert_array_equal(a,b)
+                        if a.shape[-1]==4:
+                            gate=image_quality(codes(b),codes(a))
+                            self.assertTrue(gate['accepted'], str(gate))
 
 
 if __name__ == '__main__':

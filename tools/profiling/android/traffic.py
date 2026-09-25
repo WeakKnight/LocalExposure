@@ -28,7 +28,9 @@ def estimate(manifest, fps=45):
             writes[(d['resource'], d['mip'])] = size(d['resource'], d['mip'])
         entry = p['entry']
         if entry == 'tail_reconstruct':
-            read('fineLuminance',n);read('layerWeights',n);write('reconstructionOutput')
+            read('fineLuminance',n)
+            if 'layerWeights' in descriptors:read('layerWeights',n)
+            write('reconstructionOutput')
         elif entry == 'downsample_compact':
             read('coarseLuminance',n*4,True)
             if 'layerWeights' in descriptors:read('layerWeights',n*4,True)
@@ -49,7 +51,13 @@ def estimate(manifest, fps=45):
                 # too; texture cache/broadcast savings are unknown.
                 batch=config.get('direct_batch',2)
                 loads=groups*(((gx+2*radius+batch-1)//batch)*(gy+4*radius)*(batch+2*radius)+threads)
-            if 'momentSource' in descriptors:
+            if config.get('guided_direct_fit'):
+                groups=((p['width']+gx-1)//gx)*((p['height']+gy-1)//gy)
+                # Full 5x5 fits on the coefficient halo, plus a tile anchor
+                # per thread. Cache reuse is deliberately not assumed here.
+                loads=groups*((gx+2*radius)*(gy+2*radius)*(2*radius+1)**2+threads)
+                read('compactSource',loads);write('averagedOutput')
+            elif 'momentSource' in descriptors:
                 coefficient_loads=((p['width']+gx-1)//gx)*((p['height']+gy-1)//gy)*(gx+2*radius)*(gy+2*radius)
                 read('momentSource',coefficient_loads*3,True);write('averagedOutput')
             elif config.get('guided_gather_rows'):
@@ -82,10 +90,12 @@ def estimate(manifest, fps=45):
             groups=((p['width']+15)//16)*((p['height']+15)//16)
             # Recompute the mip-2 / mip-1 halos once per 16x16 output tile.
             read('mip2Luminance',groups*49);read('mip3Luminance',groups*49,True)
-            read('mip2Weights',groups*49);read('previousResult',groups*49,True)
+            if 'mip2Weights' in descriptors:read('mip2Weights',groups*49)
+            read('previousResult',groups*49,True)
             read('coarseLuminance',groups*100);read('mip2Luminance',groups*100,True)
-            read('mip1Weights',groups*100)
-            read('fineLuminance',n);read('coarseLuminance',n,True);read('layerWeights',n)
+            if 'mip1Weights' in descriptors:read('mip1Weights',groups*100)
+            read('fineLuminance',n);read('coarseLuminance',n,True)
+            if 'layerWeights' in descriptors:read('layerWeights',n)
             read('compactSource',n);read('inverseLut',n,True);read('baseLightness',n);write('compactOutput')
         elif entry == 'reconstruct_ev':
             read('fineLuminance',n);read('coarseLuminance',n,True);read('previousResult',n,True)

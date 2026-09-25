@@ -68,7 +68,7 @@ python3 -m venv .venv
 
 Switch HDR scenes, adjust exposure, and compare the result interactively. **F5** reloads shaders; **F2** saves an image.
 
-The PC viewer is the independent reference implementation. The optimized mobile graph lives in [fusion_compact.slang](shaders/fusion_compact.slang) and runs through the [Android benchmark](docs/performance/android.md).
+The PC viewer is the independent reference implementation. The optimized mobile graph has five independent stages in [shaders/compact](shaders/compact): initialization, pyramid downsampling, tail fusion, reconstruction and Guided filtering. Each stage declares its own resources alongside its implementation. See the [stage guide](docs/implementation.md) and [Android benchmark](docs/performance/android.md).
 
 [Pipeline and calibration details](docs/implementation.md) · [Developer documentation](docs/README.md)
 

@@ -28,11 +28,11 @@ def split_residual_pyramid(manifest, first_float):
     fine = next(r for r in manifest['resources'] if r['name'] == 'luminance')
     if first_float >= fine['levels']:
         return
-    if fine['format_name'] != 'rg16_float':
-        raise ValueError('Mixed residual storage requires an RG16F residual pyramid')
+    if fine['format_name'] not in ('rg16_float','rgba16_float'):
+        raise ValueError('Mixed residual storage requires a half-float residual pyramid')
     coarse = dict(fine, name='coarse_residual', width=max(1, fine['width'] >> first_float),
                   height=max(1, fine['height'] >> first_float), levels=fine['levels'] - first_float,
-                  format=103, format_name='rg32_float', bpp=8, dump=False)
+                  format=109 if fine['bpp']==8 else 103, format_name='rgba32_float' if fine['bpp']==8 else 'rg32_float', bpp=fine['bpp']*2, dump=False)
     coarse.pop('file', None)
     fine['levels'] = first_float
     manifest['resources'].append(coarse)
@@ -187,11 +187,16 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
                     descriptor['type'] = 3 if t.get('access') == 'readWrite' else 2
                     descriptor.update(bindings[name])  # Fail on missing used resource.
                 descriptors.append(descriptor)
+        has_uniform = any(p['binding']['kind']=='uniform' for p in ref['parameters'])
+        slots = [d['binding'] for d in descriptors] + ([0] if has_uniform else [])
+        if len(slots) != len(set(slots)):
+            raise ValueError(f'{entry}: duplicate descriptor binding')
         path = f'{len(manifest["passes"]):02d}-{entry}.uniform.bin'
         (out/path).write_bytes(uniform)
         manifest['passes'].append(dict(entry=entry, label=label, width=w, height=h,
                                        group_size=ref['entryPoints'][0].get('threadGroupSize',[8,8,1]),
-                                       descriptors=descriptors, uniform=path, baseline=baseline))
+                                       descriptors=descriptors, uniform=path, baseline=baseline,
+                                       has_uniform=has_uniform))
     w, h = mapper.work_source.width, mapper.work_source.height
     add('reduce_source', 'reduce_source', w, h, dict(fullSource=view('source'), reducedOutput=view('reduced')))
     add('setup_weights', 'setup_weights', w, h, dict(hdrSource=view('reduced'),

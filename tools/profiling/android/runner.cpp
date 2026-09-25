@@ -257,8 +257,11 @@ public:
         if(p.contains("dispatch_groups")){pass.x=p["dispatch_groups"][0];pass.y=p["dispatch_groups"][1];}
         pass.graphics=p.contains("attachment"); hasGraphics|=pass.graphics;
         VkShaderStageFlags stageFlags=pass.graphics?VK_SHADER_STAGE_FRAGMENT_BIT:VK_SHADER_STAGE_COMPUTE_BIT;
-        // Slang's implicit global constant buffer is descriptor 0 for these modules.
-        std::vector<VkDescriptorSetLayoutBinding> bindings={{0,VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,1,stageFlags,nullptr}};
+        // Modules without scalar globals start their image bindings at zero.
+        // Older manifests always had the implicit global constant buffer.
+        bool hasUniform=p.value("has_uniform",true);
+        std::vector<VkDescriptorSetLayoutBinding> bindings;
+        if(hasUniform) bindings.push_back({0,VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,1,stageFlags,nullptr});
         for(auto& d:p["descriptors"]) bindings.push_back({d["binding"],VkDescriptorType(d["type"].get<int>()),1,stageFlags,nullptr});
         VkDescriptorSetLayoutCreateInfo li{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO}; li.bindingCount=bindings.size(); li.pBindings=bindings.data();
         VK(vkCreateDescriptorSetLayout(device,&li,nullptr,&pass.setLayout));
@@ -273,9 +276,11 @@ public:
         else VK(vkCreateComputePipelines(device,VK_NULL_HANDLE,1,&ci,nullptr,&pass.pipeline));
         VkDescriptorSetAllocateInfo ai{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO}; ai.descriptorPool=descriptors; ai.descriptorSetCount=1; ai.pSetLayouts=&pass.setLayout;
         VK(vkAllocateDescriptorSets(device,&ai,&pass.set));
-        auto constants=read(p["uniform"]); pass.uniform=buffer(constants.size(),VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,&constants);
-        VkDescriptorBufferInfo bi{pass.uniform.buffer,0,pass.uniform.size}; VkWriteDescriptorSet write{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET}; write.dstSet=pass.set; write.descriptorCount=1;
-        write.descriptorType=VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER; write.pBufferInfo=&bi; vkUpdateDescriptorSets(device,1,&write,0,nullptr);
+        if(hasUniform) {
+            auto constants=read(p["uniform"]); pass.uniform=buffer(constants.size(),VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,&constants);
+            VkDescriptorBufferInfo bi{pass.uniform.buffer,0,pass.uniform.size}; VkWriteDescriptorSet write{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET}; write.dstSet=pass.set; write.descriptorCount=1;
+            write.descriptorType=VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER; write.pBufferInfo=&bi; vkUpdateDescriptorSets(device,1,&write,0,nullptr);
+        }
         for(auto& d:p["descriptors"]) {
             VkDescriptorImageInfo ii{}; auto type=VkDescriptorType(d["type"].get<int>());
             if(type==VK_DESCRIPTOR_TYPE_SAMPLER) ii.sampler=sampler;

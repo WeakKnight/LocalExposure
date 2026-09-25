@@ -40,6 +40,11 @@ complete-chain time and the difference; a slower baseline can make subtraction
 look better without an equivalent speedup. Per-pass diagnostic timings are not
 an additive frame budget. A static resident image does not model sustained gameplay.
 
+After shader resource-layout changes, rerun headless same-phone validation before
+foreground measurements. SlangPy manages descriptors independently and cannot
+validate the native runner's bindings. `has_uniform` in each pass records whether
+Slang reserved descriptor 0 for a global constant buffer.
+
 Image validation runs outside timing. Preserve fixed quality gates and report
 cross-device differences rather than relaxing thresholds to accept a candidate.
 Compilation, calibration, uploads and readback are also outside GPU timing.

@@ -1,13 +1,12 @@
 // Matched four-tap residual and weight downsampling.
-// Read one residual/weight mip and write the next mip.
+// xy holds residuals, zw holds weights - 0.5; linear filtering handles both.
+// Mips 0-2 use RGBA16F; the smaller coarse mips use RGBA32F.
 Texture2D<float4> coarseLuminance;
-Texture2D<float2> layerWeights;
 SamplerState linearSampler;
 RWTexture2D<float4> lightnessOutput;
-RWTexture2D<float2> weightsOutput;
 
 // Schedule pyramid sampling independently of reconstruction kernels.
-// Both packed pyramids use the same four bilinear coordinates and arithmetic.
+// One sample fetches both residuals and weights at each bilinear coordinate.
 [shader("compute")]
 [numthreads(4,16,1)]
 void downsample_compact(uint3 tid : SV_DispatchThreadID)
@@ -22,11 +21,6 @@ void downsample_compact(uint3 tid : SV_DispatchThreadID)
     a+=coarseLuminance.SampleLevel(linearSampler,uv+texel*float2(1,-1),0);
     a+=coarseLuminance.SampleLevel(linearSampler,uv+texel*float2(-1,1),0);
     a+=coarseLuminance.SampleLevel(linearSampler,uv+texel*float2(1,1),0);
-    float2 b=layerWeights.SampleLevel(linearSampler,uv+texel*float2(-1,-1),0);
-    b+=layerWeights.SampleLevel(linearSampler,uv+texel*float2(1,-1),0);
-    b+=layerWeights.SampleLevel(linearSampler,uv+texel*float2(-1,1),0);
-    b+=layerWeights.SampleLevel(linearSampler,uv+texel*float2(1,1),0);
-    weightsOutput[tid.xy]=b*0.25;
     lightnessOutput[tid.xy]=a*0.25;
 }
 

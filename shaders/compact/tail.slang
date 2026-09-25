@@ -1,7 +1,6 @@
 // Small pyramid tail reduced and reconstructed within one workgroup.
-// Read the tail's first residual/weight mip; write its reconstructed residual.
+// Read packed xy residuals / zw centered weights; write reconstructed residual.
 Texture2D<float4> fineLuminance;
-Texture2D<float2> layerWeights;
 RWTexture2D<float> reconstructionOutput;
 
 // The host selects a base of at most 16x8. The backing arrays retain the
@@ -38,7 +37,7 @@ void tail_reconstruct(uint3 local : SV_GroupThreadID)
     uint levelOffset=0;uint2 currentSize=uint2(w,h);
     for(uint y=local.y;y<h;y+=8)for(uint x=local.x;x<w;x+=16) {
         uint i=y*w+x;uint2 p=uint2(x,y);
-        storeTailLightness(i,fineLuminance[p]);tailWeights[i]=layerWeights[p];
+        storeTailLightness(i,fineLuminance[p]);tailWeights[i]=fineLuminance[p].zw+.5;
     }
     GroupMemoryBarrierWithGroupSync();
     for(uint m=1;m<tailLevels;m++) {

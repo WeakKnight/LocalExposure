@@ -26,7 +26,7 @@ class Candidate:
                 'include_paths': [ROOT/'shaders'],
                 'defines': {**defines, 'GATHER_UNSIGNED_SOURCE': '1'}})
             self.unsigned_gather = device.create_compute_kernel(unsigned_session.load_program(
-                'compact/initialize.slang', ['reduce_setup_gather']))
+                COMPACT_MODULES['reduce_setup_gather']+'.slang', ['reduce_setup_gather']))
         self.final=device.create_compute_kernel(session.load_program(str(Path(__file__).with_name('joint.slang')) if self.config.get('joint_upsample') else 'guided.slang',['apply_joint_linear' if self.config.get('joint_upsample') else 'apply_exposure_production']))
     def render(self,source,ev,bracket=1.2,sigma=.2,*,highlight_ev=None,shadow_ev=None):
         # Keep symmetric callers compatible; asymmetric brackets match the viewer UI.
@@ -37,31 +37,32 @@ class Candidate:
         if float_from < 1:
             raise ValueError('The mixed residual pyramid must retain at least mip 0 in half')
         if float_from < levels and (not self.config.get('residual_pyramid') or any(
-                self.config.get(key) for key in ('residual_float', 'residual_snorm', 'packed_residual', 'packed_snorm'))):
+                self.config.get(key) for key in ('residual_float', 'residual_snorm', 'packed_snorm'))):
             raise ValueError('Mixed residual storage requires an RG16F residual pyramid')
         compact=m.create_texture(w,h,spy.Format.rg16_float if self.config.get('half_compact') else spy.Format.rg32_float)
         lum=m.create_texture(w,h,spy.Format.rgba16_snorm if self.config.get('packed_snorm') else spy.Format.rgba16_float if self.config.get('packed_residual') else spy.Format.rg16_snorm if self.config.get('residual_snorm') else spy.Format.rg32_float if self.config.get('residual_float') else spy.Format.rg16_float if self.config.get('residual_pyramid') else spy.Format.rgba32_float,levels=min(levels,float_from))
         base_lightness=m.create_texture(w,h,spy.Format.r32_float)
-        weights=m.create_texture(w,h,spy.Format.rg16_unorm if self.config.get('residual_pyramid') else spy.Format.r16_unorm if self.config.get('weight_unorm') else spy.Format.r16_float if self.config.get('single_weight') else (spy.Format.rg16_float if self.config.get('half_aux') else spy.Format.rg32_float),levels=levels)
+        weights=None if self.config.get('packed_residual') else m.create_texture(w,h,spy.Format.rg16_unorm if self.config.get('residual_pyramid') else spy.Format.r16_unorm if self.config.get('weight_unorm') else spy.Format.r16_float if self.config.get('single_weight') else (spy.Format.rg16_float if self.config.get('half_aux') else spy.Format.rg32_float),levels=levels)
         recon=m.create_texture(w,h,spy.Format.r32_float,levels=levels)
         avg=m.create_texture(w,h,spy.Format.rg16_float if self.config.get('half_aux') else spy.Format.rg32_float)
         moments=m.create_texture(w,h,spy.Format.rgba32_float)
         guide_ev=m.create_texture(w,h,spy.Format.rg16_float if self.config.get('half_guide') else spy.Format.rg32_float)
         final=m.create_texture(source.width,source.height,spy.Format.rgba16_float)
-        coarse_float = m.create_texture(max(1,w>>float_from),max(1,h>>float_from),spy.Format.rg32_float,levels=levels-float_from) if float_from < levels else None
+        coarse_float = m.create_texture(max(1,w>>float_from),max(1,h>>float_from),spy.Format.rgba32_float if self.config.get('packed_residual') else spy.Format.rg32_float,levels=levels-float_from) if float_from < levels else None
         def view(t, mip=0):
+            if t is None:return None
             if t is lum and coarse_float is not None and mip >= float_from:
                 return coarse_float.create_view(mip=mip-float_from, mip_count=1)
             return t.create_view(mip=mip, mip_count=1)
         enc=self.device.create_command_encoder()
         def dispatch(name,width,height,**bindings):
             if name=='reconstruct_guided' and self.config.get('guided_vertical'):
-                width=((width+15)//16)*16
+                width=((width+15)//16)*self.config.get('guided_threads_x',16)
                 height=((height+15)//16)*self.config.get('guided_threads_y',16)
             kernel = self.kernels[name]
             if name == 'reduce_setup_gather' and self.unsigned_gather is not None and source.format == spy.Format.r11g11b10_float:
                 kernel = self.unsigned_gather
-            kernel.dispatch(thread_count=[width,height,1],vars=bindings,command_encoder=enc)
+            kernel.dispatch(thread_count=[width,height,1],vars={k:v for k,v in bindings.items() if v is not None},command_encoder=enc)
         if self.config.get('separable_reduction'):
             horizontal=m.create_texture(w,h*4,spy.Format.rg32_float)
             dispatch('reduce_horizontal',w,h*4,fullSource=source,horizontalOutput=horizontal,linearSampler=m.sampler)

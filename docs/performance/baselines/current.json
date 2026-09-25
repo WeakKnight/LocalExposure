@@ -3,7 +3,7 @@
   "device": "NX789J / SM8750 / Adreno 830",
   "driver": "process-local Qualcomm 512.842.6",
   "workload": "1920x1080, 45 FPS, R11G11B10 -> RGBA8 sRGB, matched graphics HDR producer + postprocess in one submission, no visualization/presentation",
-  "measurement": "120 frames x 2 rounds/path, 45 warmup frames/block",
+  "measurement": "Current: direct_guided_acceptance. Older runs preserved as history.",
   "runs": {
     "packed-4": {
       "summary": {
@@ -5663,5 +5663,2931 @@
   },
   "targeted_tests_passed": 21,
   "image_validation": "Official comparison and 16-case matrix regenerated and visually inspected after default update",
-  "local_evidence": "outputs/current: immutable bundle, raw measured samples/metadata and phone captures. Paths embedded in original records describe their original locations."
+  "local_evidence": "outputs/current: immutable bundle, raw measured samples/metadata and phone captures. Paths embedded in original records describe their original locations.",
+  "packed_pyramid_acceptance": {
+    "sustained-control-a": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.639244702817917,
+          "p95": 3.649687410896301,
+          "min": 3.592656162288666,
+          "max": 3.6850519933662413,
+          "mean": 3.6377358776232724
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.6781515,
+          "p95": 4.9713072,
+          "min": 4.106511,
+          "max": 7.030521,
+          "mean": 4.677387647222222
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 6.194818,
+          "p95": 6.6530705,
+          "min": 4.819792,
+          "max": 9.024531,
+          "mean": 6.176889340555555
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.4424478570365906,
+          "p95": 2.446614523601532,
+          "min": 2.4202603575782775,
+          "max": 2.748489516231537,
+          "mean": 2.443129772529202
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.4813545,
+          "p95": 3.77195575,
+          "min": 2.854219,
+          "max": 6.652136,
+          "mean": 3.4750672544444443
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.981797,
+          "p95": 5.4952678,
+          "min": 3.52776,
+          "max": 8.350469,
+          "mean": 4.969715593333333
+        }
+      },
+      "increment_ms": 1.1967968457813263,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "sustained-packed-b": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.594895745567322,
+          "p95": 3.6039582453460692,
+          "min": 3.553437413246155,
+          "max": 3.636458244552612,
+          "mean": 3.5931894088034246
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.6269795,
+          "p95": 4.9276612,
+          "min": 4.04375,
+          "max": 7.364844,
+          "mean": 4.632083122777777
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 6.1457815,
+          "p95": 6.6328903,
+          "min": 4.771719,
+          "max": 9.789791,
+          "mean": 6.133445076111111
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.441510357059479,
+          "p95": 2.4502655651790617,
+          "min": 2.420416607574463,
+          "max": 8.112812301933289,
+          "mean": 2.447791838387604
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.4842705,
+          "p95": 3.7874533,
+          "min": 2.856875,
+          "max": 8.791093,
+          "mean": 3.4848343661111114
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 5.0006255,
+          "p95": 5.527963,
+          "min": 3.538281,
+          "max": 10.802813,
+          "mean": 4.9925027688888886
+        }
+      },
+      "increment_ms": 1.153385388507843,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "sustained-control-c": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.6377603278541564,
+          "p95": 3.6473983484521866,
+          "min": 3.6034894953575134,
+          "max": 7.157708158584595,
+          "mean": 3.638283273443241
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.6641925,
+          "p95": 4.9824664,
+          "min": 4.099479,
+          "max": 7.801562,
+          "mean": 4.676200114444444
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 6.1845835000000005,
+          "p95": 6.761786600000001,
+          "min": 4.8375,
+          "max": 9.022187,
+          "mean": 6.1836684349999995
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.44213535704422,
+          "p95": 2.445890565285873,
+          "min": 2.424687440803528,
+          "max": 2.743072849697113,
+          "mean": 2.443944442648201
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.4731515,
+          "p95": 3.77159685,
+          "min": 2.870312,
+          "max": 5.274114,
+          "mean": 3.4695626094444445
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.971666,
+          "p95": 5.46319,
+          "min": 3.5425,
+          "max": 7.887604,
+          "mean": 4.959828547777778
+        }
+      },
+      "increment_ms": 1.1956249708099365,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "integrated-packed-foreground": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 240,
+          "median": 3.5901040790176393,
+          "p95": 3.600057203774643,
+          "min": 1.9836978682365418,
+          "max": 3.611249911834717,
+          "mean": 3.543949349241686
+        },
+        "cpu_ms": {
+          "count": 240,
+          "median": 4.5745055,
+          "p95": 4.87120595,
+          "min": 2.645209,
+          "max": 6.9125,
+          "mean": 4.549598704166668
+        },
+        "frame_work_wall_ms": {
+          "count": 240,
+          "median": 6.1148695,
+          "p95": 6.63651105,
+          "min": 4.153802,
+          "max": 8.346615,
+          "mean": 6.077873216666666
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 240,
+          "median": 2.4407291070785524,
+          "p95": 2.4512056693227766,
+          "min": 2.429999940673828,
+          "max": 2.744635349658966,
+          "mean": 2.442744949043226
+        },
+        "cpu_ms": {
+          "count": 240,
+          "median": 3.507396,
+          "p95": 3.8143391499999995,
+          "min": 3.0125,
+          "max": 4.713281,
+          "mean": 3.4902860374999998
+        },
+        "frame_work_wall_ms": {
+          "count": 240,
+          "median": 4.995964,
+          "p95": 5.6721562,
+          "min": 3.771823,
+          "max": 6.40625,
+          "mean": 4.9911402
+        }
+      },
+      "increment_ms": 1.1493749719390869,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    }
+  },
+  "current_retained": "direct_guided_acceptance",
+  "goal_1_1ms_met": true,
+  "direct_guided_acceptance": {
+    "measurement": "60 warmup frames/block;600 frames x3 rounds/path; graphics-produced HDR + postprocess in one submission",
+    "runs": {
+      "sustained-direct-control-a": {
+        "fusion": {
+          "gpu_ms": {
+            "count": 1800,
+            "median": 3.5954686622200014,
+            "p95": 3.6041665786743162,
+            "min": 3.549843663333893,
+            "max": 3.638333244506836,
+            "mean": 3.593591434256573
+          },
+          "cpu_ms": {
+            "count": 1800,
+            "median": 4.6279685,
+            "p95": 4.9160645,
+            "min": 3.9925,
+            "max": 6.972395,
+            "mean": 4.62870402
+          },
+          "frame_work_wall_ms": {
+            "count": 1800,
+            "median": 6.141563,
+            "p95": 6.6261123,
+            "min": 4.709739,
+            "max": 8.420365,
+            "mean": 6.132973577222223
+          }
+        },
+        "baseline": {
+          "gpu_ms": {
+            "count": 1800,
+            "median": 2.4435936903419493,
+            "p95": 2.447343690250397,
+            "min": 2.4203645242424012,
+            "max": 6.1415102667274475,
+            "mean": 2.4457766474645806
+          },
+          "cpu_ms": {
+            "count": 1800,
+            "median": 3.4873955,
+            "p95": 3.80787205,
+            "min": 2.856094,
+            "max": 7.151458,
+            "mean": 3.4814399155555558
+          },
+          "frame_work_wall_ms": {
+            "count": 1800,
+            "median": 4.9953129999999994,
+            "p95": 5.55841385,
+            "min": 3.538281,
+            "max": 8.642657,
+            "mean": 4.983154121666667
+          }
+        },
+        "increment_ms": 1.151874971878052,
+        "same_output_as_headless": true,
+        "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+      },
+      "sustained-direct64-b": {
+        "fusion": {
+          "gpu_ms": {
+            "count": 1800,
+            "median": 3.5340884553852083,
+            "p95": 3.543755121815872,
+            "min": 3.500937414527893,
+            "max": 3.7038540762405394,
+            "mean": 3.5324517077399826
+          },
+          "cpu_ms": {
+            "count": 1800,
+            "median": 4.566172,
+            "p95": 4.8701222500000005,
+            "min": 4.0125,
+            "max": 7.663854,
+            "mean": 4.570824795555556
+          },
+          "frame_work_wall_ms": {
+            "count": 1800,
+            "median": 6.0868485,
+            "p95": 6.56388795,
+            "min": 4.747813,
+            "max": 9.338177,
+            "mean": 6.073386493888889
+          }
+        },
+        "baseline": {
+          "gpu_ms": {
+            "count": 1800,
+            "median": 2.4428905653591153,
+            "p95": 2.44744785691452,
+            "min": 2.42062494090271,
+            "max": 2.732499933288574,
+            "mean": 2.444071468108063
+          },
+          "cpu_ms": {
+            "count": 1800,
+            "median": 3.4970835,
+            "p95": 3.7997339,
+            "min": 2.854115,
+            "max": 6.508906,
+            "mean": 3.4900210494444446
+          },
+          "frame_work_wall_ms": {
+            "count": 1800,
+            "median": 4.9933335,
+            "p95": 5.549413749999999,
+            "min": 3.539688,
+            "max": 7.889062,
+            "mean": 4.9892621311111105
+          }
+        },
+        "increment_ms": 1.091197890026093,
+        "same_output_as_headless": true,
+        "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+      },
+      "sustained-direct-control-c": {
+        "fusion": {
+          "gpu_ms": {
+            "count": 1800,
+            "median": 3.5940624122543334,
+            "p95": 3.604062412010193,
+            "min": 3.549114496685028,
+            "max": 3.6281769947547913,
+            "mean": 3.5926958613617708
+          },
+          "cpu_ms": {
+            "count": 1800,
+            "median": 4.6273175,
+            "p95": 4.9377134,
+            "min": 4.038177,
+            "max": 6.59625,
+            "mean": 4.633235991111111
+          },
+          "frame_work_wall_ms": {
+            "count": 1800,
+            "median": 6.1455210000000005,
+            "p95": 6.6595397499999995,
+            "min": 4.768386,
+            "max": 8.74573,
+            "mean": 6.139325892222223
+          }
+        },
+        "baseline": {
+          "gpu_ms": {
+            "count": 1800,
+            "median": 2.4415624403915404,
+            "p95": 2.4484478568901062,
+            "min": 2.4205207742385864,
+            "max": 6.1395311001091,
+            "mean": 2.4454122666864397
+          },
+          "cpu_ms": {
+            "count": 1800,
+            "median": 3.4835935,
+            "p95": 3.7720398,
+            "min": 2.863906,
+            "max": 6.868646,
+            "mean": 3.4832230616666666
+          },
+          "frame_work_wall_ms": {
+            "count": 1800,
+            "median": 4.9959895,
+            "p95": 5.50453725,
+            "min": 3.54401,
+            "max": 12.046302,
+            "mean": 4.993467274444445
+          }
+        },
+        "increment_ms": 1.152499971862793,
+        "same_output_as_headless": true,
+        "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+      }
+    },
+    "quality": {
+      "finite": true,
+      "rmse_codes": 0.23872060179248167,
+      "p99_codes": 1.0,
+      "max_codes": 8.0,
+      "fraction_pixels_over4": 1.253858024691358e-05,
+      "thresholds": {
+        "rmse_codes": 0.75,
+        "p99_codes": 3,
+        "max_codes": 12,
+        "fraction_pixels_over4": 0.001
+      },
+      "accepted": true,
+      "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+    },
+    "traffic": {
+      "width": 1920,
+      "height": 1080,
+      "fps": 45.0,
+      "rows": [
+        {
+          "pass_name": "reduce_setup",
+          "read_sweep_bytes": 8294400,
+          "write_bytes": 2073600,
+          "expanded_read_bytes": 24883200
+        },
+        {
+          "pass_name": "pyramids_mip1",
+          "read_sweep_bytes": 1036800,
+          "write_bytes": 259200,
+          "expanded_read_bytes": 4147200
+        },
+        {
+          "pass_name": "pyramids_mip2",
+          "read_sweep_bytes": 259200,
+          "write_bytes": 64320,
+          "expanded_read_bytes": 1029120
+        },
+        {
+          "pass_name": "pyramids_mip3",
+          "read_sweep_bytes": 64320,
+          "write_bytes": 31680,
+          "expanded_read_bytes": 253440
+        },
+        {
+          "pass_name": "pyramids_mip4",
+          "read_sweep_bytes": 31680,
+          "write_bytes": 7680,
+          "expanded_read_bytes": 122880
+        },
+        {
+          "pass_name": "pyramids_mip5",
+          "read_sweep_bytes": 7680,
+          "write_bytes": 1920,
+          "expanded_read_bytes": 30720
+        },
+        {
+          "pass_name": "tail_from_mip5",
+          "read_sweep_bytes": 1920,
+          "write_bytes": 480,
+          "expanded_read_bytes": 1920
+        },
+        {
+          "pass_name": "reconstruct_mip4",
+          "read_sweep_bytes": 10080,
+          "write_bytes": 1920,
+          "expanded_read_bytes": 46080
+        },
+        {
+          "pass_name": "reconstruct_mip3",
+          "read_sweep_bytes": 41280,
+          "write_bytes": 7920,
+          "expanded_read_bytes": 190080
+        },
+        {
+          "pass_name": "reconstruct_ev",
+          "read_sweep_bytes": 2438768,
+          "write_bytes": 518400,
+          "expanded_read_bytes": 10978320
+        },
+        {
+          "pass_name": "reconstruct_guided",
+          "read_sweep_bytes": 518400,
+          "write_bytes": 518400,
+          "expanded_read_bytes": 20530560
+        },
+        {
+          "pass_name": "apply_exposure_production",
+          "read_sweep_bytes": 518400,
+          "write_bytes": 0,
+          "expanded_read_bytes": 33177600
+        }
+      ],
+      "fusion_scale": 4,
+      "baseline_bytes": 16588800,
+      "incremental_sweep_bytes": 16708448,
+      "incremental_sweep_gbps": 0.75188016,
+      "incremental_expanded_bytes": 98876640,
+      "incremental_expanded_gbps": 4.4494488,
+      "assumptions": [
+        "Increment over matched tonemap: final source read and output write cancel; all other production passes remain.",
+        "Sweep model charges every bound input mip once per pass, and every output once. Assumes within-pass reuse; ignores cross-pass reuse. Not a DRAM lower bound.",
+        "Expanded model includes zero-weight/duplicate texel slots even for aligned reduction samples. It charges each issued load and four texels per bilinear 2D sample (two for 1D), including duplicate/clamped taps. Not a DRAM upper bound.",
+        "Default reduction integrates 16 source locations; the divisible-size gather variant uses 12 component gathers covering the same 4x4 pixels. Separate guided stages load 144 entries per 8x8 group; fused guided uses output-tile halos, independently of thread-group size; direct moments count each horizontal batch and its halo plus a per-thread anchor load. Partial groups included; shared-memory accesses excluded.",
+        "Whole stored texel bytes charged even for RGB/alpha-only reads. Inverse LUT assumed queried at every low-res pixel; actual branch can skip.",
+        "No compression, cache-line transactions, write allocation, uniforms, instructions, metadata or unrelated GPU traffic modeled.",
+        "Calibration, uploads, viewer/debug resources and presentation excluded."
+      ]
+    },
+    "production_source_sha256": {
+      "shaders\\compact\\guided.slang": "91f29a1449e1930637aa58540d47a3e5951097c53608a8e03873bf5f54ec731e",
+      "tools\\profiling\\android\\variants.py": "5b1efdb3a4fd2aab495fe4df02e756ce65be5c44e699597e590e83cf0ab543f9",
+      "tools\\profiling\\android\\quality_sweep.py": "819a2b60fba9efc2aac66d2b09b317d520a5f503c5e6ab7a56cc841b592ace2e",
+      "tools\\profiling\\android\\traffic.py": "9cd4167f4715855733a6ae008445dd5a38838318b632eb358c0cd0cc6763b792"
+    },
+    "integrated_sustained": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.53473949703598,
+          "p95": 3.5441197051403046,
+          "min": 3.491979081413269,
+          "max": 3.7163540759353637,
+          "mean": 3.5328370375916864
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.563411,
+          "p95": 4.876536150000001,
+          "min": 3.944219,
+          "max": 7.503125,
+          "mean": 4.567294620555555
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 6.0804945,
+          "p95": 6.56977645,
+          "min": 4.626041,
+          "max": 8.856302,
+          "mean": 6.069125355555555
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.442525982034683,
+          "p95": 2.446145773612976,
+          "min": 2.420416607574463,
+          "max": 6.144166516662597,
+          "mean": 2.4466066242961695
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.4845575,
+          "p95": 3.79878125,
+          "min": 2.85,
+          "max": 7.69901,
+          "mean": 3.4849723038888887
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.9884115,
+          "p95": 5.51683345,
+          "min": 3.532031,
+          "max": 9.408125,
+          "mean": 4.980244993333334
+        }
+      },
+      "increment_ms": 1.0922135150012968,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "integrated_metadata": {
+      "started_utc": "2026-09-25T12:07:42.477105+00:00",
+      "serial": "9125145100CA",
+      "custom_driver": {
+        "library": "vulkan.ad07xx.so",
+        "files": {
+          "notadreno_utils.so": "62c9bb967c47d0b28db9b09473536e5c7bdde2b6e27e857005f16d03a42c2296",
+          "notbinder.so": "2cc369c593941e29993d09c18cc9d383c8881adc55b117960a90a3a04982c96e",
+          "notbinder_ndk.so": "7957ab3ce2cafa5c6e26e6a1c6d6500a6f7fc79ea05f45e960c6fda97ad798c7",
+          "notdmabufheap.so": "0511f5d184282500f1e103906fe558ab896f33d4305575c963d07894bc30ed61",
+          "notgsl.so": "2aba1757d4bc12d77751bed63568b43cbe800a91fe9f0c37feac2787954522e7",
+          "notllvm-glnext.so": "382d29ed05cf74761856782b1709bbf644b662cb4c59c65228c72026c40ba247",
+          "notllvm-qgl.so": "118f4e0ba400c1817039589417e07decf1a2a3870f3b8a501a4f045a4dcbbdd0",
+          "vendor.qti.hardware.hexlp-V2-ndk.so": "80dc7678cb8989c696a2244e35bb0c98a60f6c942be1f693dccf4413395fb5da",
+          "vulkan.ad07xx.so": "752ea27689d57be898e33f92ebea9a81ec1b94dce7c82c5b58ba21fecede3f7e"
+        },
+        "metadata": {
+          "schemaVersion": 1,
+          "name": "Qualcomm Adreno 842.6",
+          "description": "Extracted from GameHub",
+          "author": "StevenMX",
+          "packageVersion": "1",
+          "vendor": "Qualcomm",
+          "driverVersion": "Vulkan 1.4",
+          "minApi": 35,
+          "libraryName": "vulkan.ad07xx.so"
+        },
+        "adrenotools_commit": "8fae8ce254dfc1344527e05301e43f37dea2df80"
+      },
+      "command": [
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\android\\android-ndk-r30\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe",
+        "--target=aarch64-linux-android29",
+        "-std=c++17",
+        "-O2",
+        "-shared",
+        "-fPIC",
+        "-static-libstdc++",
+        "-I",
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\android",
+        "D:\\Github\\LocalExposure\\outputs\\goal110\\integrated-direct64-sustained\\custom_activity.cpp",
+        "-I",
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\libadrenotools\\include",
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\libadrenotools-build\\libadrenotools.a",
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\libadrenotools-build\\lib\\linkernsbypass\\liblinkernsbypass.a",
+        "-ldl",
+        "-landroid",
+        "-llog",
+        "-o",
+        "D:\\Github\\LocalExposure\\outputs\\goal110\\integrated-direct64-sustained\\liblocalexposure.so"
+      ],
+      "library_sha256": "dfbf759240e6889cc69c01d43cc7fd7b7c7709fad6f296806a4e5664b7782325",
+      "bundle": "D:\\Github\\LocalExposure\\outputs\\goal110\\integrated-direct64\\bundle",
+      "manifest_sha256": "48fb81876aadb069d8a80933b593e89fee96112a61021c3754e04c35cae83943",
+      "execution_manifest_sha256": "6bd4caca8f06c550361bef715e8386e6b695ad16c6be70984bf4c04a2cfcfdf3",
+      "settings": {
+        "frames": 600,
+        "warmup": 60,
+        "rounds": 3,
+        "graphics_context": true,
+        "hdr_producer": true,
+        "joint_submission": true,
+        "separate_queue": false,
+        "dedicated_compute": false,
+        "graphics_draws": 1,
+        "fps": 45.0,
+        "tile_memory": null
+      },
+      "source_sha256": {
+        "activity.cpp": "53c5bf812383836afcfe85e958cd4a4a2165b01fb7aeae6a180c60245ba8c7e1",
+        "runner.cpp": "b34a43c304f4f7f9454a48145f60c939bb70849d62c27d2aea7464f10cccf25e"
+      },
+      "tool_sha256": {
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\android\\android-ndk-r30\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe": "5a7b3226976221f6dc1464d850614403dc18e5fddcb43120640f20472c5c960c",
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\android\\zulu17.68.17-ca-jre17.0.20-win_x64\\zulu17.68.17-ca-jre17.0.20-win_x64\\bin\\java.exe": "11e6968492931cdd7802b5e53c9a86662043df656282a3e62c561326a0fbe8f6",
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\android\\build-tools_r35.0.1_windows\\android-15\\aapt2.exe": "90481d1cbee3a170007701363391059ac3f9f22c4a4916b0423d591a22ac22d6",
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\android\\build-tools_r35.0.1_windows\\android-15\\lib\\apksigner.jar": "00ef9948f843fe395d2440ae3ef41405b8040a6d5d46493bd1902ac0ee6deae7",
+        "D:\\Github\\LocalExposure\\.tools\\mobile\\android\\platform-tools\\adb.exe": "b4a6b455702684652cccf7b46258b29e653538904359a58fd4931cf3ef286b3f"
+      },
+      "completed_utc": "2026-09-25T12:09:15.527059+00:00",
+      "device": "Adreno (TM) 830"
+    },
+    "integrated_bundle_manifest_sha256": "48fb81876aadb069d8a80933b593e89fee96112a61021c3754e04c35cae83943",
+    "integrated_stress": {
+      "accepted": true,
+      "config": {
+        "width": 513,
+        "height": 289,
+        "game_format": true,
+        "bracket_ev": 3.0,
+        "sigma": 0.2,
+        "variants": [
+          "guided-packed-coefficients",
+          "guided-coefficient-layout"
+        ]
+      },
+      "backend": "<slangpy.DeviceInfo object at 0x000001F97FEC8190>",
+      "note": "Same desktop backend; synthetic stress and moving-edge differential, not phone temporal capture.",
+      "records": [
+        {
+          "scene": "log-ramp",
+          "ev": -4,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1168127740084104,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "log-ramp",
+          "ev": -4,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1168127740084104,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "log-ramp",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.08454287891696467,
+            "p99_codes": 0.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "log-ramp",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.09190779909650124,
+            "p99_codes": 0.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "log-ramp",
+          "ev": 4,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.07209840939145001,
+            "p99_codes": 0.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "log-ramp",
+          "ev": 4,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.07209840939145001,
+            "p99_codes": 0.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "hard-edge",
+          "ev": -4,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.0,
+            "p99_codes": 0.0,
+            "max_codes": 0.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "hard-edge",
+          "ev": -4,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.0,
+            "p99_codes": 0.0,
+            "max_codes": 0.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "hard-edge",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.0,
+            "p99_codes": 0.0,
+            "max_codes": 0.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "hard-edge",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.0,
+            "p99_codes": 0.0,
+            "max_codes": 0.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "hard-edge",
+          "ev": 4,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.28270484129290807,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "hard-edge",
+          "ev": 4,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.27923593886113035,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "colored-edge",
+          "ev": -4,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.06744188651854266,
+            "p99_codes": 0.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "colored-edge",
+          "ev": -4,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.06744188651854266,
+            "p99_codes": 0.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "colored-edge",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1591889776469731,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "colored-edge",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.16121694446889148,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "colored-edge",
+          "ev": 4,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.050981274193458166,
+            "p99_codes": 0.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "colored-edge",
+          "ev": 4,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.050981274193458166,
+            "p99_codes": 0.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "fine-checker",
+          "ev": -4,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.15329622816872857,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "fine-checker",
+          "ev": -4,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1538013965624914,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "fine-checker",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.0,
+            "p99_codes": 0.0,
+            "max_codes": 0.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "fine-checker",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.0,
+            "p99_codes": 0.0,
+            "max_codes": 0.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "fine-checker",
+          "ev": 4,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1728013603451279,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "fine-checker",
+          "ev": 4,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.17309386412669195,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "random-hdr",
+          "ev": -4,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.12516584616888343,
+            "p99_codes": 1.0,
+            "max_codes": 2.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "random-hdr",
+          "ev": -4,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.12550667819750277,
+            "p99_codes": 1.0,
+            "max_codes": 2.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "random-hdr",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.14307763200217347,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "random-hdr",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.14302262178818204,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "random-hdr",
+          "ev": 4,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.14849847622729875,
+            "p99_codes": 1.0,
+            "max_codes": 2.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "random-hdr",
+          "ev": 4,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.148407605147156,
+            "p99_codes": 1.0,
+            "max_codes": 2.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-00",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.2939723678960656,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-00",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.2721655269759087,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-01",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.28385172162600225,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-01",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.273356629064801,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-02",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.2780700217068711,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-02",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.2780700217068711,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-03",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.2861316917596507,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-03",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.28499398669032056,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-04",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.25362863675089403,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-04",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.2458228018360667,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-05",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.26490647141300877,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-05",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.26734805732543765,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-06",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.2803970080640199,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-06",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.2803970080640199,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-07",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.292865123404653,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-07",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.29507545757995,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-08",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.373766109503504,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-08",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.37808724854373366,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-09",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.37808724854373366,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-09",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.3798019387398717,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-10",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.37722698065193305,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-10",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.37894556349292197,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-11",
+          "ev": 0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.37722698065193305,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-11",
+          "ev": 0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.3849001794597505,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-00",
+          "ev": 0.0,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.2012727868780365,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-00",
+          "ev": 0.0,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1993365362109572,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-01",
+          "ev": 0.0125,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.20002900158680903,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-01",
+          "ev": 0.0125,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.19934781504855986,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-02",
+          "ev": 0.025,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.18759901826896944,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-02",
+          "ev": 0.025,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.18966106630665314,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-03",
+          "ev": 0.037500000000000006,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1740007313834915,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-03",
+          "ev": 0.037500000000000006,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.17321721742023555,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-04",
+          "ev": 0.05,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.18037071807913502,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-04",
+          "ev": 0.05,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.18058872645130114,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-05",
+          "ev": 0.0625,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1896551389352537,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-05",
+          "ev": 0.0625,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1886269002979231,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-06",
+          "ev": 0.07500000000000001,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1820827833586641,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-06",
+          "ev": 0.07500000000000001,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.18385228915411703,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-07",
+          "ev": 0.08750000000000001,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1844139697680941,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-07",
+          "ev": 0.08750000000000001,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1840722813357715,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-08",
+          "ev": 0.1,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.2055120864421705,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-08",
+          "ev": 0.1,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.2058236466281573,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-09",
+          "ev": 0.1125,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1853624949598176,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-09",
+          "ev": 0.1125,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.18480369725552012,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-10",
+          "ev": 0.125,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.18660162347395956,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-10",
+          "ev": 0.125,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1852472291971703,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-11",
+          "ev": 0.1375,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.18042057178878773,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-11",
+          "ev": 0.1375,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.18111708285950645,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-12",
+          "ev": 0.15000000000000002,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.18627601855767115,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-12",
+          "ev": 0.15000000000000002,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.187076950416651,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-13",
+          "ev": 0.1625,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.17162636013268756,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-13",
+          "ev": 0.1625,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.17158050313544063,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-14",
+          "ev": 0.17500000000000002,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.17842815935898018,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-14",
+          "ev": 0.17500000000000002,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1763431358221379,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-15",
+          "ev": 0.1875,
+          "variant": "guided-packed-coefficients",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.1906424555153978,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        },
+        {
+          "scene": "motion-ramp-15",
+          "ev": 0.1875,
+          "variant": "guided-coefficient-layout",
+          "quality": {
+            "finite": true,
+            "rmse_codes": 0.19070730891402563,
+            "p99_codes": 1.0,
+            "max_codes": 1.0,
+            "fraction_pixels_over4": 0.0,
+            "thresholds": {
+              "rmse_codes": 0.75,
+              "p99_codes": 3,
+              "max_codes": 12,
+              "fraction_pixels_over4": 0.001
+            },
+            "accepted": true,
+            "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+            "finite_intermediates": true
+          }
+        }
+      ],
+      "temporal": [
+        {
+          "scene": "motion-01",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.18203956042425007,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-01",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.18904362427186683,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-02",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.15505349220541348,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-02",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.1728859122701109,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-03",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.232230756159822,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-03",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.23082753632737485,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-04",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.3372094325927133,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-04",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.3323572453422882,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-05",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.3448309470831712,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-05",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.3429414482197836,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-06",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.3806563873760198,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-06",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.3823595564509363,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-07",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.31115287940170827,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-07",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.3132341927682358,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-08",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.4363294235115967,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-08",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.44151078568834795,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-09",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.09190779909650124,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-09",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.10196254838691633,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-10",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.10510058921410191,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-10",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.08454287891696467,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-11",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.10814761408717502,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-11",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.1111111111111111,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-01",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.27730488491025795,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-01",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.2756051336969309,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-02",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.26930459016504316,
+          "max_delta_codes": 2.0
+        },
+        {
+          "scene": "motion-ramp-02",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.2703420073582859,
+          "max_delta_codes": 2.0
+        },
+        {
+          "scene": "motion-ramp-03",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.24900340062122744,
+          "max_delta_codes": 2.0
+        },
+        {
+          "scene": "motion-ramp-03",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.2500351279699622,
+          "max_delta_codes": 2.0
+        },
+        {
+          "scene": "motion-ramp-04",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.24461711790392032,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-04",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.24405580491439524,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-05",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.2566643667715275,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-05",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.256059221944068,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-06",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.25551424615340296,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-06",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.2559055156921816,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-07",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.25262938679853186,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-07",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.25347345659693227,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-08",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.2702047472892362,
+          "max_delta_codes": 2.0
+        },
+        {
+          "scene": "motion-ramp-08",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.2698092148076908,
+          "max_delta_codes": 2.0
+        },
+        {
+          "scene": "motion-ramp-09",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.2666786388511569,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-09",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.26638761308606657,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-10",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.25517524799501545,
+          "max_delta_codes": 2.0
+        },
+        {
+          "scene": "motion-ramp-10",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.2541245764562357,
+          "max_delta_codes": 2.0
+        },
+        {
+          "scene": "motion-ramp-11",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.2521349647377061,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-11",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.25172443748048345,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-12",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.2528117666234703,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-12",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.25389001144918627,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-13",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.24736822731192792,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-13",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.2478766928583441,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-14",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.24030048347672256,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-14",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.2390434376595633,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-15",
+          "variant": "guided-packed-coefficients",
+          "rmse_delta_codes": 0.25401838517404657,
+          "max_delta_codes": 1.0
+        },
+        {
+          "scene": "motion-ramp-15",
+          "variant": "guided-coefficient-layout",
+          "rmse_delta_codes": 0.25266053413698436,
+          "max_delta_codes": 1.0
+        }
+      ]
+    },
+    "retained": true
+  },
+  "goal110_rejected_candidates": {
+    "packed_pyramid_8x8": {
+      "increment_ms": 1.148749971954346,
+      "control_increment_ms": 1.1493749719390869,
+      "same_output_as_headless": true,
+      "retained": false,
+      "reason": "No distinguishable gain; initial stale group_size run invalid and excluded."
+    },
+    "packed_pair": {
+      "increment_ms": 1.1546614301433564,
+      "chain_ms": 3.5979165788269043,
+      "same_output_as_headless": true,
+      "desktop_matrix": "16/16 pass; Veranda strong max6",
+      "phone_quality": "max6; accepted",
+      "retained": false,
+      "reason": "No gain; 64-thread followup also slower. Both rejected.",
+      "traffic": "Experimental entry unmodeled; no bandwidth claim. Headless ran and independent validation was recovered separately after reporting rejected unknown traffic entry."
+    },
+    "packed_pair64": {
+      "increment_ms": 1.1873697626781459,
+      "chain_ms": 3.628880119737625,
+      "same_output_as_headless": true,
+      "retained": false,
+      "reason": "Slower than default and 256-thread pair"
+    },
+    "reconstruct_half_fetch": {
+      "increment_ms": 1.1541926801548006,
+      "chain_ms": 3.5956249122161865,
+      "same_output_as_headless": true,
+      "quality": "16/16 desktop cases and native phone pass",
+      "retained": false,
+      "reason": "No performance gain; only fused fine reconstruction resources changed, coarse FP32 remains unchanged"
+    },
+    "guided_half_fetch": {
+      "increment_ms": 1.1606510133304595,
+      "chain_ms": 3.602447828716278,
+      "same_output_as_headless": true,
+      "phone_default_coefficients_and_final_exact": true,
+      "retained": false,
+      "reason": "No performance gain"
+    },
+    "packed-init4x4": {
+      "increment_ms": 1.3747135081043242,
+      "chain_ms": 3.817369698469162,
+      "same_output_as_headless": true,
+      "retained": false,
+      "reason": "No gain versus packed default"
+    },
+    "packed-init2x16": {
+      "increment_ms": 1.1500520552558902,
+      "chain_ms": 3.5915884539814,
+      "same_output_as_headless": true,
+      "retained": false,
+      "reason": "No gain versus packed default"
+    },
+    "integer-gather": {
+      "increment_ms": 1.5996874609451295,
+      "chain_ms": 4.607135304187775,
+      "baseline_ms": 3.0074478432426455,
+      "same_output_as_headless": true,
+      "retained": false,
+      "reason": "Mutable views slow shared baseline; packed decode further slower than matched alias control"
+    },
+    "integer-alias-control": {
+      "increment_ms": 1.465833297546387,
+      "chain_ms": 4.473385307453156,
+      "baseline_ms": 3.0075520099067687,
+      "same_output_as_headless": true,
+      "retained": false,
+      "reason": "Mutable views slow shared baseline; packed decode further slower than matched alias control"
+    },
+    "guided_moment_padding": {
+      "increment_ms": 1.1546353884773253,
+      "chain_ms": 3.596354078865051,
+      "same_output_as_headless": true,
+      "retained": false,
+      "change": "Moment physical stride20 to21, no arithmetic change",
+      "reason": "No gain"
+    },
+    "guided_row_padding": {
+      "increment_ms": 1.1550780967998504,
+      "chain_ms": 3.597265537176132,
+      "same_output_as_headless": true,
+      "retained": false,
+      "reason": "No gain"
+    },
+    "guided-sliding": {
+      "increment_ms": 1.147343721988678,
+      "chain_ms": 3.5899478290214537,
+      "same_output_as_headless": true,
+      "quality": "16/16 assets, phone image and synthetic temporal gates pass; temporal worst2",
+      "retained": false,
+      "reason": "Sliding sum marginal screen delta; paired gather slower. Neither establishes improvement."
+    },
+    "guided-paired-gather": {
+      "increment_ms": 1.1679947631511682,
+      "chain_ms": 3.6097394952049253,
+      "same_output_as_headless": true,
+      "quality": "16/16 assets, phone image and synthetic temporal gates pass; temporal worst2",
+      "retained": false,
+      "reason": "Sliding sum marginal screen delta; paired gather slower. Neither establishes improvement."
+    },
+    "guided-paired-gather128": {
+      "increment_ms": 1.1817447628154758,
+      "chain_ms": 3.6239582448577883,
+      "same_output_as_headless": true,
+      "retained": false,
+      "reason": "Slower"
+    },
+    "guided_radius1": {
+      "retained": false,
+      "timed": false,
+      "veranda_strong_peak": 206,
+      "reason": "3x3 fit and averaging materially change eaves/foliage edges; rejected by image gates",
+      "control": "Same direct implementation restored to5x5 passes16/16, Veranda strong10. Direct5x5 phone test running."
+    },
+    "guided_direct5": {
+      "increment_ms": 1.149817680261612,
+      "chain_ms": 3.5924478289604185,
+      "same_output_as_headless": true,
+      "quality": "16/16 desktop gates; synthetic motion worst2; native phone gate passes",
+      "retained": false,
+      "reason": "No distinguishable gain;128-thread followup running"
+    }
+  }
 }

@@ -11,11 +11,12 @@ float zMaxInput;
 float zMaxLightness;
 // Runtime bound (always 4) keeps reduction register pressure down on Mali.
 uint reductionRows;
-// Outputs: log luminance / guide, baseline lightness, two residuals and weights.
+// Outputs: log luminance / guide, FP32 baseline, and packed residual/weights.
+// Packed xy = exposure residuals; zw = normalized highlight/shadow weights - 0.5.
+// Centering weights improves half precision around the balanced-exposure region.
 RWTexture2D<float2> compactOutput;
 RWTexture2D<float> baseLightnessOutput;
 RWTexture2D<float4> lightnessOutput;
-RWTexture2D<float2> weightsOutput;
 #ifndef GATHER_UNSIGNED_SOURCE
 #define GATHER_UNSIGNED_SOURCE 0
 #endif
@@ -41,8 +42,8 @@ void storeReducedLuma(uint2 pixel,float luminance,float guide)
     float3 weights=exp2(logWeight-max(logWeight.x,max(logWeight.y,logWeight.z)));
     weights/=weights.x+weights.y+weights.z;
     baseLightnessOutput[pixel]=y.y;
-    lightnessOutput[pixel]=float4(y.x-y.y,y.z-y.y,0,0);
-    weightsOutput[pixel]=weights.xz;
+    lightnessOutput[pixel]=float4(y.x-y.y,y.z-y.y,weights.xz-.5);
+
 }
 
 void storeReduced(uint2 pixel,float4 reduced)

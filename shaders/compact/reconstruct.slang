@@ -1,4 +1,5 @@
 // Weighted residual reconstruction and inverse-curve exposure recovery.
+// Pyramid textures pack residuals in xy and weights - 0.5 in zw.
 // Input guide/log luminance and baseline; output recovered EV / guide.
 Texture2D<float2> compactSource;
 Texture2D<float> baseLightness;
@@ -15,15 +16,12 @@ float zMaxLightness;
 
 Texture2D<float4> fineLuminance;
 Texture2D<float4> coarseLuminance;
-Texture2D<float2> layerWeights;
 RWTexture2D<float> reconstructionOutput;
 Texture2D<float> previousResult;
 bool isCoarsest;
 
 // Additional mip inputs and tile storage for reconstruct_ev_fused.
-Texture2D<float2> mip1Weights;
 Texture2D<float4> mip2Luminance;
-Texture2D<float2> mip2Weights;
 Texture2D<float4> mip3Luminance;
 groupshared float mip2Result[49];
 groupshared float mip1Result[100];
@@ -34,7 +32,7 @@ float reconstructValue(uint2 pixel, uint w, uint h)
     float4 fine=fineLuminance[pixel];
     float2 detail=fine.xy;
     if(!isCoarsest)detail-=coarseLuminance.SampleLevel(linearSampler,uv,0).xy;
-    float2 weights=layerWeights[pixel];
+    float2 weights=fine.zw+.5;
     float2 contribution=detail*weights;
     float value=contribution.x+contribution.y;
     if(!isCoarsest) value+=previousResult.SampleLevel(linearSampler,uv,0);
@@ -114,7 +112,7 @@ void reconstruct_ev_fused(uint3 tid : SV_DispatchThreadID, uint3 local : SV_Grou
         int2 p=clamp(mip2Origin+int2(lane%7,lane/7),int2(0),int2(gw-1,gh-1));
         float2 uv=(float2(p)+.5)/float2(gw,gh);
         float2 detail=mip2Luminance[p].xy-mip3Luminance.SampleLevel(linearSampler,uv,0).xy;
-        float2 weights=mip2Weights[p];
+        float2 weights=mip2Luminance[p].zw+.5;
         float2 contribution=detail*weights;
         mip2Result[lane]=contribution.x+contribution.y+previousResult.SampleLevel(linearSampler,uv,0);
     }
@@ -123,7 +121,7 @@ void reconstruct_ev_fused(uint3 tid : SV_DispatchThreadID, uint3 local : SV_Grou
         int2 p=clamp(mip1Origin+int2(lane%10,lane/10),int2(0),int2(pw-1,ph-1));
         float2 uv=(float2(p)+.5)/float2(pw,ph);
         float2 detail=coarseLuminance[p].xy-mip2Luminance.SampleLevel(linearSampler,uv,0).xy;
-        float2 weights=mip1Weights[p];
+        float2 weights=coarseLuminance[p].zw+.5;
         float2 contribution=detail*weights;
         float2 pos=uv*float2(gw,gh)-.5;
         int2 ip=int2(floor(pos))-mip2Origin;float2 f=frac(pos);uint index=ip.y*7+ip.x;
@@ -139,7 +137,7 @@ void reconstruct_ev_fused(uint3 tid : SV_DispatchThreadID, uint3 local : SV_Grou
     uint index=ip.y*10+ip.x;
     float previous=lerp(lerp(mip1Result[index],mip1Result[index+1],f.x),lerp(mip1Result[index+10],mip1Result[index+11],f.x),f.y);
     float2 detail=fineLuminance[tid.xy].xy-coarseLuminance.SampleLevel(linearSampler,uv,0).xy;
-    float2 weights=layerWeights[tid.xy];
+    float2 weights=fineLuminance[tid.xy].zw+.5;
     float2 contribution=detail*weights;
     float baseline=baseLightness[tid.xy];
     float lightness=(contribution.x+contribution.y+previous)+baseline;

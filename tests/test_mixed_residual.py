@@ -22,12 +22,15 @@ class MixedResidualTests(unittest.TestCase):
         self.assertEqual(after - before, 30 * 16 * 4)
 
     def test_every_binding_keeps_its_extent_and_all_levels(self):
-        cases = [(w, h, levels, split) for w, h, levels in
-                 [(480, 270, 9), (129, 73, 8), (3, 1, 2)] for split in (3, 4)]
-        for width, height, levels, split in cases:
-            with self.subTest(size=(width, height), split=split):
+        cases = [(w, h, levels, split, packed) for w, h, levels in
+                 [(480, 270, 9), (129, 73, 8), (3, 1, 2)]
+                 for split in (3, 4) for packed in (False, True)]
+        for width, height, levels, split, packed in cases:
+            with self.subTest(size=(width, height), split=split, packed=packed):
                 resource = dict(name='luminance', width=width, height=height, levels=levels,
-                                format=83, format_name='rg16_float', bpp=4, dump=True)
+                                format=97 if packed else 83,
+                                format_name='rgba16_float' if packed else 'rg16_float',
+                                bpp=8 if packed else 4, dump=True)
                 m = dict(resources=[resource], passes=[dict(descriptors=[
                     dict(resource='luminance', mip=i) for i in range(levels)])],
                     reference_resources=[copy.deepcopy(resource)])
@@ -44,6 +47,11 @@ class MixedResidualTests(unittest.TestCase):
                 self.assertEqual(sum(r['levels'] for r in resources.values()), levels)
                 if levels <= split:
                     self.assertEqual(m, original)
+                else:
+                    coarse = resources['coarse_residual']
+                    self.assertEqual(coarse['format'], 109 if packed else 103)
+                    self.assertEqual(coarse['format_name'], 'rgba32_float' if packed else 'rg32_float')
+                    self.assertEqual(coarse['bpp'], 16 if packed else 8)
 
 
 if __name__ == '__main__':

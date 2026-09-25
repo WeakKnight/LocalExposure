@@ -8,8 +8,8 @@ optimized mobile graph are independent; their storage choices differ deliberatel
 | HDR reduction and exposure application | FP32: input reaches 65535 and sums/exposure can exceed half range. |
 | Fitted Z curve and inverse lookup | FP32 arithmetic; 1024-entry R16F LUT stores log luminance. Coordinates and exp2 remain float. |
 | Reference Fusion pyramids/reconstruction | FP32: small residuals and inversion near the shoulder are sensitive to error. |
-| Mobile residual pyramid | RG16F at mips 0–2, RG32F above; FP32 reconstruction. Coarse precision protects strong highlights. |
-| Mobile weights | RG16_UNORM storage; normalization and filtering arithmetic remain float. |
+| Mobile residual pyramid | Residuals in RGBA16F xy at mips 0–2, RGBA32F above; FP32 reconstruction. Coarse precision protects strong highlights. |
+| Mobile weights | Centered weights (weight − 0.5) share pyramid zw; decode with +0.5. Normalization and filtering arithmetic remain float. |
 | Exposure and guide storage | Reference exposure R16F; mobile log-luminance/guide and EV/guide RG16F. Exposure limits are ±12 EV. |
 | Guided fit | Subtraction, moments and variance remain FP32 on the mobile path; regularized slope division uses half. |
 | Mobile fitted coefficients | Two half values packed into one shared uint; unpack to FP32 for averaging. Intercept quantization is approximate. |

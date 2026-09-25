@@ -53,9 +53,12 @@ def estimate(manifest, fps=45):
                 loads=groups*(((gx+2*radius+batch-1)//batch)*(gy+4*radius)*(batch+2*radius)+threads)
             if config.get('guided_direct_fit'):
                 groups=((p['width']+gx-1)//gx)*((p['height']+gy-1)//gy)
-                # Full 5x5 fits on the coefficient halo, plus a tile anchor
-                # per thread. Cache reuse is deliberately not assumed here.
-                loads=groups*((gx+2*radius)*(gy+2*radius)*(2*radius+1)**2+threads)
+                # Vertical batches share input rows in registers. Include the
+                # halo and optional per-thread anchor; do not assume cache reuse.
+                batch=config.get('guided_fit_rows',1)
+                batches=(gy+2*radius+batch-1)//batch
+                anchor_loads=0 if config.get('guided_uncentered',False) else threads
+                loads=groups*((gx+2*radius)*batches*(batch+2*radius)*(2*radius+1)+anchor_loads)
                 read('compactSource',loads);write('averagedOutput')
             elif 'momentSource' in descriptors:
                 coefficient_loads=((p['width']+gx-1)//gx)*((p['height']+gy-1)//gy)*(gx+2*radius)*(gy+2*radius)

@@ -3,7 +3,7 @@
   "device": "NX789J / SM8750 / Adreno 830",
   "driver": "process-local Qualcomm 512.842.6",
   "workload": "1920x1080, 45 FPS, R11G11B10 -> RGBA8 sRGB, matched graphics HDR producer + postprocess in one submission, no visualization/presentation",
-  "measurement": "Current: direct_guided_acceptance. Older runs preserved as history.",
+  "measurement": "Current: layout64_acceptance. 64x1 Guided layout, unchanged workgroup barriers and default device features. Matched sustained A/B and integrated validation pass.",
   "runs": {
     "packed-4": {
       "summary": {
@@ -5894,7 +5894,7 @@
       "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
     }
   },
-  "current_retained": "direct_guided_acceptance",
+  "current_retained": "interior_fit_acceptance",
   "goal_1_1ms_met": true,
   "direct_guided_acceptance": {
     "measurement": "60 warmup frames/block;600 frames x3 rounds/path; graphics-produced HDR + postprocess in one submission",
@@ -8589,5 +8589,1274 @@
       "retained": false,
       "reason": "No distinguishable gain;128-thread followup running"
     }
+  },
+  "goal_0_9ms_met": false,
+  "batched_direct_guided_acceptance": {
+    "candidate": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.451874915725708,
+          "p95": 3.4604686655159,
+          "min": 3.4085415834503174,
+          "max": 7.464999817749024,
+          "mean": 3.452059261786022
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.474635,
+          "p95": 4.791536150000001,
+          "min": 3.886667,
+          "max": 8.085781,
+          "mean": 4.4871655766666665
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 6.006589,
+          "p95": 6.5178823,
+          "min": 4.614895,
+          "max": 9.018073,
+          "mean": 5.99404444
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.443229107017517,
+          "p95": 2.4469817110925676,
+          "min": 2.420677024234772,
+          "max": 2.760833265930176,
+          "mean": 2.444120715792046
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.4781775,
+          "p95": 3.7987938999999997,
+          "min": 2.851406,
+          "max": 7.441094,
+          "mean": 3.4795866327777776
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.977031500000001,
+          "p95": 5.5175,
+          "min": 3.532656,
+          "max": 8.861562,
+          "mean": 4.969036286111112
+        }
+      },
+      "increment_ms": 1.0086458087081906,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "integrated": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.4510676240787506,
+          "p95": 3.460002519693947,
+          "min": 3.412916583343506,
+          "max": 7.258749822784424,
+          "mean": 3.451208827779007
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.479974,
+          "p95": 4.76270905,
+          "min": 3.868802,
+          "max": 8.439687,
+          "mean": 4.483956709444445
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 5.991224000000001,
+          "p95": 6.470117299999999,
+          "min": 4.550885,
+          "max": 10.0325,
+          "mean": 5.993652360555556
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.4420572320461273,
+          "p95": 2.445885356952667,
+          "min": 2.421041607559204,
+          "max": 2.872447846538544,
+          "mean": 2.4439021972788617
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.4819275000000003,
+          "p95": 3.7936981,
+          "min": 2.862188,
+          "max": 5.401459,
+          "mean": 3.4804118505555555
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.98987,
+          "p95": 5.498700749999999,
+          "min": 3.526094,
+          "max": 7.108073,
+          "mean": 4.982004283888889
+        }
+      },
+      "increment_ms": 1.0090103920326232,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "raw_directory": "outputs/goal090/integrated-quad-sustained",
+    "bundle": "outputs/goal090/integrated-quad/bundle",
+    "traffic": {
+      "width": 1920,
+      "height": 1080,
+      "fps": 45,
+      "rows": [
+        {
+          "pass_name": "reduce_setup",
+          "read_sweep_bytes": 8294400,
+          "write_bytes": 2073600,
+          "expanded_read_bytes": 24883200
+        },
+        {
+          "pass_name": "pyramids_mip1",
+          "read_sweep_bytes": 1036800,
+          "write_bytes": 259200,
+          "expanded_read_bytes": 4147200
+        },
+        {
+          "pass_name": "pyramids_mip2",
+          "read_sweep_bytes": 259200,
+          "write_bytes": 64320,
+          "expanded_read_bytes": 1029120
+        },
+        {
+          "pass_name": "pyramids_mip3",
+          "read_sweep_bytes": 64320,
+          "write_bytes": 31680,
+          "expanded_read_bytes": 253440
+        },
+        {
+          "pass_name": "pyramids_mip4",
+          "read_sweep_bytes": 31680,
+          "write_bytes": 7680,
+          "expanded_read_bytes": 122880
+        },
+        {
+          "pass_name": "pyramids_mip5",
+          "read_sweep_bytes": 7680,
+          "write_bytes": 1920,
+          "expanded_read_bytes": 30720
+        },
+        {
+          "pass_name": "tail_from_mip5",
+          "read_sweep_bytes": 1920,
+          "write_bytes": 480,
+          "expanded_read_bytes": 1920
+        },
+        {
+          "pass_name": "reconstruct_mip4",
+          "read_sweep_bytes": 10080,
+          "write_bytes": 1920,
+          "expanded_read_bytes": 46080
+        },
+        {
+          "pass_name": "reconstruct_mip3",
+          "read_sweep_bytes": 41280,
+          "write_bytes": 7920,
+          "expanded_read_bytes": 190080
+        },
+        {
+          "pass_name": "reconstruct_ev",
+          "read_sweep_bytes": 2438768,
+          "write_bytes": 518400,
+          "expanded_read_bytes": 10978320
+        },
+        {
+          "pass_name": "reconstruct_guided",
+          "read_sweep_bytes": 518400,
+          "write_bytes": 518400,
+          "expanded_read_bytes": 8290560
+        },
+        {
+          "pass_name": "apply_exposure_production",
+          "read_sweep_bytes": 518400,
+          "write_bytes": 0,
+          "expanded_read_bytes": 33177600
+        }
+      ],
+      "fusion_scale": 4,
+      "baseline_bytes": 16588800,
+      "incremental_sweep_bytes": 16708448,
+      "incremental_sweep_gbps": 0.75188016,
+      "incremental_expanded_bytes": 86636640,
+      "incremental_expanded_gbps": 3.8986488,
+      "assumptions": [
+        "Increment over matched tonemap: final source read and output write cancel; all other production passes remain.",
+        "Sweep model charges every bound input mip once per pass, and every output once. Assumes within-pass reuse; ignores cross-pass reuse. Not a DRAM lower bound.",
+        "Expanded model includes zero-weight/duplicate texel slots even for aligned reduction samples. It charges each issued load and four texels per bilinear 2D sample (two for 1D), including duplicate/clamped taps. Not a DRAM upper bound.",
+        "Default reduction integrates 16 source locations; the divisible-size gather variant uses 12 component gathers covering the same 4x4 pixels. Separate guided stages load 144 entries per 8x8 group; fused guided uses output-tile halos, independently of thread-group size; direct moments count each horizontal batch and its halo plus a per-thread anchor load. Partial groups included; shared-memory accesses excluded.",
+        "Whole stored texel bytes charged even for RGB/alpha-only reads. Inverse LUT assumed queried at every low-res pixel; actual branch can skip.",
+        "No compression, cache-line transactions, write allocation, uniforms, instructions, metadata or unrelated GPU traffic modeled.",
+        "Calibration, uploads, viewer/debug resources and presentation excluded."
+      ]
+    },
+    "quality": {
+      "unit_tests": 65,
+      "asset_matrix": "16/16 passed; image PNGs unchanged after regeneration",
+      "coefficient_parity": "7 sizes x 2 guide patterns x 2 coefficient formats, exact",
+      "shared_tonemap_spirv_unchanged": true
+    },
+    "source_sha256": {
+      "shaders\\compact\\guided.slang": "33538bb12b68ec3f7f39d358b01b96c74061bee774e183e51f88ac63fb778eb2",
+      "tools\\profiling\\android\\variants.py": "50cfbbd245df6821592f84f3696e1874713f3bb81b30e6224af4f85d62064408",
+      "tools\\profiling\\android\\traffic.py": "8ca5f2adc210c8425924d58778a89111895d1202e159d6be7ed0e48e9e7adb89"
+    }
+  },
+  "uniform_inverse_query_acceptance": {
+    "sustained": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.44367179092598,
+          "p95": 3.4517707490615845,
+          "min": 3.399739500331879,
+          "max": 3.489010331485748,
+          "mean": 3.441422977323475
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.468802,
+          "p95": 4.771698349999999,
+          "min": 3.920781,
+          "max": 6.614375,
+          "mean": 4.473753931666667
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 5.9845055,
+          "p95": 6.47453125,
+          "min": 4.608802,
+          "max": 8.275469,
+          "mean": 5.979123886111111
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.4427082736968995,
+          "p95": 2.447239523586273,
+          "min": 2.420572857570648,
+          "max": 2.7599999326171876,
+          "mean": 2.4429669542461396
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.489271,
+          "p95": 3.7876509499999997,
+          "min": 2.852187,
+          "max": 6.372344,
+          "mean": 3.481501769444445
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.9983070000000005,
+          "p95": 5.4855056,
+          "min": 3.526927,
+          "max": 7.743177,
+          "mean": 4.974168284444445
+        }
+      },
+      "increment_ms": 1.0009635172290805,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "control_recheck": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.4517447073955534,
+          "p95": 3.460364498851776,
+          "min": 3.3975520003852844,
+          "max": 7.0796873271560665,
+          "mean": 3.453369620550327
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.4823435,
+          "p95": 4.78664105,
+          "min": 3.899687,
+          "max": 8.110469,
+          "mean": 4.487296274444444
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 6.0020834999999995,
+          "p95": 6.5438576,
+          "min": 4.589063,
+          "max": 9.839218,
+          "mean": 5.9994485822222225
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.4431249403533934,
+          "p95": 2.4488384818805695,
+          "min": 2.420989524227142,
+          "max": 2.7655728491477967,
+          "mean": 2.4448583893851468
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.4911455,
+          "p95": 3.77192185,
+          "min": 2.855781,
+          "max": 5.574271,
+          "mean": 3.480974557777778
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.990469,
+          "p95": 5.504669249999999,
+          "min": 3.536563,
+          "max": 8.37526,
+          "mean": 4.982410947777777
+        }
+      },
+      "increment_ms": 1.00861976704216,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "integrated_screen": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 240,
+          "median": 3.441119707654953,
+          "p95": 3.4528671032014846,
+          "min": 1.7442707907485961,
+          "max": 3.4809374150161743,
+          "mean": 3.3876845961122988
+        },
+        "cpu_ms": {
+          "count": 240,
+          "median": 4.4334115,
+          "p95": 4.81348675,
+          "min": 2.580104,
+          "max": 5.965104,
+          "mean": 4.416279070833334
+        },
+        "frame_work_wall_ms": {
+          "count": 240,
+          "median": 5.9935935,
+          "p95": 6.619765599999999,
+          "min": 3.889219,
+          "max": 7.969792,
+          "mean": 5.963992825000001
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 240,
+          "median": 2.4415363987255096,
+          "p95": 2.4458384819538117,
+          "min": 2.4274478574028016,
+          "max": 2.458281189983368,
+          "mean": 2.441198942136526
+        },
+        "cpu_ms": {
+          "count": 240,
+          "median": 3.485755,
+          "p95": 3.778796,
+          "min": 2.892032,
+          "max": 4.011718,
+          "mean": 3.465068766666667
+        },
+        "frame_work_wall_ms": {
+          "count": 240,
+          "median": 4.9659115,
+          "p95": 5.4708722000000005,
+          "min": 3.585156,
+          "max": 5.832917,
+          "mean": 4.938940925
+        }
+      },
+      "increment_ms": 0.9995833089294432,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "bundle": "outputs\\goal090\\integrated-unconditional\\bundle",
+    "identical_active_candidate_spirv": {
+      "reconstruct_compact.spv": "23235063327b154f3c8e9959d97723e4eed6df9d85d0b5c0372cee89ccd39ec5",
+      "tail_reconstruct.spv": "bf85ebaa7f38c7c0cd82eeee0d85ccb0fc2f565865ce33ad84a2c11daf1a2511",
+      "reduce_setup_gather.spv": "36fb37ec667ad8b6b969bd34290ee524ac68a81f6e251f1e9181379ce67b3c81",
+      "downsample_compact.spv": "a2c92fc45a6a28c73206cf2ac06466755de11a5907430368ca513c7e3e974e2e",
+      "reconstruct_ev_fused.spv": "30afcda312ce30f082735793af1f61a05e0d260b043ffe698a11916dccab7bf9",
+      "baseline_srgb_compute.spv": "eddb4100384f6a89e05124f05fdeb9cff58c55c4a67ad1e6d662341a67f96acd",
+      "apply_srgb_compute.spv": "dbb70387c0cc4fa0a9a7b7925bc34dac796ebabd556955929cf52d873cfab859",
+      "reconstruct_guided.spv": "d3995ce84bd04c79234645882fdcd1452c984050668588da562ea588461f9c4a"
+    },
+    "source_sha256": "3453f8c7149eb6e3f3c8bd7817648f3fb07f88cd0feaac2917d2dc02e7ee5901",
+    "quality": "65 tests and 16/16 scene/preset gates; PNGs unchanged; frozen production parity and odd-size edge/temporal checks passed. Comparisons regenerated and inspected.",
+    "traffic": "Same texture allocation and sweep; inverse queries now unconditional, at most one per working-resolution pixel. No measured DRAM reduction claimed."
+  },
+  "batched_coefficient_averages_acceptance": {
+    "summary": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.4330728328514097,
+          "p95": 3.4411483534875873,
+          "min": 3.3933332504882814,
+          "max": 3.469635331958771,
+          "mean": 3.4309038803580667
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.46112,
+          "p95": 4.7520234,
+          "min": 3.864115,
+          "max": 6.651563,
+          "mean": 4.4656143211111115
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 5.9775,
+          "p95": 6.51809575,
+          "min": 4.574062,
+          "max": 8.475365,
+          "mean": 5.977732851111112
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.442161398710251,
+          "p95": 2.446468690271759,
+          "min": 2.420781190898895,
+          "max": 2.8518749303741453,
+          "mean": 2.444081421811523
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.476797,
+          "p95": 3.80043175,
+          "min": 2.870365,
+          "max": 5.589843,
+          "mean": 3.4766384477777774
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.9810935,
+          "p95": 5.48618765,
+          "min": 3.55625,
+          "max": 8.85823,
+          "mean": 4.975191227777778
+        }
+      },
+      "increment_ms": 0.9909114341411587,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "fresh_control": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.443801999256134,
+          "p95": 3.45234887404747,
+          "min": 3.400104083656311,
+          "max": 3.4878124148483276,
+          "mean": 3.441530037506046
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.469974000000001,
+          "p95": 4.7889305,
+          "min": 3.850573,
+          "max": 6.254792,
+          "mean": 4.476366045000001
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 6.0003645,
+          "p95": 6.51670265,
+          "min": 4.507916,
+          "max": 8.294427,
+          "mean": 5.997255602222222
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.4427603570289613,
+          "p95": 2.4520051484699246,
+          "min": 2.421249940887451,
+          "max": 2.738385349811554,
+          "mean": 2.4456987828831482
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.489635,
+          "p95": 3.78645295,
+          "min": 2.885937,
+          "max": 5.172396,
+          "mean": 3.483787127222222
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.9991924999999995,
+          "p95": 5.5162111,
+          "min": 3.58,
+          "max": 7.602969,
+          "mean": 4.991484038333333
+        }
+      },
+      "increment_ms": 1.0010416422271726,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "integrated_screen": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 240,
+          "median": 3.4314061662254334,
+          "p95": 3.4411613743206027,
+          "min": 1.9111457866744994,
+          "max": 3.4595311655387877,
+          "mean": 3.3809997004421715
+        },
+        "cpu_ms": {
+          "count": 240,
+          "median": 4.444636,
+          "p95": 4.76890915,
+          "min": 2.577396,
+          "max": 6.317344,
+          "mean": 4.420032308333333
+        },
+        "frame_work_wall_ms": {
+          "count": 240,
+          "median": 5.979713,
+          "p95": 6.5135883,
+          "min": 3.786354,
+          "max": 7.720156,
+          "mean": 5.948048425
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 240,
+          "median": 2.441744732053757,
+          "p95": 2.444958273641968,
+          "min": 2.4295311906852723,
+          "max": 2.460937439918518,
+          "mean": 2.441090652208614
+        },
+        "cpu_ms": {
+          "count": 240,
+          "median": 3.50737,
+          "p95": 3.8056641,
+          "min": 2.97125,
+          "max": 4.106823,
+          "mean": 3.474549241666667
+        },
+        "frame_work_wall_ms": {
+          "count": 240,
+          "median": 5.0023435,
+          "p95": 5.48787445,
+          "min": 3.72099,
+          "max": 8.964843,
+          "mean": 4.986050341666667
+        }
+      },
+      "increment_ms": 0.9896614341716763,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "bundle": "outputs/goal090/integrated-batched-averages/bundle",
+    "identical_active_candidate_spirv": {
+      "apply_srgb_compute.spv": "dbb70387c0cc4fa0a9a7b7925bc34dac796ebabd556955929cf52d873cfab859",
+      "baseline_srgb_compute.spv": "eddb4100384f6a89e05124f05fdeb9cff58c55c4a67ad1e6d662341a67f96acd",
+      "downsample_compact.spv": "a2c92fc45a6a28c73206cf2ac06466755de11a5907430368ca513c7e3e974e2e",
+      "reconstruct_compact.spv": "23235063327b154f3c8e9959d97723e4eed6df9d85d0b5c0372cee89ccd39ec5",
+      "reconstruct_ev_fused.spv": "30afcda312ce30f082735793af1f61a05e0d260b043ffe698a11916dccab7bf9",
+      "reconstruct_guided.spv": "9a6db5b81e6a6cd45329ac8f21565b05cc43d42de79a93836c3685a2cc4cfb2c",
+      "reduce_setup_gather.spv": "36fb37ec667ad8b6b969bd34290ee524ac68a81f6e251f1e9181379ce67b3c81",
+      "tail_reconstruct.spv": "bf85ebaa7f38c7c0cd82eeee0d85ccb0fc2f565865ce33ad84a2c11daf1a2511"
+    },
+    "source_sha256": "e1a070ddbda45205743703204ec749da547ea7291d4306013a8d291ab4abd4cb",
+    "quality": "65 tests pass; exact coefficient parity across tiny/odd/normal sizes and both coefficient storage modes; 16/16 matrix passes with unchanged images; odd HDR edges/temporal pass, worst temporal differential 2 codes. Images regenerated, inspected, freshness checks pass.",
+    "traffic": "External texture traffic unchanged; source-level shared reads for coefficient averaging reduced 2880 to 1152 per tile. Not a DRAM-counter measurement.",
+    "goal_0_9ms_met": false
+  },
+  "uncentered_moments_acceptance": {
+    "retained": true,
+    "sustained": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.4241926247348786,
+          "p95": 3.4320884578754423,
+          "min": 3.379114500835419,
+          "max": 3.4629165821228027,
+          "mean": 3.4217127926194952
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.4511199999999995,
+          "p95": 4.7901717,
+          "min": 3.821719,
+          "max": 7.660468,
+          "mean": 4.457423575555556
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 5.9826555,
+          "p95": 6.49495295,
+          "min": 4.506875,
+          "max": 9.622552,
+          "mean": 5.974011317222222
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.4415624403915404,
+          "p95": 2.451302023487091,
+          "min": 2.42062494090271,
+          "max": 6.078906101589203,
+          "mean": 2.445639263208675
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.4747655,
+          "p95": 3.77960905,
+          "min": 2.852188,
+          "max": 6.82875,
+          "mean": 3.4703774794444446
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.9892185,
+          "p95": 5.4986486999999995,
+          "min": 3.540937,
+          "max": 8.283438,
+          "mean": 4.974761889444444
+        }
+      },
+      "increment_ms": 0.9826301843433383,
+      "same_output_as_headless": false,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "fresh_control": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.4342707494888307,
+          "p95": 3.4427655409481046,
+          "min": 3.388645750602722,
+          "max": 7.471197734264374,
+          "mean": 3.436181484395885
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.4582035,
+          "p95": 4.775521,
+          "min": 3.843437,
+          "max": 8.5375,
+          "mean": 4.462692637777778
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 5.9740105,
+          "p95": 6.505684850000001,
+          "min": 4.527032,
+          "max": 10.384844,
+          "mean": 5.970969558333333
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.442083273712158,
+          "p95": 2.4461561902793885,
+          "min": 2.420989524227142,
+          "max": 6.076979018302917,
+          "mean": 2.446470860410595
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.48276,
+          "p95": 3.78700765,
+          "min": 2.85375,
+          "max": 6.87927,
+          "mean": 3.4762063149999998
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.9879685,
+          "p95": 5.476106499999999,
+          "min": 3.529271,
+          "max": 8.23224,
+          "mean": 4.977924761666666
+        }
+      },
+      "increment_ms": 0.9921874757766727,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "integrated_screen": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 240,
+          "median": 3.4224738747768404,
+          "p95": 3.431692624551773,
+          "min": 1.8909895371665955,
+          "max": 3.4416665826416017,
+          "mean": 3.3719170183722498
+        },
+        "cpu_ms": {
+          "count": 240,
+          "median": 4.408307499999999,
+          "p95": 4.7906511499999995,
+          "min": 2.577083,
+          "max": 6.161302,
+          "mean": 4.39207165
+        },
+        "frame_work_wall_ms": {
+          "count": 240,
+          "median": 5.946718499999999,
+          "p95": 6.532765499999999,
+          "min": 3.79099,
+          "max": 7.806511,
+          "mean": 5.916254570833333
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 240,
+          "median": 2.4429166070251465,
+          "p95": 2.446614523601532,
+          "min": 2.425312440788269,
+          "max": 6.111874850784302,
+          "mean": 2.457442648337173
+        },
+        "cpu_ms": {
+          "count": 240,
+          "median": 3.4936455,
+          "p95": 3.7424655,
+          "min": 2.887708,
+          "max": 6.883958,
+          "mean": 3.4877076333333332
+        },
+        "frame_work_wall_ms": {
+          "count": 240,
+          "median": 4.987083500000001,
+          "p95": 5.424125249999999,
+          "min": 3.596042,
+          "max": 8.308125,
+          "mean": 4.984949879166667
+        }
+      },
+      "increment_ms": 0.9795572677516939,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "bundle": "outputs/goal090/integrated-uncentered-final/bundle",
+    "identical_active_candidate_spirv": {
+      "apply_srgb_compute.spv": "dbb70387c0cc4fa0a9a7b7925bc34dac796ebabd556955929cf52d873cfab859",
+      "baseline_srgb_compute.spv": "eddb4100384f6a89e05124f05fdeb9cff58c55c4a67ad1e6d662341a67f96acd",
+      "downsample_compact.spv": "a2c92fc45a6a28c73206cf2ac06466755de11a5907430368ca513c7e3e974e2e",
+      "reconstruct_compact.spv": "23235063327b154f3c8e9959d97723e4eed6df9d85d0b5c0372cee89ccd39ec5",
+      "reconstruct_ev_fused.spv": "30afcda312ce30f082735793af1f61a05e0d260b043ffe698a11916dccab7bf9",
+      "reconstruct_guided.spv": "9c7dea8ef59633173068f7b8f619ee582194fd0c5e451ca1944bb55d87435c77",
+      "reduce_setup_gather.spv": "36fb37ec667ad8b6b969bd34290ee524ac68a81f6e251f1e9181379ce67b3c81",
+      "tail_reconstruct.spv": "bf85ebaa7f38c7c0cd82eeee0d85ccb0fc2f565865ce33ad84a2c11daf1a2511"
+    },
+    "source_sha256": "afd252796238e5f1224325270a3d260dfab80e818cff676e411d3a6c7d8bae82",
+    "quality": "65 tests pass including exact FP32-control coefficients and 140 final-image cases; 16/16 regenerated asset matrix passes; odd HDR/temporal both modes pass, worst 2 codes. Comparison sheets inspected and freshness checks pass. Independent phone readback matches foreground.",
+    "limitations": "Raw moments change rounding; extreme flat-guide synthetic internal differences reach 0.0297 EV but tested final ACES images peak at 1 code. No arbitrary tone-operator guarantee.",
+    "traffic": {
+      "incremental_sweep_bytes": 16708448,
+      "incremental_sweep_gbps": 0.75188016,
+      "incremental_expanded_bytes": 86506080,
+      "incremental_expanded_gbps": 3.8927736
+    },
+    "goal_0_9ms_met": false,
+    "sustained_output_validation": "The original sustained summary compared against a copied centered-control headless image, hence its historical same_output_as_headless=false. Later independent candidate and integrated headless readbacks match the sustained output exactly; integrated foreground summary reports true."
+  },
+  "layout64_acceptance": {
+    "retained": "superseded by interior_fit_acceptance",
+    "change": "Guided 64x1 workgroup; same 64 threads,16x16 output tile, arithmetic, workgroup barriers and device features",
+    "sustained": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.4116665833740236,
+          "p95": 3.4213566873041152,
+          "min": 3.3669270011329653,
+          "max": 3.459947832195282,
+          "mean": 3.4093408600511736
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.4376560000000005,
+          "p95": 4.75367465,
+          "min": 3.860781,
+          "max": 6.804011,
+          "mean": 4.451968662222222
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 5.9656769999999995,
+          "p95": 6.4467294,
+          "min": 4.550937,
+          "max": 10.944323,
+          "mean": 5.958584803333333
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.4433593153476716,
+          "p95": 2.447606711077309,
+          "min": 2.4218749408721925,
+          "max": 2.75359368277359,
+          "mean": 2.4446758083710862
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.4956775,
+          "p95": 3.7830185,
+          "min": 2.873282,
+          "max": 6.605781,
+          "mean": 3.489997016666667
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 5.003177,
+          "p95": 5.5269063,
+          "min": 3.5875,
+          "max": 8.102917,
+          "mean": 4.997453902222222
+        }
+      },
+      "increment_ms": 0.968307268026352,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "fresh_control": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.4248957497177126,
+          "p95": 3.433075437018013,
+          "min": 3.3681770011024477,
+          "max": 3.4799478317070007,
+          "mean": 3.4225571791729545
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.464167,
+          "p95": 4.7698353,
+          "min": 3.805313,
+          "max": 7.954062,
+          "mean": 4.471693146111111
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 5.9784895,
+          "p95": 6.5321389,
+          "min": 4.476406,
+          "max": 9.855313,
+          "mean": 5.978938137777778
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.4424478570365906,
+          "p95": 2.4472212944200513,
+          "min": 2.42062494090271,
+          "max": 2.743541599685669,
+          "mean": 2.443775461170845
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.4828390000000002,
+          "p95": 3.7753858499999997,
+          "min": 2.853906,
+          "max": 7.215417,
+          "mean": 3.4859099161111113
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.993906,
+          "p95": 5.4687493499999995,
+          "min": 3.533698,
+          "max": 8.965365,
+          "mean": 4.983761713888889
+        }
+      },
+      "increment_ms": 0.982447892681122,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "integrated_screen": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 240,
+          "median": 3.4090884584369663,
+          "p95": 3.420015541503525,
+          "min": 1.8988541203079223,
+          "max": 3.4689582486419677,
+          "mean": 3.372233424614525
+        },
+        "cpu_ms": {
+          "count": 240,
+          "median": 4.40474,
+          "p95": 4.7383410999999995,
+          "min": 2.577969,
+          "max": 5.072657,
+          "mean": 4.379826179166667
+        },
+        "frame_work_wall_ms": {
+          "count": 240,
+          "median": 5.961328,
+          "p95": 6.5399247,
+          "min": 3.879323,
+          "max": 7.810573,
+          "mean": 5.911659958333333
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 240,
+          "median": 2.44302077368927,
+          "p95": 2.4538515025915144,
+          "min": 2.430468690662384,
+          "max": 2.8494270137672424,
+          "mean": 2.448883186740589
+        },
+        "cpu_ms": {
+          "count": 240,
+          "median": 3.4917445,
+          "p95": 3.78849455,
+          "min": 2.900781,
+          "max": 4.40026,
+          "mean": 3.481596979166667
+        },
+        "frame_work_wall_ms": {
+          "count": 240,
+          "median": 4.9932035,
+          "p95": 5.64696395,
+          "min": 3.574896,
+          "max": 6.459687,
+          "mean": 4.9985023958333334
+        }
+      },
+      "increment_ms": 0.9660676847476961,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "bundle": "outputs/goal090/layout64-integrated-headless/bundle",
+    "identical_active_candidate_spirv": {
+      "apply_srgb_compute.spv": "dbb70387c0cc4fa0a9a7b7925bc34dac796ebabd556955929cf52d873cfab859",
+      "reconstruct_compact.spv": "23235063327b154f3c8e9959d97723e4eed6df9d85d0b5c0372cee89ccd39ec5",
+      "reduce_setup_gather.spv": "36fb37ec667ad8b6b969bd34290ee524ac68a81f6e251f1e9181379ce67b3c81",
+      "tail_reconstruct.spv": "bf85ebaa7f38c7c0cd82eeee0d85ccb0fc2f565865ce33ad84a2c11daf1a2511",
+      "reconstruct_ev_fused.spv": "30afcda312ce30f082735793af1f61a05e0d260b043ffe698a11916dccab7bf9",
+      "baseline_srgb_compute.spv": "eddb4100384f6a89e05124f05fdeb9cff58c55c4a67ad1e6d662341a67f96acd",
+      "reconstruct_guided.spv": "abc7d6aabc44d13f930bd0a4645753b4dc24c832c532cca95ce06c9e750d3ced",
+      "downsample_compact.spv": "a2c92fc45a6a28c73206cf2ac06466755de11a5907430368ca513c7e3e974e2e"
+    },
+    "source_sha256": "4cdc3b1a98273579b92eef74277f4663d00a8b124ff2499ae288c7bdc073a733",
+    "quality": "65 tests pass including FP32 coefficient control and 140 final-image cases; 16/16 regenerated matrix passes; odd HDR and temporal both modes pass (worst 2 codes). Four matrix sheets and Veranda comparison inspected; freshness checks pass. Integrated phone validation and foreground readback match.",
+    "traffic": {
+      "incremental_sweep_bytes": 16708448,
+      "incremental_sweep_gbps": 0.75188016,
+      "incremental_expanded_bytes": 86506080,
+      "incremental_expanded_gbps": 3.8927736
+    },
+    "goal_0_9ms_met": false,
+    "limitations": "Measured on NX789J / Adreno830, process-local Qualcomm512.842.6, 1080p45 matched graphics HDR workload. No other-device or DRAM-counter claim."
+  },
+  "interior_fit_acceptance": {
+    "retained": true,
+    "change": "Guided interior four-fit batches sum fixed row windows rows[k+j]; batches touching the top/bottom image clamp keep the explicit offset cases. Sampling, summation order and half rounding unchanged.",
+    "sustained": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.4016145002861022,
+          "p95": 3.409583250091553,
+          "min": 3.3592707513198854,
+          "max": 3.4730207485427855,
+          "mean": 3.399498846402569
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.4272915,
+          "p95": 4.734234600000001,
+          "min": 3.839687,
+          "max": 6.690104,
+          "mean": 4.432918126666666
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 5.9590625,
+          "p95": 6.4735135,
+          "min": 4.50948,
+          "max": 8.449115,
+          "mean": 5.950722112222223
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.441822857051849,
+          "p95": 2.4475181694128034,
+          "min": 2.420833274230957,
+          "max": 2.746614516277313,
+          "mean": 2.443535472750778
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.477474,
+          "p95": 3.79069785,
+          "min": 2.935469,
+          "max": 7.455365,
+          "mean": 3.4745971700000005
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.982708499999999,
+          "p95": 5.4961426,
+          "min": 3.650573,
+          "max": 9.003438,
+          "mean": 4.976898267222222
+        }
+      },
+      "increment_ms": 0.959791643234253,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "sustained_round_increments_ms": [
+      0.9587760182590479,
+      0.9599478932304382,
+      0.9604687265510563
+    ],
+    "fresh_control": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.4124999166870116,
+          "p95": 3.420729083152771,
+          "min": 3.35822908467865,
+          "max": 3.472083248565674,
+          "mean": 3.4100709236907583
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.432083,
+          "p95": 4.7732031500000005,
+          "min": 3.821146,
+          "max": 6.174271,
+          "mean": 4.441451797777778
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 5.964792,
+          "p95": 6.5115076499999995,
+          "min": 4.560156,
+          "max": 8.485313,
+          "mean": 5.94946421611111
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.4427082736968995,
+          "p95": 2.4468749402618406,
+          "min": 2.4254166074523926,
+          "max": 2.7660936824684144,
+          "mean": 2.4439730884808353
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.4782029999999997,
+          "p95": 3.79086695,
+          "min": 2.890469,
+          "max": 6.245104,
+          "mean": 3.4777981877777777
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.994479,
+          "p95": 5.49721565,
+          "min": 3.558854,
+          "max": 8.427291,
+          "mean": 4.981731660000001
+        }
+      },
+      "increment_ms": 0.9697916429901121,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "fresh_control_round_increments_ms": [
+      0.9690885180072786,
+      0.9695312263298033,
+      0.9705208096389768
+    ],
+    "repeat_sustained_after_control": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 3.4022134586048125,
+          "p95": 3.409953041749191,
+          "min": 3.3457811683158876,
+          "max": 3.4687499153137207,
+          "mean": 3.399987416992493
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 4.434011,
+          "p95": 4.7440476,
+          "min": 3.778906,
+          "max": 6.929427,
+          "mean": 4.445123671111111
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 5.9577085,
+          "p95": 6.46080185,
+          "min": 4.456718,
+          "max": 9.092812,
+          "mean": 5.953189705000001
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 1800,
+          "median": 2.4420572320461273,
+          "p95": 2.4465754611024857,
+          "min": 2.4253645241203308,
+          "max": 2.753697849437714,
+          "mean": 2.4435526602503583
+        },
+        "cpu_ms": {
+          "count": 1800,
+          "median": 3.4888545,
+          "p95": 3.76404925,
+          "min": 2.888697,
+          "max": 5.867135,
+          "mean": 3.4829672116666663
+        },
+        "frame_work_wall_ms": {
+          "count": 1800,
+          "median": 4.996198,
+          "p95": 5.4621896,
+          "min": 3.586615,
+          "max": 8.107344,
+          "mean": 4.98180258611111
+        }
+      },
+      "increment_ms": 0.9601562265586852,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "repeat_round_increments_ms": [
+      0.9595312265739442,
+      0.9604426848850252,
+      0.9603124765548703
+    ],
+    "run_order": "candidate sustained, retained fresh control sustained, candidate repeat sustained; serial on one phone, 1800 frames/path, 60 warmup, 600 frames x 3 rounds",
+    "integrated_screen": {
+      "fusion": {
+        "gpu_ms": {
+          "count": 240,
+          "median": 3.4017447086162567,
+          "p95": 3.4110962708879473,
+          "min": 1.9009895369224548,
+          "max": 3.4180728332176207,
+          "mean": 3.3582679301638128
+        },
+        "cpu_ms": {
+          "count": 240,
+          "median": 4.3820049999999995,
+          "p95": 4.7226046,
+          "min": 2.552447,
+          "max": 5.026458,
+          "mean": 4.364655608333333
+        },
+        "frame_work_wall_ms": {
+          "count": 240,
+          "median": 5.9369795,
+          "p95": 6.4885784,
+          "min": 3.834583,
+          "max": 7.956093,
+          "mean": 5.877146479166667
+        }
+      },
+      "baseline": {
+        "gpu_ms": {
+          "count": 240,
+          "median": 2.4430207736892697,
+          "p95": 2.4468254610963824,
+          "min": 2.4315624406356813,
+          "max": 2.4576561899986267,
+          "mean": 2.442605409116077
+        },
+        "cpu_ms": {
+          "count": 240,
+          "median": 3.495521,
+          "p95": 3.79997375,
+          "min": 2.961198,
+          "max": 5.150417,
+          "mean": 3.480973741666667
+        },
+        "frame_work_wall_ms": {
+          "count": 240,
+          "median": 4.987474,
+          "p95": 5.520072999999999,
+          "min": 3.681146,
+          "max": 6.900937,
+          "mean": 4.980363545833333
+        }
+      },
+      "increment_ms": 0.9587239349269869,
+      "same_output_as_headless": true,
+      "note": "Single submission: headline GPU/CPU intervals include common graphics HDR producer plus Fusion/tonemap, or the same graphics work plus tonemap baseline. Difference cancels the common producer nominally; presentation excluded. Raw context_gpu_ms zeros are unused placeholders, not measured zero producer cost."
+    },
+    "integrated_screen_config": "120 frames x 2 rounds, 45 warmup; short screen, not the baseline",
+    "bundle": "outputs/goal090/interior-fit-integrated-headless/bundle",
+    "identical_active_candidate_spirv": {
+      "apply_srgb_compute.spv": "dbb70387c0cc4fa0a9a7b7925bc34dac796ebabd556955929cf52d873cfab859",
+      "reconstruct_compact.spv": "23235063327b154f3c8e9959d97723e4eed6df9d85d0b5c0372cee89ccd39ec5",
+      "reduce_setup_gather.spv": "36fb37ec667ad8b6b969bd34290ee524ac68a81f6e251f1e9181379ce67b3c81",
+      "tail_reconstruct.spv": "bf85ebaa7f38c7c0cd82eeee0d85ccb0fc2f565865ce33ad84a2c11daf1a2511",
+      "reconstruct_ev_fused.spv": "30afcda312ce30f082735793af1f61a05e0d260b043ffe698a11916dccab7bf9",
+      "baseline_srgb_compute.spv": "eddb4100384f6a89e05124f05fdeb9cff58c55c4a67ad1e6d662341a67f96acd",
+      "reconstruct_guided.spv": "1ce05461c61e459be929b9946609a1115b3d3dbf313862ace358089406c7933f",
+      "downsample_compact.spv": "a2c92fc45a6a28c73206cf2ac06466755de11a5907430368ca513c7e3e974e2e"
+    },
+    "phone_output": "Integrated headless luminance/averaged/final readback and foreground final match the tested candidate and its sustained runs byte for byte; headless validation passes (max 8 codes vs phone reference).",
+    "source_sha256": "40e8a4b1584418e250021b6b20cb3f4880263f7500d07d95b8391094c6af9a9f",
+    "quality": "65 tests pass; packed and FP32 coefficient parity exact over 7 sizes x random/near-constant guides; 16/16 regenerated matrix passes (peak 11 codes, Sundowner dark-shadow-lift; Veranda strong 10); 140 extreme final-image cases pass with exact FP32 control; 513x289 spatial/temporal pass (temporal max 2 codes). Comparison and worst-crop images regenerated and inspected; freshness checks pass.",
+    "packed_aoc": {
+      "registers": 14,
+      "occupancy_percent": 18,
+      "scratch_bytes": 0,
+      "note": "Offline a830 projection, not a measurement"
+    },
+    "traffic": {
+      "incremental_sweep_bytes": 16708448,
+      "incremental_sweep_gbps": 0.75188016,
+      "incremental_expanded_bytes": 86506080,
+      "incremental_expanded_gbps": 3.8927736
+    },
+    "traffic_note": "Texture accesses unchanged; modeled traffic is not DRAM counters.",
+    "goal_0_9ms_met": false,
+    "limitations": "Measured on NX789J / Adreno 830, process-local Qualcomm 512.842.6, 1080p45 matched graphics HDR workload. About 0.010 ms (1%) against fresh sustained control; no other-device or DRAM-counter claim."
   }
 }

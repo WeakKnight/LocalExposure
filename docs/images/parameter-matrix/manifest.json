@@ -40,13 +40,13 @@
     "tools/render_comparison.py": "0721898135db74c132b61c0183a29d63461e368333185eda699319b0e80a9d38",
     "tools/profiling/android/quality.py": "a72ae178f4773c39a492d85a92eaff5f5862442f6b96ce352e1b22c5162a984f",
     "tools/profiling/android/quality_sweep.py": "615cf95ec299d184ca5f36b5e6209e41b2f0e26850ae48efc57b782fac3d54ee",
-    "tools/profiling/android/variants.py": "04ce25fec767dd5ca0d45e760dd07f3676188352b2375ca73e6057a9f4f73a8f",
+    "tools/profiling/android/variants.py": "6d801f429c5f3f4cf9c3c2208edae1bd4602ffe71dc7d54ef30ea47d775eddac",
     "tools/profiling/android/pack_source.slang": "32a7d227670f04c003d46f6c37d9916f593f2a39d5045b874bb53b8244b7e346",
     "shaders/aces.slang": "926b65c08bd1cd46e13ce28eb82cba9ce6428b74a32ea5743ae7e3b8ac0d006f",
-    "shaders/compact/guided.slang": "b47a2194826e35777262ffbf68278336576a7c34307ca547983e1b72f3ee4631",
+    "shaders/compact/guided.slang": "6f2d93ebe634e0dfce22ef4b2c5c92c48cdeaf54b642d212ebb46cf0c895540a",
     "shaders/compact/initialize.slang": "8ab903c1973805e0f971d233639a7c35efeb871e2e76efce1cdea92930e163a0",
     "shaders/compact/pyramid.slang": "160c58d13555fdbc3c34c321b600094615243e72f336a37ea87615c3c5292284",
-    "shaders/compact/reconstruct.slang": "4fd8fea0c068b89489880712511cf290c6ea441f3a500b4a24f871dc3a859a72",
+    "shaders/compact/reconstruct.slang": "387a7ec2d786b22bfbc585ddd88a8102a4b76e2c9b3ef85e6f0057ff0ed7ca54",
     "shaders/compact/tail.slang": "1a8896d23535acb2d056c0b2be141ddc333d68f2db1a3a9e9d305db41b6de2c2",
     "shaders/fusion.slang": "ed98e36c678c1450d437bcbc84c9c186a0628e280332d5d5186e8154f317c75c",
     "shaders/guided.slang": "43050071379ca3ea95ce5929af6169155e80b3b116d5a359b30e81f8427f62fe",
@@ -63,26 +63,26 @@
     "Assets/qwantani_patio_4k.exr": "bbd401be5fedf7d23b28f51e1051b00bda4d605a2a40ed983ac012c6e62b11d0"
   },
   "artifacts": {
-    "abandoned_tiled_room_4k-default-worst.png": "cbc246ac693726ff21acb8f46475995d45773ae1a2e4c67be68ab5d5921136c9",
-    "abandoned_tiled_room_4k-dark-shadow-lift-worst.png": "62bea13b24c6c9ec9495e4a537badce3e071fec2d419454c80381e63900a9fc1",
-    "abandoned_tiled_room_4k-bright-highlight-protection-worst.png": "121ee0310641c0fe77dc4e88e71f3efed43820330a4cd6d0025dc680fd3b0d69",
-    "abandoned_tiled_room_4k-strong-balanced-worst.png": "08cfbb06c4e06555ef385e3d8134e3844990a3f1a7577bd819aef06899772878",
-    "abandoned_tiled_room_4k.png": "daba1a380baa0d07b9286c9c63ed30efb53895988e1eb2dbd87d9df611562c13",
+    "abandoned_tiled_room_4k-default-worst.png": "44ba80ae6a6b0c5acfe756beed219f0381644baf8a12be2879e7641e8e029859",
+    "abandoned_tiled_room_4k-dark-shadow-lift-worst.png": "9dae0514d385a2abe992f5cc2f9ded94395538df947cb43ce41f55b9726c84f7",
+    "abandoned_tiled_room_4k-bright-highlight-protection-worst.png": "e66ea917d24c44e35ac48bdbd7cc17acffcb489ab3c11713464b4f463dcaf29f",
+    "abandoned_tiled_room_4k-strong-balanced-worst.png": "5fd28613900a6fa71a889c09dbc88a8e8d177efa528fa7eab1dd4a5d48fae64f",
+    "abandoned_tiled_room_4k.png": "ca91d6dd9f660ca974d3b63537628f37661dff516174917a4f6c8db95ce11c98",
     "qwantani_patio_4k-default-worst.png": "2b7bd510680442c2dbba572e9b41aeb03330137b2742740164f8689a799a2859",
-    "qwantani_patio_4k-dark-shadow-lift-worst.png": "79c73c0da92952c4160e86eccd7d4c84b789e2066e6f2ac9c2589ca91768aedb",
-    "qwantani_patio_4k-bright-highlight-protection-worst.png": "6323b74bf3b59ff6c38ad42cb4d3fbaa39e007810bf8d0f5fee6c760fe0d2f4c",
-    "qwantani_patio_4k-strong-balanced-worst.png": "2bd44d2dcdcc3894f9f03daee8d059366ba2fa399152d58b9af99099d535fb96",
-    "qwantani_patio_4k.png": "007b0277ef4e5c1e962f32d91e69228895888e2411c80967dae6f167792b7f9a",
-    "sundowner_deck_4k-default-worst.png": "a6a3770b21822ad1c74cf8624fbe6749aec0669c0742ce9f1759689b90c42cc1",
-    "sundowner_deck_4k-dark-shadow-lift-worst.png": "bce4eeb4ff6da8f44bca5a2e8a4834ad888c73f6e6815aea60eaa81ae8a53068",
-    "sundowner_deck_4k-bright-highlight-protection-worst.png": "9ddda9fcaf4b4fe023450880f00938c42ca0a328a947bb82792e4b7ff1fd6238",
-    "sundowner_deck_4k-strong-balanced-worst.png": "d532d81b6a83e5465b1a5db0cfc35676d95713df36b48738d667e43e101041fb",
-    "sundowner_deck_4k.png": "f6e724d251f83d384bf19461b227deb7e3d59d44a26edde0cb062999416fc151",
-    "veranda_4k-default-worst.png": "70b86a3f96b879deb341c4efe908292399dbdf00a3e5eadd98d0add444d3ceb3",
-    "veranda_4k-dark-shadow-lift-worst.png": "71fba30155e491e41bbd455a9a597d56ef7fbb4c4bc5e19a0a4bc6e13922f762",
-    "veranda_4k-bright-highlight-protection-worst.png": "f0097944cef1a394064b14155da35996706e94c02c741dd92ac2eeda7886716c",
-    "veranda_4k-strong-balanced-worst.png": "15f5f3343c86b944ef243b68ad3d53c60a0f060e6944e4394bd0139e150c447b",
-    "veranda_4k.png": "5f83abda649c5d1a37da74ca3e05bf3c6150667c25636059cddf55d13b44772e"
+    "qwantani_patio_4k-dark-shadow-lift-worst.png": "6e9f828b2153c76e87b89a7863e7672d6a78d20d66c619c6c2d999d5e5f49c66",
+    "qwantani_patio_4k-bright-highlight-protection-worst.png": "625582494d5df6a4ed923bdef61999ad7e8c414e87650bf6544a7cd77e6c46ce",
+    "qwantani_patio_4k-strong-balanced-worst.png": "3391786e370660ec23d50ccd13c3e93e6880ec2204cff6ed143189e91de586e5",
+    "qwantani_patio_4k.png": "6043b10f518f8d4df8b09b10c2a8f06f8c3416b18cc355f785ba9e74130432d3",
+    "sundowner_deck_4k-default-worst.png": "5bd3f65ba89473abd5e4d149f23dc9167718298e4822035c2a7eb4334301cec9",
+    "sundowner_deck_4k-dark-shadow-lift-worst.png": "7374efa019347240ac5f537e7971c7e974f6ed1b886f536e9021b77da2683164",
+    "sundowner_deck_4k-bright-highlight-protection-worst.png": "115444ac84860f492c354dd2f8bfce5d0d0679a72775a18107ab43ca4f1b3419",
+    "sundowner_deck_4k-strong-balanced-worst.png": "6a3a0ae771b54f03055a5011ec98222541572a8858cb4f21d93870d000ccc249",
+    "sundowner_deck_4k.png": "ed0521db9cacc1c9f14e3c7262134073987cf8ee34b1cd02d51e306dd582075c",
+    "veranda_4k-default-worst.png": "8aab26373c79de0c4dbb5af118b3f4ce6d6e3c7e0d577b91ef3d0a3269322f2b",
+    "veranda_4k-dark-shadow-lift-worst.png": "6c18712af497cb36fd513c0c980b4d2f79405c2e01ed1e9082beecbd3d7b8b23",
+    "veranda_4k-bright-highlight-protection-worst.png": "d047b92a32e9b59a324555f3f102841cc5f8220d1a6fcdd9f57ad0219d383858",
+    "veranda_4k-strong-balanced-worst.png": "f5871549097289a16457778e6ad616836499f39259453058fe37d04f93cab5d5",
+    "veranda_4k.png": "cd739f37ae029c0da7d35d309d1430d9dd60b5cbda28e1a6872350d6b5508511"
   },
   "cases": [
     {
@@ -97,7 +97,7 @@
       "shadow_ev": 1.1999999999999997,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.22384821797673088,
+        "rmse_codes": 0.22385396290398551,
         "p99_codes": 1.0,
         "max_codes": 2.0,
         "fraction_pixels_over4": 0.0,
@@ -119,8 +119,8 @@
       "worst_crop": "abandoned_tiled_room_4k-default-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-default-reference.png": "c5179c7646e967bdb3ccd5000b26f7c314e998d7d518d49b8cf214624aca09ce",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-default-optimized.png": "68c5817bf5eb3860c469b79612ca656969179709c8bc36d66f7dabb7a8925332",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-default-error.png": "a25c8ad4b0f589093ca0b795b0218976a8ed8f0ded2a9cdc092f54426230b9f0"
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-default-optimized.png": "1434ec60da4d7962ea6e40781d173ac2712d3f19ff1df08e8145efd155bd1c88",
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-default-error.png": "6a83af2a40466a2d2ca7c090c9336dc0c5a5bd788ce3731ef89c9d861d8ab524"
       }
     },
     {
@@ -135,7 +135,7 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.2800098400865004,
+        "rmse_codes": 0.28007843551611084,
         "p99_codes": 1.0,
         "max_codes": 3.0,
         "fraction_pixels_over4": 0.0,
@@ -157,8 +157,8 @@
       "worst_crop": "abandoned_tiled_room_4k-dark-shadow-lift-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-dark-shadow-lift-reference.png": "1bd161039d028bc164fd1033f4608a886377a1522536097a69095a334d32a59f",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-dark-shadow-lift-optimized.png": "94a0dbd4d5d167eea7593ef3a461db8d1288505909ef14763bd617efb74c9709",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-dark-shadow-lift-error.png": "a9449d3805aa3e01949b9ea3439a3a4e331a056300b5f9fee41b98caea762bd9"
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-dark-shadow-lift-optimized.png": "e8b490ec601e313841ca296bf5c79b13dc153627063ac846e8757a1176ed79ea",
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-dark-shadow-lift-error.png": "78f96173c63d5e1fd882bebb792bd99fc81c9feed547a47649285acdb7a0e1d2"
       }
     },
     {
@@ -173,7 +173,7 @@
       "shadow_ev": 0.5999999999999999,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.17852220441484526,
+        "rmse_codes": 0.1785478655088819,
         "p99_codes": 1.0,
         "max_codes": 5.0,
         "fraction_pixels_over4": 4.822530864197531e-07,
@@ -195,8 +195,8 @@
       "worst_crop": "abandoned_tiled_room_4k-bright-highlight-protection-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-bright-highlight-protection-reference.png": "dc831c2bab657df0d9e51f3c67cf898adb8040bd013b64c3cb5947bcea775fc3",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-bright-highlight-protection-optimized.png": "084dd27f6be47409b1234b6b2ee44161eb117728cfa6ae17948ce5850e07472f",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-bright-highlight-protection-error.png": "159bd34060dceef417f043ec57973f8c71710685fcf6b147724e62c7325ec4d5"
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-bright-highlight-protection-optimized.png": "1a32a8546668e5fddd74b3bf031bb4efc52cc4929a087267ca8e95d53228bc8f",
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-bright-highlight-protection-error.png": "1536ab045f1a1fb48a35f70ea1258440507a9a0bb2d83e458c3e0941b70805da"
       }
     },
     {
@@ -211,7 +211,7 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.2858964045160875,
+        "rmse_codes": 0.2859211433345938,
         "p99_codes": 1.0,
         "max_codes": 4.0,
         "fraction_pixels_over4": 0.0,
@@ -233,8 +233,8 @@
       "worst_crop": "abandoned_tiled_room_4k-strong-balanced-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-strong-balanced-reference.png": "a5f1a8d1d56df63144103e8cf3dd9aef122d3461cba3e36e56b46aaa8de7751b",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-strong-balanced-optimized.png": "2f206fc6f73266ef62106e7d9ff68e49bea5f4e760c0bf1ed649e33f2969aeb0",
-        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-strong-balanced-error.png": "dd742734b407e55deb08c49cab275d3b32d6296d3d85b3922de2df7d7a96c2be"
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-strong-balanced-optimized.png": "d166695a270879c80301650458a0fcff8d5b325219ca83ec6365dc7a4de7d8ba",
+        "outputs/quality/parameter-matrix/abandoned_tiled_room_4k-strong-balanced-error.png": "d236f0fe1795c3b4273145102b4a8e41505d486c0c537f0d87dfc5e504143b65"
       }
     },
     {
@@ -249,7 +249,7 @@
       "shadow_ev": 1.1999999999999997,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.2017541387686708,
+        "rmse_codes": 0.20174975650287955,
         "p99_codes": 1.0,
         "max_codes": 3.0,
         "fraction_pixels_over4": 0.0,
@@ -271,8 +271,8 @@
       "worst_crop": "qwantani_patio_4k-default-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/qwantani_patio_4k-default-reference.png": "55fac2f7fd6583dea4b6d15f2a0b5b6e9cade01344915f5b32ee424d6325f427",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-default-optimized.png": "e8508526a313c56df15a99b73a7fb486ef7a1788f4c3214e87c6a7fb9d0a8ef3",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-default-error.png": "841d27fce58601936caf6c8d0621170e3ed9cd838183e509f3010393775dd125"
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-default-optimized.png": "670c0a652ca83aa8b9ff62aea98965a7024e031a3858fdaba552edbadc9e51ec",
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-default-error.png": "94dd4137a422fb351b60f8ba03be1cbfd6ac21d6293f91bab4cec36ff2a74bac"
       }
     },
     {
@@ -287,7 +287,7 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.2940379794062892,
+        "rmse_codes": 0.29399013912594446,
         "p99_codes": 1.0,
         "max_codes": 3.0,
         "fraction_pixels_over4": 0.0,
@@ -309,8 +309,8 @@
       "worst_crop": "qwantani_patio_4k-dark-shadow-lift-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/qwantani_patio_4k-dark-shadow-lift-reference.png": "75bcc35c74c17c77ee35dbd24886b49caf95ee196b7f9fb66974d686e43a8e0f",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-dark-shadow-lift-optimized.png": "bea6c11e66e08c8f2f23802acadc427334b8b7c6bffdf9f384b3ba7ee3220c62",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-dark-shadow-lift-error.png": "beaa491d0e8167af81f6c7e69432bf24d473060cd0d02264a51948f8141c7d65"
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-dark-shadow-lift-optimized.png": "76fa627f3d720cce06678436b9dd8405937c595cdbc0ed6cf0b156421d56d9e2",
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-dark-shadow-lift-error.png": "ed3ca86109c9520afad1372d27e225cc907ce8fa6e770100907d2b87f2bddc83"
       }
     },
     {
@@ -325,7 +325,7 @@
       "shadow_ev": 0.5999999999999999,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.15979819046833646,
+        "rmse_codes": 0.15973782129945915,
         "p99_codes": 1.0,
         "max_codes": 3.0,
         "fraction_pixels_over4": 0.0,
@@ -347,8 +347,8 @@
       "worst_crop": "qwantani_patio_4k-bright-highlight-protection-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/qwantani_patio_4k-bright-highlight-protection-reference.png": "263a01363a04194c571349270edd0f89c9b8f3516539d4a7490c87d3d23c7795",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-bright-highlight-protection-optimized.png": "34fd8a89487ccb7c9c35e5d40287d2f7babfb4026356a2884a87af7c15a50295",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-bright-highlight-protection-error.png": "26e2b465a5ab001937a3a29d4fd1b93d09eaf6a7102a49ca5189bfa1fbec79b4"
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-bright-highlight-protection-optimized.png": "757d6341714053f1182af53534d92e590941af60b60f24f3ecb907db4a9190b0",
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-bright-highlight-protection-error.png": "ac73693b5c155839996fa1f5721a0e0eeca11e25ce9387332f207bcabd77cbe8"
       }
     },
     {
@@ -363,7 +363,7 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.22144286077094413,
+        "rmse_codes": 0.22138986186411969,
         "p99_codes": 1.0,
         "max_codes": 6.0,
         "fraction_pixels_over4": 4.822530864197531e-07,
@@ -385,8 +385,8 @@
       "worst_crop": "qwantani_patio_4k-strong-balanced-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/qwantani_patio_4k-strong-balanced-reference.png": "3f645e5681f51cbef78743d063bb8028a6d8b81c031cc82e468929f1edd47fd6",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-strong-balanced-optimized.png": "c974c762b058c71a436cc94c4430b6440c346a888e1092e877a180e3138c9f86",
-        "outputs/quality/parameter-matrix/qwantani_patio_4k-strong-balanced-error.png": "5b29c91d928184f72fd3abf768bbe42ae64f650c7123851ca13e1fa3d39476a3"
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-strong-balanced-optimized.png": "112f01a728b1a5151a7a13b27ad18ecad52db3518dca9e21b1a2df22374b5aa1",
+        "outputs/quality/parameter-matrix/qwantani_patio_4k-strong-balanced-error.png": "23da05b9faa2422b40529a02d63fe86417c676f9065eda47e54b1a5fadc4d91c"
       }
     },
     {
@@ -401,7 +401,7 @@
       "shadow_ev": 1.1999999999999997,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.22677838001444342,
+        "rmse_codes": 0.22675711362655618,
         "p99_codes": 1.0,
         "max_codes": 3.0,
         "fraction_pixels_over4": 0.0,
@@ -423,8 +423,8 @@
       "worst_crop": "sundowner_deck_4k-default-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/sundowner_deck_4k-default-reference.png": "c04de7241c944f0e62ef9002dc42643c028506f1f7ef5ee2b1faf340eb70881d",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-default-optimized.png": "6b2ca8811160f0a74cbd9afbc6cd323f0d74968d3bcb7484d048143449cb4fd1",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-default-error.png": "e87374905d929c504451d7998506f8ac50a0b9610db45dfbc24ad28376b39d64"
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-default-optimized.png": "e59cea56406ba140eb7f119fa0add29b38b1f8988ed3f73c32ed55a49a189103",
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-default-error.png": "f07f46a66c4de6a4de2a76917aab5bf7cdce616ebe79284354975dff892b0a63"
       }
     },
     {
@@ -439,7 +439,7 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.27371831186270895,
+        "rmse_codes": 0.2737012800286115,
         "p99_codes": 1.0,
         "max_codes": 11.0,
         "fraction_pixels_over4": 4.340277777777778e-06,
@@ -461,8 +461,8 @@
       "worst_crop": "sundowner_deck_4k-dark-shadow-lift-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/sundowner_deck_4k-dark-shadow-lift-reference.png": "8544b4432626cf2cc250f6f05a6ee4ef6e4537b3eb4252da184002249feb541c",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-dark-shadow-lift-optimized.png": "70a5583e9fecf4a6469d98d84563324f8639b8ff236e6162be3aef27107e3894",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-dark-shadow-lift-error.png": "90b3184db3575b14bc67f71ac5e0b913b20918d24789e859ccc8413cd3d51685"
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-dark-shadow-lift-optimized.png": "22f9cd1b551ddbf95796108f57b25cd7cde19f89a4424febff16052b510f3e58",
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-dark-shadow-lift-error.png": "545b8669a1ef030ce871d89019ad8088008c519d6785286c9872dc9d3e32f41e"
       }
     },
     {
@@ -477,7 +477,7 @@
       "shadow_ev": 0.5999999999999999,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.20647006279670602,
+        "rmse_codes": 0.20646422345249943,
         "p99_codes": 1.0,
         "max_codes": 4.0,
         "fraction_pixels_over4": 0.0,
@@ -499,8 +499,8 @@
       "worst_crop": "sundowner_deck_4k-bright-highlight-protection-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/sundowner_deck_4k-bright-highlight-protection-reference.png": "db6634d04cdb944c45201f4fcdfebb3ed7b726ba2e3520327622ae10ed0fa163",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-bright-highlight-protection-optimized.png": "cfcd3a4023718b09166418d33cbc208fd57b31ef2bde5b9a898b829dbeb8ad50",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-bright-highlight-protection-error.png": "70dafc691e5a3ecbf859e1bb5731bc316c33ef4734576e422e279822ffb0ff96"
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-bright-highlight-protection-optimized.png": "6f4f17726346b11295af76c5cec34f50a8e7c5750994cc54b74d57f8b7f255f3",
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-bright-highlight-protection-error.png": "7e39b2d0a4569ad5e8019e267d9ddbb814b6c475f89688eee501a0c0b7b066f6"
       }
     },
     {
@@ -515,7 +515,7 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.2961776382775004,
+        "rmse_codes": 0.2961933776695702,
         "p99_codes": 1.0,
         "max_codes": 5.0,
         "fraction_pixels_over4": 4.822530864197531e-07,
@@ -537,8 +537,8 @@
       "worst_crop": "sundowner_deck_4k-strong-balanced-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/sundowner_deck_4k-strong-balanced-reference.png": "7a39fd64677c59a7e634eb551fffeaeec80fd22449d196bda856d5de42028648",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-strong-balanced-optimized.png": "0133bcac7646f395b1ab1552bc23f8f605af14aba93306d10599de4bbf3983ab",
-        "outputs/quality/parameter-matrix/sundowner_deck_4k-strong-balanced-error.png": "ee50eb9e11583b646614e7199d08404618b0e8f3eed37ebe81168a041641e71d"
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-strong-balanced-optimized.png": "db2e2ce7a75ffef799c2d6ba202abc971dd78de074cafb2d32d4fb8ba1ff1744",
+        "outputs/quality/parameter-matrix/sundowner_deck_4k-strong-balanced-error.png": "edd70af954ade5afd2ccff0984db3779a2249bd14b8e77046cdd96cc756b9c04"
       }
     },
     {
@@ -553,7 +553,7 @@
       "shadow_ev": 1.1999999999999997,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.2264254543294829,
+        "rmse_codes": 0.22639989464272875,
         "p99_codes": 1.0,
         "max_codes": 4.0,
         "fraction_pixels_over4": 0.0,
@@ -575,8 +575,8 @@
       "worst_crop": "veranda_4k-default-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/veranda_4k-default-reference.png": "9f57c45645203edab8e9a5f9987775718ac95217436fe7aad9b9fdb8d1fbd75d",
-        "outputs/quality/parameter-matrix/veranda_4k-default-optimized.png": "d947f34f238c9f29832baa01d522d2f0dc6fc594db366fbf5d1447be0494bcef",
-        "outputs/quality/parameter-matrix/veranda_4k-default-error.png": "244ce90cad3554121b8e670747328a7b38079159aa7719c9b917c35e92517786"
+        "outputs/quality/parameter-matrix/veranda_4k-default-optimized.png": "aaa956ea15b94787ed81acb2be813532d1bbe82b8c766e42b07b2fd0203b5555",
+        "outputs/quality/parameter-matrix/veranda_4k-default-error.png": "479cf4829eb5dde4c3e8bbfab9a5acb8eba2d5cca7c2e11bc05d591e63ea243b"
       }
     },
     {
@@ -591,7 +591,7 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.2981299957091936,
+        "rmse_codes": 0.29816180668047165,
         "p99_codes": 1.0,
         "max_codes": 5.0,
         "fraction_pixels_over4": 9.645061728395062e-07,
@@ -613,8 +613,8 @@
       "worst_crop": "veranda_4k-dark-shadow-lift-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/veranda_4k-dark-shadow-lift-reference.png": "ebe82fc8515adafc6beab61abc12f501af2047fafbee7ca4316505e703cdd895",
-        "outputs/quality/parameter-matrix/veranda_4k-dark-shadow-lift-optimized.png": "dc46c119f1feb92325a8ebf2f539efaf4e0f95cdd3ac657eaf1e7278bbbb3049",
-        "outputs/quality/parameter-matrix/veranda_4k-dark-shadow-lift-error.png": "9dc5de508505f4846118d3834268d8045d57e1788519d99b3f48a546cab5bcbf"
+        "outputs/quality/parameter-matrix/veranda_4k-dark-shadow-lift-optimized.png": "c8836591623dbd246b570df1a496f65f175fdf19ad75a15a074c61ec08582320",
+        "outputs/quality/parameter-matrix/veranda_4k-dark-shadow-lift-error.png": "f6d61e9d07ec0295b8e8a934fc7bd2f4e9eeba290b5a291feff288268dae656d"
       }
     },
     {
@@ -629,7 +629,7 @@
       "shadow_ev": 0.5999999999999999,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.16481513992893443,
+        "rmse_codes": 0.1647209925942488,
         "p99_codes": 1.0,
         "max_codes": 3.0,
         "fraction_pixels_over4": 0.0,
@@ -651,8 +651,8 @@
       "worst_crop": "veranda_4k-bright-highlight-protection-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/veranda_4k-bright-highlight-protection-reference.png": "c4c2994b5c74913dea4bd306f021cce7a23fa4f3f05a9cd50b6071bf1c592b26",
-        "outputs/quality/parameter-matrix/veranda_4k-bright-highlight-protection-optimized.png": "d00bc5b52d3f550cd59c04127c0b2dafde5774ec1db1bd93e8996675e9eb28e9",
-        "outputs/quality/parameter-matrix/veranda_4k-bright-highlight-protection-error.png": "0962606e91454294d2deacc016d984df25d91803c82ff989b42933c312c145a3"
+        "outputs/quality/parameter-matrix/veranda_4k-bright-highlight-protection-optimized.png": "8bca766d2bf2192a2c161bae0db75c0e384697e40921cb5337e57ca96e8ef641",
+        "outputs/quality/parameter-matrix/veranda_4k-bright-highlight-protection-error.png": "08587bedcc85ba96acb7a375db8ef2af50a5c42399fa422cf07bdafe49c2a2e4"
       }
     },
     {
@@ -667,7 +667,7 @@
       "shadow_ev": 3.0,
       "quality": {
         "finite": true,
-        "rmse_codes": 0.27513441346594764,
+        "rmse_codes": 0.2752164902623854,
         "p99_codes": 1.0,
         "max_codes": 10.0,
         "fraction_pixels_over4": 1.0127314814814815e-05,
@@ -689,8 +689,8 @@
       "worst_crop": "veranda_4k-strong-balanced-worst.png",
       "full_resolution_artifacts": {
         "outputs/quality/parameter-matrix/veranda_4k-strong-balanced-reference.png": "1ee3d97987e34cd363b0ce285a537c5b43bc126ddd306bef546b1580e9acce79",
-        "outputs/quality/parameter-matrix/veranda_4k-strong-balanced-optimized.png": "b8092f77f9904cd667ef16bf79c6f2a250a6d6b609a53d9c92c7833434c7a603",
-        "outputs/quality/parameter-matrix/veranda_4k-strong-balanced-error.png": "d2a665ad7f90cc646055152bb09a3fa78d3cec30f14f3d10d6ea088dff96eafa"
+        "outputs/quality/parameter-matrix/veranda_4k-strong-balanced-optimized.png": "4cbee4667f9cb694ce2ab3e83b09bc9fc02ba6ac7b3634b57282577ad3a86e4f",
+        "outputs/quality/parameter-matrix/veranda_4k-strong-balanced-error.png": "5baa7ef28dea68e03ba01045bff8688ce930973cef990e68c0df6e2081c5f455"
       }
     }
   ],
@@ -708,10 +708,12 @@
     "packed_weight_bias": 0.5,
     "gather_reduction": true,
     "guided_vertical": 2,
-    "guided_threads_x": 8,
-    "guided_threads_y": 8,
+    "guided_threads_x": 64,
+    "guided_threads_y": 1,
     "tile_x": 16,
     "guided_direct_fit": true,
+    "guided_fit_rows": 4,
+    "guided_uncentered": true,
     "guided_static_windows": true,
     "guided_batch": 2,
     "guided_direct_moments": true,

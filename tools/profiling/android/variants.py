@@ -15,10 +15,12 @@ PRODUCTION = {'half_aux': True,
  'packed_weight_bias': 0.5,
  'gather_reduction': True,
  'guided_vertical': 2,
- 'guided_threads_x': 8,
- 'guided_threads_y': 8,
+ 'guided_threads_x': 64,
+ 'guided_threads_y': 1,
  'tile_x': 16,
  'guided_direct_fit': True,
+ 'guided_fit_rows': 4,
+ 'guided_uncentered': True,
  'guided_static_windows': True,
  'guided_batch': 2,
  'guided_direct_moments': True,
@@ -53,7 +55,7 @@ PRODUCTION = {'half_aux': True,
 
 VARIANTS = {
     "guided-packed-coefficients": dict(PRODUCTION),
-    "guided-coefficient-layout": {**PRODUCTION, "packed_half_coefficients": False},
+    "guided-coefficient-layout": {**PRODUCTION, "packed_half_coefficients": False, "guided_uncentered": False},
     "lossless": {},
 }
 DEFAULT_VARIANT = "guided-packed-coefficients"

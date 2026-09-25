@@ -15,9 +15,10 @@ For the current mobile path at 1920x1080:
 Use R11G11B10 HDR input and RGBA8 sRGB output. Average GB/s is bytes/frame times
 FPS divided by 1e9. Packing residuals and weights slightly increases the sweep
 estimate from 16.66 to 16.71 MB/frame. Direct 5×5 Guided fitting keeps this sweep
-unchanged, but repeats more cached input reads. The expanded logical-access
-estimate is 98.88 MB/frame (4.449 GB/s at 45 FPS), including reconstruction halos
-and every direct fit sample, up from 3.946 GB/s before the Guided change.
+unchanged. Sharing eight input rows across four fits reduces the expanded
+logical-access estimate from 98.88 to 86.64 MB/frame; omitting the default per-thread anchor
+read further reduces it to 86.51 MB/frame (**3.893 GB/s at 45 FPS**),
+including reconstruction halos and each issued fit sample.
 Cache reuse determines how much reaches DRAM; no physical-bandwidth or power
 improvement is claimed.
 

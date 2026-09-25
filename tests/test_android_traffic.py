@@ -81,3 +81,14 @@ class TrafficTests(unittest.TestCase):
         self.assertEqual(direct['expanded_read_bytes'],4*(20*20*25+64)*8)
         self.assertEqual(direct['read_sweep_bytes'],before['read_sweep_bytes'])
         self.assertEqual(direct['write_bytes'],before['write_bytes'])
+
+        m['config']['variant_settings']['guided_fit_rows']=4
+        batched=estimate(m)['rows'][0]
+        self.assertEqual(batched['expanded_read_bytes'],4*(20*5*8*5+64)*8)
+        self.assertEqual(batched['read_sweep_bytes'],direct['read_sweep_bytes'])
+        self.assertEqual(batched['write_bytes'],direct['write_bytes'])
+
+        m['config']['variant_settings']['guided_uncentered']=True
+        raw=estimate(m)['rows'][0]
+        self.assertEqual(raw['expanded_read_bytes'],batched['expanded_read_bytes']-4*64*8)
+        self.assertEqual(raw['read_sweep_bytes'],batched['read_sweep_bytes'])

@@ -63,21 +63,15 @@ void reconstruct_compact(uint3 tid : SV_DispatchThreadID)
 float compactEV(float value,float2 lg,float baseline)
 {
     float lightness=clamp(value,0.0,zMaxLightness);
-    float ev=0.0;
-    if(lg.x>log2(1e-12) && abs(lightness-baseline)>2e-6)
-    {
-        float targetLog;
-        if(lightness<=0.0) targetLog=-1e20;
-        else if(lightness>=zMaxLightness) targetLog=log2(zMaxInput);
-        else
-        {
-            float t=saturate(lightness/zMaxLightness);
-            float u=0.5+log2((t+inverseWarpEpsilon)/(1.0-t+inverseWarpEpsilon))/(2.0*inverseWarpSpan);
-            float coord=(saturate(u)*float(inverseSize-1)+0.5)/float(inverseSize);
-            targetLog=min(inverseLut.SampleLevel(inverseSampler,coord,0),log2(zMaxInput));
-        }
-        ev=clamp(targetLog-lg.x,-12.0,12.0);
-    }
+    // Query uniformly, then select boundary and identity results. This keeps
+    // texture access outside divergent branches without changing the curve.
+    float t=saturate(lightness/zMaxLightness);
+    float u=0.5+log2((t+inverseWarpEpsilon)/(1.0-t+inverseWarpEpsilon))/(2.0*inverseWarpSpan);
+    float coord=(saturate(u)*float(inverseSize-1)+0.5)/float(inverseSize);
+    float targetLog=min(inverseLut.SampleLevel(inverseSampler,coord,0),log2(zMaxInput));
+    targetLog=lightness<=0.0 ? -1e20 : (lightness>=zMaxLightness ? log2(zMaxInput) : targetLog);
+    float ev=clamp(targetLog-lg.x,-12.0,12.0);
+    ev=(lg.x>log2(1e-12) && abs(lightness-baseline)>2e-6) ? ev : 0.0;
     return float(half(ev));
 }
 

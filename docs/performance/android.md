@@ -80,3 +80,27 @@ For a controlled A/B comparison, prepare fresh bundles for the default and
 formats, driver, pacing, warmup and frame counts. Each foreground invocation
 also measures its matched no-LE baseline. Existing bundles are immutable;
 rebuild to pick up shader or default changes.
+
+Experimental compute passes can specify `required_subgroup_size` in their bundle
+manifest. The runner opts into `VK_EXT_subgroup_size_control`, checks the feature,
+stage, size range and workgroup subgroup limit, then sets the pipeline-stage
+request. Unspecified passes keep the driver default. A Slang `WaveSize` attribute
+alone did not change the SPIR-V in the tested export path. On Adreno 830 with
+512.842.6, the queried required-size range is 64–64; requesting 32 is rejected.
+`require_full_subgroups: true` additionally enables the supported full-compute-
+subgroup feature and stage flag. It requires an explicit size and a local X
+dimension divisible by that size; it is never enabled for default bundles.
+
+For sampled-view experiments, a resource may declare `sampled_alias_format` and
+sampled-image descriptors select it with `sampled_alias: true`. This creates a
+sampled-only view of the same mutable image, preserving producer and barrier
+identity; `nearest: true` selects a point sampler. Formats must be compatible
+under the [Vulkan format rules](https://docs.vulkan.org/spec/latest/chapters/formats.html#formats-compatibility).
+Run an alias-enabled original-shader control: creation flags alone can alter
+performance. Default resources never enable aliases.
+
+`view_formats` optionally supplies an explicit nonempty Vulkan format list; it
+must include the image and every declared view format. `extended_usage: false`
+can disable that mutable-image flag for controlled experiments. HDR-producer
+setup strips these alias options from its immutable input, applying them only
+to the produced target. See [format-list rationale](https://docs.vulkan.org/guide/latest/extensions/VK_KHR_image_format_list.html).

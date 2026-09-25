@@ -20,7 +20,7 @@ static std::vector<char> read(const std::string& path) {
     auto n=f.tellg(); std::vector<char> b(static_cast<size_t>(n)); f.seekg(0); f.read(b.data(),b.size()); return b;
 }
 struct Buffer { VkBuffer buffer{}; VkDeviceMemory memory{}; VkDeviceSize size{}; };
-struct Image { VkImage image{}; VkDeviceMemory memory{}; std::vector<VkImageView> views;
+struct Image { VkImage image{}; VkDeviceMemory memory{}; std::vector<VkImageView> views, sampledAliasViews;
     uint32_t width{},height{},levels{},bpp{}; bool dump{}; VkImageLayout layout=VK_IMAGE_LAYOUT_GENERAL; };
 struct Pass { VkPipeline pipeline{}; VkPipelineLayout layout{}; VkDescriptorSet set{};
     VkDescriptorSetLayout setLayout{}; Buffer uniform; uint32_t x{},y{},width{},height{}; bool baseline{},graphics{};
@@ -30,11 +30,13 @@ public:
     VkInstance instance{}; VkPhysicalDevice physical{}; VkDevice device{}; VkQueue queue{},graphicsQueue{};
     VkPhysicalDeviceProperties properties{}; VkPhysicalDeviceMemoryProperties memories{};
     uint32_t family{},graphicsFamily{},validBits{}; VkQueueFlags queueFlags{}; VkCommandPool pool{},graphicsPool{}; VkCommandBuffer cmd{}; VkFence fence{};
-    VkSampler sampler{}; VkDescriptorPool descriptors{}; VkQueryPool queries{};
+    VkSampler sampler{}, nearestSampler{}; VkDescriptorPool descriptors{}; VkQueryPool queries{};
     std::map<std::string,Image> images; std::vector<Pass> passes; std::vector<Buffer> buffers;
     std::vector<VkShaderModule> modules; json manifest; uint32_t productionCount{};
     double lastSubmitQueryMs{};
     bool hasGraphics=false;
+    bool subgroupSizeEnabled=false;
+    VkPhysicalDeviceSubgroupSizeControlProperties subgroupProperties{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES};
     std::string calibrationExtension;
     VkDeviceMemory tileMemory{}; PFN_vkCmdBindTileMemoryQCOM bindTile{};
     json tileReport=json::object();
@@ -87,6 +89,26 @@ public:
             enabled12.pNext=&tileFeature;deviceExtensions.push_back(VK_QCOM_TILE_MEMORY_HEAP_EXTENSION_NAME);
         }
         if(windowed) deviceExtensions.push_back("VK_KHR_swapchain");
+        // Opt in only for explicit benchmark candidates; default device features stay unchanged.
+        VkPhysicalDeviceSubgroupSizeControlFeatures subgroupFeature{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES};
+        auto manifestBytes=read("manifest.json");
+        auto requestedManifest=json::parse(manifestBytes.begin(),manifestBytes.end());
+        bool requestSubgroup=false;
+        for(const auto& p:requestedManifest["passes"])requestSubgroup|=p.contains("required_subgroup_size");
+        if(requestSubgroup) {
+            uint32_t n=0;VK(vkEnumerateDeviceExtensionProperties(physical,nullptr,&n,nullptr));
+            std::vector<VkExtensionProperties> ex(n);VK(vkEnumerateDeviceExtensionProperties(physical,nullptr,&n,ex.data()));
+            bool supported=false;for(auto& e:ex)supported|=std::string(e.extensionName)==VK_EXT_SUBGROUP_SIZE_CONTROL_EXTENSION_NAME;
+            if(!supported)throw std::runtime_error("Subgroup size control extension unavailable");
+            VkPhysicalDeviceFeatures2 f{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2};f.pNext=&subgroupFeature;vkGetPhysicalDeviceFeatures2(physical,&f);
+            VkPhysicalDeviceProperties2 props{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2};props.pNext=&subgroupProperties;vkGetPhysicalDeviceProperties2(physical,&props);
+            if(!subgroupFeature.subgroupSizeControl)throw std::runtime_error("Subgroup size control feature unavailable");
+            bool requestFull=false;for(const auto& p:requestedManifest["passes"])requestFull|=p.value("require_full_subgroups",false);
+            if(requestFull&&!subgroupFeature.computeFullSubgroups)throw std::runtime_error("Full compute subgroups unavailable");
+            subgroupFeature.computeFullSubgroups=requestFull?VK_TRUE:VK_FALSE;
+            subgroupFeature.pNext=enabled12.pNext;enabled12.pNext=&subgroupFeature;
+            deviceExtensions.push_back(VK_EXT_SUBGROUP_SIZE_CONTROL_EXTENSION_NAME);subgroupSizeEnabled=true;
+        }
         if(calibrate) {
             uint32_t extensionCount=0; VK(vkEnumerateDeviceExtensionProperties(physical,nullptr,&extensionCount,nullptr));
             std::vector<VkExtensionProperties> extensions(extensionCount);
@@ -107,6 +129,8 @@ public:
         VkSamplerCreateInfo si{VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO}; si.minFilter=si.magFilter=VK_FILTER_LINEAR;
         si.mipmapMode=VK_SAMPLER_MIPMAP_MODE_NEAREST; si.addressModeU=si.addressModeV=si.addressModeW=VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE; si.maxLod=0;
         VK(vkCreateSampler(device,&si,nullptr,&sampler));
+        si.minFilter=si.magFilter=VK_FILTER_NEAREST;si.mipmapMode=VK_SAMPLER_MIPMAP_MODE_NEAREST;
+        VK(vkCreateSampler(device,&si,nullptr,&nearestSampler));
         VkDescriptorPoolSize sizes[]={{VK_DESCRIPTOR_TYPE_SAMPLER,256},{VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,512},{VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,256},{VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,128}};
         VkDescriptorPoolCreateInfo di{VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO}; di.maxSets=128; di.poolSizeCount=4; di.pPoolSizes=sizes;
         VK(vkCreateDescriptorPool(device,&di,nullptr,&descriptors));
@@ -192,11 +216,26 @@ public:
             bool one=r["one_d"]; auto format=VkFormat(r["format"].get<int>());
             VkFormatProperties fp; vkGetPhysicalDeviceFormatProperties(physical,VkFormat(r.value("storage_view_format",int(format))),&fp);
             bool attachment=r.value("attachment",false),sampledOnly=r.value("sampled_only",false);
+            // Integer point-load resources explicitly opt out; existing textures still require filtering.
             const VkFormatFeatureFlags needed=attachment?VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT:
-                VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT|VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT|(sampledOnly?0:VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
+                VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT|(r.value("linear_filter",true)?VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT:0)|(sampledOnly?0:VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
             if((fp.optimalTilingFeatures&needed)!=needed) throw std::runtime_error("Unsupported format "+r["format_name"].get<std::string>());
             VkImageCreateInfo ci{VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO}; ci.imageType=one?VK_IMAGE_TYPE_1D:VK_IMAGE_TYPE_2D; ci.format=format;
-            if(r.contains("storage_view_format")) ci.flags=VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT|VK_IMAGE_CREATE_EXTENDED_USAGE_BIT;
+            if(r.contains("storage_view_format") || r.contains("sampled_alias_format")) {
+                ci.flags=VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+                if(r.value("extended_usage",true))ci.flags|=VK_IMAGE_CREATE_EXTENDED_USAGE_BIT;
+            }
+            std::vector<VkFormat> viewFormats;
+            VkImageFormatListCreateInfo formatList{VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO};
+            if(r.contains("view_formats")) {
+                for(int f:r["view_formats"])viewFormats.push_back(VkFormat(f));
+                if(viewFormats.empty())throw std::runtime_error("Empty view format list");
+                auto included=[&](VkFormat f){return std::find(viewFormats.begin(),viewFormats.end(),f)!=viewFormats.end();};
+                if(!included(format) || !included(VkFormat(r.value("storage_view_format",int(format)))) ||
+                   (r.contains("sampled_alias_format") && !included(VkFormat(r["sampled_alias_format"].get<int>()))))
+                    throw std::runtime_error("View format list omits a declared view");
+                formatList.viewFormatCount=uint32_t(viewFormats.size());formatList.pViewFormats=viewFormats.data();ci.pNext=&formatList;
+            }
             ci.extent={im.width,im.height,1}; ci.mipLevels=im.levels; ci.arrayLayers=1; ci.samples=VK_SAMPLE_COUNT_1_BIT; ci.tiling=VK_IMAGE_TILING_OPTIMAL;
             ci.usage=VK_IMAGE_USAGE_SAMPLED_BIT|VK_IMAGE_USAGE_STORAGE_BIT|VK_IMAGE_USAGE_TRANSFER_SRC_BIT|VK_IMAGE_USAGE_TRANSFER_DST_BIT;
             if(sampledOnly) ci.usage&=~VK_IMAGE_USAGE_STORAGE_BIT;
@@ -215,6 +254,16 @@ public:
             for(uint32_t m=0;m<im.levels;m++) {
                 VkImageViewCreateInfo vi{VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO}; vi.image=im.image; vi.viewType=one?VK_IMAGE_VIEW_TYPE_1D:VK_IMAGE_VIEW_TYPE_2D; vi.format=VkFormat(r.value("storage_view_format",int(format)));
                 vi.subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,m,1,0,1}; VkImageView view; VK(vkCreateImageView(device,&vi,nullptr,&view)); im.views.push_back(view);
+                if(r.contains("sampled_alias_format")) {
+                    VkFormatProperties aliasProperties{};
+                    vi.format=VkFormat(r["sampled_alias_format"].get<int>());
+                    vkGetPhysicalDeviceFormatProperties(physical,vi.format,&aliasProperties);
+                    if(!(aliasProperties.optimalTilingFeatures&VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT))
+                        throw std::runtime_error("Sampled alias format unsupported");
+                    VkImageViewUsageCreateInfo usage{VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO};
+                    usage.usage=VK_IMAGE_USAGE_SAMPLED_BIT;vi.pNext=&usage;
+                    VK(vkCreateImageView(device,&vi,nullptr,&view));im.sampledAliasViews.push_back(view);
+                }
             }
             VkImageMemoryBarrier ib{VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER}; ib.oldLayout=VK_IMAGE_LAYOUT_UNDEFINED; ib.newLayout=VK_IMAGE_LAYOUT_GENERAL;
             ib.srcQueueFamilyIndex=ib.dstQueueFamilyIndex=VK_QUEUE_FAMILY_IGNORED; ib.image=im.image; ib.subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,im.levels,0,1}; ib.dstAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT;
@@ -272,6 +321,21 @@ public:
         VK(vkCreateShaderModule(device,&mi,nullptr,&module)); modules.push_back(module);
         auto entry=p["entry"].get<std::string>(); VkComputePipelineCreateInfo ci{VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO}; ci.layout=pass.layout;
         ci.stage={VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO}; ci.stage.stage=VK_SHADER_STAGE_COMPUTE_BIT; ci.stage.module=module; ci.stage.pName=entry.c_str();
+        VkPipelineShaderStageRequiredSubgroupSizeCreateInfo subgroup{VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO};
+        if(p.value("require_full_subgroups",false)&&!p.contains("required_subgroup_size"))throw std::runtime_error("Full-subgroup experiment requires an explicit size");
+        if(p.contains("required_subgroup_size")) {
+            subgroup.requiredSubgroupSize=p["required_subgroup_size"];
+            auto size=subgroup.requiredSubgroupSize;
+            if(pass.graphics||!subgroupSizeEnabled||!size||(size&(size-1))||size<subgroupProperties.minSubgroupSize||size>subgroupProperties.maxSubgroupSize||!(subgroupProperties.requiredSubgroupSizeStages&VK_SHADER_STAGE_COMPUTE_BIT))
+                throw std::runtime_error("Unsupported requested compute subgroup size "+std::to_string(size)+"; device range "+std::to_string(subgroupProperties.minSubgroupSize)+".."+std::to_string(subgroupProperties.maxSubgroupSize));
+            uint64_t invocations=1;for(const auto& axis:p["group_size"])invocations*=axis.get<uint32_t>();
+            if(invocations>uint64_t(size)*subgroupProperties.maxComputeWorkgroupSubgroups)throw std::runtime_error("Workgroup exceeds subgroup count limit");
+            if(p.value("require_full_subgroups",false)) {
+                if(p["group_size"][0].get<uint32_t>()%size)throw std::runtime_error("Full subgroup requires aligned local X size");
+                ci.stage.flags|=VK_PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT;
+            }
+            ci.stage.pNext=&subgroup;
+        }
         if(pass.graphics) makeGraphics(pass,p,module,entry);
         else VK(vkCreateComputePipelines(device,VK_NULL_HANDLE,1,&ci,nullptr,&pass.pipeline));
         VkDescriptorSetAllocateInfo ai{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO}; ai.descriptorPool=descriptors; ai.descriptorSetCount=1; ai.pSetLayouts=&pass.setLayout;
@@ -283,8 +347,13 @@ public:
         }
         for(auto& d:p["descriptors"]) {
             VkDescriptorImageInfo ii{}; auto type=VkDescriptorType(d["type"].get<int>());
-            if(type==VK_DESCRIPTOR_TYPE_SAMPLER) ii.sampler=sampler;
-            else {ii.imageView=images.at(d["resource"].get<std::string>()).views.at(d["mip"].get<size_t>()); ii.imageLayout=images.at(d["resource"].get<std::string>()).layout;}
+            if(type==VK_DESCRIPTOR_TYPE_SAMPLER) ii.sampler=d.value("nearest",false)?nearestSampler:sampler;
+            else {
+                const auto& im=images.at(d["resource"].get<std::string>());
+                bool alias=d.value("sampled_alias",false);
+                if(alias && type!=VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE)throw std::runtime_error("Alias view is sampled-only");
+                ii.imageView=(alias?im.sampledAliasViews:im.views).at(d["mip"].get<size_t>());ii.imageLayout=im.layout;
+            }
             VkWriteDescriptorSet w{VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET}; w.dstSet=pass.set; w.dstBinding=d["binding"]; w.descriptorCount=1; w.descriptorType=type; w.pImageInfo=&ii;
             vkUpdateDescriptorSets(device,1,&w,0,nullptr);
         }
@@ -430,10 +499,10 @@ public:
         for(auto& p:passes) {vkDestroyPipeline(device,p.pipeline,nullptr); vkDestroyPipelineLayout(device,p.layout,nullptr); vkDestroyDescriptorSetLayout(device,p.setLayout,nullptr);
             if(p.graphics) {vkDestroyFramebuffer(device,p.framebuffer,nullptr); vkDestroyRenderPass(device,p.renderPass,nullptr);}}
         for(auto m:modules) vkDestroyShaderModule(device,m,nullptr);
-        for(auto& [name,im]:images) {for(auto v:im.views) vkDestroyImageView(device,v,nullptr); vkDestroyImage(device,im.image,nullptr); if(im.memory!=tileMemory)vkFreeMemory(device,im.memory,nullptr);}
+        for(auto& [name,im]:images) {for(auto v:im.views) vkDestroyImageView(device,v,nullptr); for(auto v:im.sampledAliasViews)vkDestroyImageView(device,v,nullptr); vkDestroyImage(device,im.image,nullptr); if(im.memory!=tileMemory)vkFreeMemory(device,im.memory,nullptr);}
         if(tileMemory)vkFreeMemory(device,tileMemory,nullptr);
         for(auto& b:buffers) {vkDestroyBuffer(device,b.buffer,nullptr); vkFreeMemory(device,b.memory,nullptr);}
-        vkDestroyQueryPool(device,queries,nullptr); vkDestroyDescriptorPool(device,descriptors,nullptr); vkDestroySampler(device,sampler,nullptr);
+        vkDestroyQueryPool(device,queries,nullptr); vkDestroyDescriptorPool(device,descriptors,nullptr); vkDestroySampler(device,sampler,nullptr); vkDestroySampler(device,nearestSampler,nullptr);
         vkDestroyFence(device,fence,nullptr); if(graphicsPool!=pool)vkDestroyCommandPool(device,graphicsPool,nullptr); vkDestroyCommandPool(device,pool,nullptr); vkDestroyDevice(device,nullptr); vkDestroyInstance(instance,nullptr);
     }
 };

@@ -11,7 +11,7 @@ optimized mobile graph are independent; their storage choices differ deliberatel
 | Mobile residual pyramid | Residuals in RGBA16F xy at mips 0–2, RGBA32F above; FP32 reconstruction. Coarse precision protects strong highlights. |
 | Mobile weights | Centered weights (weight − 0.5) share pyramid zw; decode with +0.5. Normalization and filtering arithmetic remain float. |
 | Exposure and guide storage | Reference exposure R16F; mobile log-luminance/guide and EV/guide RG16F. Exposure limits are ±12 EV. |
-| Guided fit | Subtraction, moments and variance remain FP32 on the mobile path; regularized slope division uses half. |
+| Guided fit | Default raw moments and variance use FP32; regularized slope division uses half. The independent FP32 coefficient control retains local centering. |
 | Mobile fitted coefficients | Two half values packed into one shared uint; unpack to FP32 for averaging. Intercept quantization is approximate. |
 | Guided horizontal sums / final coefficients | Half storage, with FP32 accumulation and evaluation. The independent reference keeps its own coefficient path. |
 | Coordinates | FP32 to preserve texel positions at large resolutions. |
@@ -20,6 +20,8 @@ optimized mobile graph are independent; their storage choices differ deliberatel
 The neutral-response proxy does not reproduce arbitrary chromatic behavior.
 Near-flat tone responses can amplify small pyramid errors; lower storage size
 alone is not evidence of acceptable quality or faster execution.
+
+Raw moments can differ by about 0.030 EV from centered fits on synthetic near-constant extreme guides. The 140-case production-shader image check peaks at one sRGB8 code, including global exposure shifts to reveal otherwise clipped errors. This is measured for the current ACES operator, not an arbitrary-operator guarantee.
 
 Validation includes black/HDR endpoints, odd/thin sizes, edges, motion and four
 HDR assets at several exposure/contrast settings. The inverse LUT's regression

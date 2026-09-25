@@ -53,6 +53,9 @@ def main():
         source=next(r for r in manifest['resources'] if r['name']=='source')
         if source['format']!=122:raise ValueError('HDR producer requires R11G11B10 source')
         immutable=copy.deepcopy(source);immutable.update(name='immutable_source',dump=False,sampled_only=True)
+        # Alias experiments target the produced HDR image, not this common input.
+        for key in ('sampled_alias_format','view_formats','extended_usage'):
+            immutable.pop(key,None)
         manifest['resources'].append(immutable)
         source.update(attachment=True,sampled_attachment=True);source.pop('sampled_only',None)
     else:

@@ -10,22 +10,22 @@ Contrast Scale uses the viewer mapping: bracket magnitude = 6 × (1 − scale) E
 
 | Scene | Preset | Global EV | Highlight / Shadow | RMSE | P99 | Max | Pixels >4 (%) | Gate |
 | --- | --- | ---: | --- | ---: | ---: | ---: | ---: | --- |
-| abandoned_tiled_room_4k | default | +0 | 0.8 / 0.8 | 0.2238 | 1 | 2 | 0.00000 | PASS |
-| abandoned_tiled_room_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.2800 | 1 | 3 | 0.00000 | PASS |
+| abandoned_tiled_room_4k | default | +0 | 0.8 / 0.8 | 0.2239 | 1 | 2 | 0.00000 | PASS |
+| abandoned_tiled_room_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.2801 | 1 | 3 | 0.00000 | PASS |
 | abandoned_tiled_room_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.1785 | 1 | 5 | 0.00005 | PASS |
 | abandoned_tiled_room_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.2859 | 1 | 4 | 0.00000 | PASS |
-| qwantani_patio_4k | default | +0 | 0.8 / 0.8 | 0.2018 | 1 | 3 | 0.00000 | PASS |
+| qwantani_patio_4k | default | +0 | 0.8 / 0.8 | 0.2017 | 1 | 3 | 0.00000 | PASS |
 | qwantani_patio_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.2940 | 1 | 3 | 0.00000 | PASS |
-| qwantani_patio_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.1598 | 1 | 3 | 0.00000 | PASS |
+| qwantani_patio_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.1597 | 1 | 3 | 0.00000 | PASS |
 | qwantani_patio_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.2214 | 1 | 6 | 0.00005 | PASS |
 | sundowner_deck_4k | default | +0 | 0.8 / 0.8 | 0.2268 | 1 | 3 | 0.00000 | PASS |
 | sundowner_deck_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.2737 | 1 | 11 | 0.00043 | PASS |
 | sundowner_deck_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.2065 | 1 | 4 | 0.00000 | PASS |
 | sundowner_deck_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.2962 | 1 | 5 | 0.00005 | PASS |
 | veranda_4k | default | +0 | 0.8 / 0.8 | 0.2264 | 1 | 4 | 0.00000 | PASS |
-| veranda_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.2981 | 1 | 5 | 0.00010 | PASS |
-| veranda_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.1648 | 1 | 3 | 0.00000 | PASS |
-| veranda_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.2751 | 1 | 10 | 0.00101 | PASS |
+| veranda_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.2982 | 1 | 5 | 0.00010 | PASS |
+| veranda_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.1647 | 1 | 3 | 0.00000 | PASS |
+| veranda_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.2752 | 1 | 10 | 0.00101 | PASS |
 
 Errors are sRGB8 code values. Fixed gates: RMSE ≤0.75, P99 ≤3, max ≤12, pixels >4 ≤0.1%. Numerical gates supplement visual inspection; this is not an exhaustive parameter sweep.
 

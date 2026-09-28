@@ -9,6 +9,18 @@
 
 Each pair uses the same 1200×600 HDR input, global exposure, and tone mapper. The after images use the current optimized mobile algorithm. Examples use ±3 EV brackets to emphasize the effect; the default is ±1.2 EV.
 
+## Inside the Veranda result
+
+![Veranda: three exposures, actual exposure weights, local exposure EV, and the final result](docs/images/veranda-fusion-walkthrough.png)
+
+Read top to bottom:
+
+1. **Three exposure choices.** A darker exposure protects highlights; a brighter one reveals shadows.
+2. **Where each exposure helps.** The actual initialization weights are shown on the same black-to-white 0–1 scale. They favor lightness near the middle of the calibrated response and sum to one. These are the 300×150 mip-0 weights, enlarged for viewing; the RGB map combines them as red = darker, green = middle, blue = brighter.
+3. **Turn the multiscale result into exposure.** The weight and lightness pyramids drive residual fusion, followed by full-resolution detail correction and inverse lightness lookup. The EV map shows the actual applied adjustment: amber lifts, blue darkens, and dark means no change. Its color scale clips at ±3 EV and excludes global exposure.
+
+The three color previews use the real tone mapper; weights use its fitted scalar lightness response. The final image is **HDR adjusted by local exposure, then tone mapped**, rather than a direct weighted blend of those previews. These documentation-only readbacks add no work to the mobile benchmark. Regenerate with `python tools/render_examples.py`.
+
 ## What we built
 
 Exposure fusion supplies the foundation. Our work focuses on turning it into a practical **HDR exposure adjustment** with a small mobile runtime:

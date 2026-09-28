@@ -1,0 +1,26 @@
+{
+  "variant": "fine-residual-lookup",
+  "global_ev": -1.0,
+  "bracket_ev": 3.0,
+  "sigma": 0.2,
+  "size": [
+    1200,
+    600
+  ],
+  "weight_source": "Actual packed initialization mip 0 (300x150), decoded and bilinearly enlarged; no per-map contrast normalization",
+  "weight_min": 0.09130859375,
+  "weight_max": 0.77197265625,
+  "weight_sum_max_error": 0.0,
+  "ev_source": "Production exposureMultiplier(), including half rounding; excludes global EV",
+  "ev_min": -11.999999046325684,
+  "ev_max": 12.0,
+  "display_ev_range": [
+    -3,
+    0,
+    3
+  ],
+  "ev_display_clipped_fraction": 0.021480555555555555,
+  "final_matches": "veranda-after.png",
+  "shader_sha256": "7a5f6fa770d4a893d7229db22618b1bc79f2878e6d3aaaef764c6fd4d22b4942",
+  "image_sha256": "52a0ba7cd21485602bc54561ca261784df963ca7fe684f7cb8e37d71325a8efa"
+}

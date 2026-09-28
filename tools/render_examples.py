@@ -9,12 +9,14 @@ import slangpy as spy
 from tone_mapper import ROOT, ToneMapper, load_exr, create_hdr_texture
 from tools.profiling.android.quality_sweep import Candidate, codes
 from tools.profiling.android.variants import DEFAULT_VARIANT
+from tools.render_walkthrough import CaptureFinal, save_walkthrough
 
 
 def main():
     device = spy.Device(enable_hot_reload=False)
     mapper = ToneMapper(device)
     candidate = Candidate(device, mapper, DEFAULT_VARIANT)
+    candidate.final = CaptureFinal(candidate.final)
     session = device.create_slang_session(compiler_options={'include_paths': [ROOT/'shaders']})
     baseline = device.create_compute_kernel(session.load_program('guided.slang', ['tonemap_baseline']))
     w, h = 1200, 600
@@ -37,6 +39,8 @@ def main():
             path = ROOT/'docs/images'/f'{scene}-{label}.png'
             Image.fromarray(codes(pixels)).save(path)
             print(f'Saved {path} ({DEFAULT_VARIANT if label == "after" else "tonemap only"})')
+        if scene == 'veranda':
+            save_walkthrough(device, mapper, candidate.final, baseline, source, after, ev, 3.0)
     device.wait()
 
 

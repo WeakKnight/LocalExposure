@@ -4,7 +4,7 @@ These are optional; launch the application with `run.ps1` from the repository ro
 
 | Tool | Purpose |
 | --- | --- |
-| `render_examples.py` | Regenerate introductory global-vs-local examples |
+| `render_examples.py` | Regenerate introductory examples and Veranda's exposure/weight/EV walkthrough (`render_walkthrough.py`, `fusion_walkthrough.slang` are documentation-only helpers) |
 | `render_comparison.py`, `validate_asset_matrix.py` | Regenerate reference / optimized / error images and parameter matrices |
 | `profiling/mobile_profile.py` | Export SPIR-V and run AOC; defaults to Adreno 730 |
 | `profiling/mali_profile.py` | Run Mali Offline Compiler; defaults to Immortalis-G720 |

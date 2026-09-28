@@ -19,7 +19,7 @@ PRESETS = [
 ]
 OUT = ROOT / 'docs/images/parameter-matrix'
 FULL = ROOT / 'outputs/quality/parameter-matrix'
-SETTINGS = dict(width=1920, height=1080, sigma=.2, fusion_scale=4,
+SETTINGS = dict(width=1920, height=1080, sigma=.2, fusion_scale=4, reference_fusion_scale=1,
                 input_format='R11G11B10_FLOAT', output_encoding='sRGB8', presets=PRESETS)
 
 
@@ -42,20 +42,22 @@ def main():
         for name, expected in record['artifacts'].items():
             if not (OUT / name).exists() or digest(OUT / name) != expected:
                 raise SystemExit(f'Missing or changed artifact: {name}')
-        print('Parameter matrix sources, settings and artifacts are current.')
+        print('Parameter matrix sources, settings and artifacts are current. Quality gates: ' + ('PASS' if record['accepted'] else 'FAIL'))
         raise SystemExit(0 if record['accepted'] else 1)
 
     import OpenEXR
     import slangpy as spy
     from main import contrast_scale_to_ev
     from tone_mapper import ToneMapper, create_hdr_texture
-    from tools.profiling.android.quality import image_quality
+    from tools.profiling.android.quality import full_resolution_quality as image_quality
     from tools.profiling.android.quality_sweep import Candidate, codes
     from tools.profiling.android.variants import DEFAULT_VARIANT, VARIANTS
 
     device = spy.Device(enable_hot_reload=False)
     mapper = ToneMapper(device, fusion_scale=4)
     candidate = Candidate(device, mapper, DEFAULT_VARIANT)
+    reference_mapper = ToneMapper(device, fusion_scale=SETTINGS["reference_fusion_scale"])
+    reference_mapper.curve = mapper.curve  # Share calibration, not spatial resolution.
     pack = device.create_compute_kernel(device.create_slang_session().load_program(
         str(ROOT / 'tools/profiling/android/pack_source.slang'), ['pack_source']))
     OUT.mkdir(parents=True, exist_ok=True)
@@ -83,9 +85,10 @@ def main():
             shadow = contrast_scale_to_ev(preset['shadow_contrast'])
             encoder = device.create_command_encoder()
             mapper.prepare_weights(encoder, packed, ev, highlight, shadow, SETTINGS['sigma'])
-            mapper.prepare_result(encoder, packed, ev)
+            reference_mapper.prepare_weights(encoder, packed, ev, highlight, shadow, SETTINGS['sigma'])
+            reference_mapper.prepare_result(encoder, packed, ev)
             device.submit_command_buffer(encoder.finish())
-            reference_linear = mapper.final_color.to_numpy()
+            reference_linear = reference_mapper.final_color.to_numpy()
             optimized_linear, coefficients = candidate.render(packed, ev, sigma=SETTINGS['sigma'],
                                                               highlight_ev=highlight, shadow_ev=shadow)
             finite = all(np.isfinite(x).all() for x in [reference_linear, optimized_linear, coefficients])
@@ -113,7 +116,7 @@ def main():
                 if column < 2:
                     image = image.resize((640, 360), Image.Resampling.LANCZOS)
                 sheet.paste(image, (column * 640, top + 22))
-            draw.text((8, top + 384), f'Full reference | optimized | error (0 black, 1 blue, 3 cyan, 6 yellow, >=12 red). '
+            draw.text((8, top + 384), f'Full-resolution Fusion | optimized quarter-res | error (0 black, 1 blue, 3 cyan, 6 yellow, >=12 red). '
                       f'RMSE {quality["rmse_codes"]:.3f}; max {quality["max_codes"]:.0f}; '
                       f'{"PASS" if quality["accepted"] else "FAIL"}', fill='white')
             y, x = np.unravel_index(error.argmax(), error.shape)
@@ -134,21 +137,21 @@ def main():
                   variant=DEFAULT_VARIANT, variant_config=VARIANTS[DEFAULT_VARIANT],
                   backend=dict(api=device.info.api_name, adapter=device.info.adapter_name),
                   comparison='Same desktop backend, not phone captures. Independent unfused full pyramid reference; '
-                             'both paths use quarter-width/height Fusion, Guided upsampling and shared calibration.',
+                             'reference uses full-resolution Fusion without Guided; optimized uses quarter-width/height Fusion with full-resolution fine-residual correction. Shared calibration.',
                   error='Full-resolution sRGB8 metrics. Fixed 0..12 max-channel heatmap; overview uses 3x3 peak pooling.')
     (OUT / 'manifest.json').write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
     lines = ['# Asset and parameter validation', '', record['comparison'], '',
-             f'Result: {sum(r["quality"]["accepted"] for r in records)}/{len(records)} cases pass all fixed gates.', '',
+             f'Result: {sum(r["quality"]["accepted"] for r in records)}/{len(records)} cases pass the red-area goal (native max RGB error ≥12 occupies <1%).', '',
              f'Backend: {device.info.api_name}, {device.info.adapter_name}. 1920×1080 R11G11B10 input, sigma 0.2.', '',
              'Contrast Scale uses the viewer mapping: bracket magnitude = 6 × (1 − scale) EV.', '',
-             '| Scene | Preset | Global EV | Highlight / Shadow | RMSE | P99 | Max | Pixels >4 (%) | Gate |',
+             '| Scene | Preset | Global EV | Highlight / Shadow | RMSE | P99 | Max | Red area (%) | Goal |',
              '| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | --- |']
     for r in records:
         q, p = r['quality'], r['preset']
         lines.append(f'| {r["scene"]} | {p["name"]} | {p["global_ev"]:+} | {p["highlight_contrast"]} / {p["shadow_contrast"]} | '
-                     + (f'{q["rmse_codes"]:.4f} | {q["p99_codes"]:.0f} | {q["max_codes"]:.0f} | {100*q["fraction_pixels_over4"]:.5f} | '
+                     + (f'{q["rmse_codes"]:.4f} | {q["p99_codes"]:.0f} | {q["max_codes"]:.0f} | {100*q["red_fraction"]:.5f} | '
                         if q['finite'] else '— | — | — | — | ') + ('PASS' if q['accepted'] else 'FAIL') + ' |')
-    lines += ['', 'Errors are sRGB8 code values. Fixed gates: RMSE ≤0.75, P99 ≤3, max ≤12, pixels >4 ≤0.1%. '
+    lines += ['', 'Errors are sRGB8 code values. Goal: red area <1% per case (max-channel error ≥12). The earlier strict RMSE/P99/max gate remains in manifest.json as legacy_accepted. '
               'Numerical gates supplement visual inspection; this is not an exhaustive parameter sweep.', '',
               'Each overview row shows reference / optimized / absolute error. The error scale is shared across all cases. '
               'Worst-pixel crops and source hashes are indexed in [manifest.json](manifest.json). '

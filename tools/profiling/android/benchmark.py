@@ -76,6 +76,8 @@ def build(out):
 
 
 def select_device(adb, serial=None):
+    if serial and run([adb, '-s', serial, 'get-state']).strip() == 'device':
+        return serial
     # Vendor desktop utilities can restart an older ADB server. Let it settle,
     # but never automatically choose among multiple phones.
     for attempt in range(3):
@@ -153,6 +155,9 @@ def validate(bundle, manifest):
         actual=np.fromfile(bundle/'final.device.bin',np.uint8).reshape(shape)
         expected=np.fromfile(bundle/'final.phone-reference.bin',np.uint8).reshape(shape)
         quality=image_quality(expected,actual)
+        if manifest['config'].get('variant_settings',{}).get('fine_residual_lookup'):
+            from .quality import full_resolution_quality
+            quality=full_resolution_quality(expected,actual)
         for name,r in device_report.items():
             r['accepted']=quality['accepted'] if name=='final' else (r['bitwise_equal'] if manifest['config'].get('variant_settings',{}).get('unfused_control') else report[name]['finite'])
             r['acceptance_mode']='approximate; image quality gate and finite intermediates'
@@ -160,7 +165,7 @@ def validate(bundle, manifest):
     return dict(passed=passed, quality=quality, same_device=device_report, desktop_within_thresholds=desktop_passed, stages=report,
                 omitted_checks=['exposure EV portability (intermediate removed by fusion)'] if exposure is None else [],
                 thresholds=dict(final_max_abs=.01,final_rmse=.001,exposure_max_ev=.05,exposure_rmse_ev=.01),
-                note='Acceptance: finite stages; same-phone core stages bitwise, RGBA16F final bitwise, sRGB8 final at most one UNORM step versus viewer compute + hardware-sRGB reference. Desktop thresholds are a separate portability check. Mip-0 readback of every stage.')
+                note=('Acceptance uses the explicit quality rule above against the independent same-phone reference; legacy metrics remain reported. Desktop differences include approximation and backend rounding.' if quality else 'Acceptance: finite stages; same-phone core stages bitwise, RGBA16F final bitwise, sRGB8 final at most one UNORM step versus viewer compute + hardware-sRGB reference. Desktop thresholds are a separate portability check. Mip-0 readback of every stage.'))
 
 
 def summarize(raw):
@@ -326,7 +331,8 @@ def main():
     for r in manifest['resources']:
         if r['dump']:
             run([*adb,'pull',REMOTE+'/'+r['name']+'.device.bin',out/'bundle'/(r['name']+'.phone-reference.bin')])
-    if manifest['config'].get('variant_settings',{}).get('packed_residual'):
+    fine_residual=manifest['config'].get('variant_settings',{}).get('fine_residual_lookup',False)
+    if manifest['config'].get('variant_settings',{}).get('packed_residual') and not fine_residual:
         run([*adb,'pull',REMOTE+'/weights.device.bin',out/'bundle/weights.phone-reference.bin'])
     if manifest['config'].get('compact') and any(r['name']=='luminance' and r['dump'] for r in manifest['resources']):
         # Decode the legacy graph reference into the lossless production layout.
@@ -340,7 +346,7 @@ def main():
             if name=='weights' and (manifest['config'].get('variant_settings',{}).get('weight_unorm') or manifest['config'].get('variant_settings',{}).get('residual_pyramid')):continue
             file=out/'bundle'/f'{name}.phone-reference.bin'
             if file.exists(): np.fromfile(file,np.float32).astype(np.float16).tofile(file)
-    if manifest['config'].get('variant_settings',{}).get('residual_pyramid'):
+    if manifest['config'].get('variant_settings',{}).get('residual_pyramid') and not fine_residual:
         lum=np.fromfile(out/'bundle/luminance.phone-reference.bin',np.float32).reshape(-1,4)
         weights=np.fromfile(out/'bundle/weights.phone-reference.bin',np.float32).reshape(-1,2)
         if manifest['config'].get('variant_settings',{}).get('packed_residual'):

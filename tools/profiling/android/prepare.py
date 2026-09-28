@@ -42,9 +42,15 @@ def split_residual_pyramid(manifest, first_float):
                 descriptor.update(resource='coarse_residual', mip=descriptor['mip'] - first_float)
 
 
-def prepare(out, width, height, image, ev=0., source_format='rgba32_float', output_format='rgba16_float', compact=False, fused_guided=False, variant="lossless", *, highlight_ev=1.2, shadow_ev=1.2, sigma=.2):
+def prepare(out, width, height, image, ev=0., source_format='rgba32_float', output_format='rgba16_float', compact=False, fused_guided=False, variant="lossless", *, highlight_ev=1.2, shadow_ev=1.2, sigma=.2, fusion_scale=4):
     from .quality import VARIANTS
     variant_config=dict(VARIANTS[variant])
+    if variant_config.get('fine_residual_lookup'):
+        from .prepare_fine import prepare_fine
+        return prepare_fine(out, width, height, image, ev, source_format, output_format,
+                            variant, highlight_ev, shadow_ev, sigma)
+    if fusion_scale not in (1,4) or (fusion_scale == 1 and variant != 'lossless'):
+        raise ValueError('Full-resolution export is reserved for the independent reference')
     if compact and not fused_guided:
         raise ValueError('The retained compact graph requires fused_guided=True')
     if variant_config.get('half_gather') and source_format!='r11g11b10_float':raise ValueError('Half gather requires finite R11G11B10 input')
@@ -59,7 +65,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
         (width, height), Image.Resampling.BILINEAR)) for c in range(3)], axis=-1)
     rgba = np.concatenate([rgb, np.ones((height, width, 1), 'float32')], axis=-1)
     device = spy.Device(enable_hot_reload=False)
-    mapper = ToneMapper(device)
+    mapper = ToneMapper(device, fusion_scale=fusion_scale)
     source = create_hdr_texture(device, rgba)
     source_payload=rgba
     if source_format=='r11g11b10_float':
@@ -117,7 +123,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
     elif output_format!='rgba16_float':
         raise ValueError('Unsupported output format')
     manifest = dict(schema=1, width=width, height=height, resources=resources, passes=[],
-                    config=dict(globalEV=ev, highlightEV=highlight_ev, shadowEV=shadow_ev, sigma=sigma, fusion_scale=4,source_format=source_format,output_format=output_format),
+                    config=dict(globalEV=ev, highlightEV=highlight_ev, shadowEV=shadow_ev, sigma=sigma, fusion_scale=fusion_scale,source_format=source_format,output_format=output_format),
                     calibration=curve.report, image=dict(path=str(image.resolve()), sha256=sha(image)),
                     reference_backend=str(device.info), shaders={p.relative_to(ROOT/'shaders').as_posix(): sha(p) for p in (ROOT/'shaders').rglob('*.slang')})
     manifest['benchmark_shaders']={p.name:sha(p) for p in Path(__file__).parent.glob('*.slang')}
@@ -157,7 +163,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
         reflections[entry] = json.loads((out/f'{entry}.reflection.json').read_text())
         manifest['commands'].append(cmd)
     cb = {k: v for k, v in curve.bindings().items() if k not in ('inverseLut', 'inverseSampler')}
-    cb.update(globalEV=ev, highlightEV=highlight_ev, shadowEV=shadow_ev, sigma=sigma, reductionRows=4, guided=True)
+    cb.update(globalEV=ev, highlightEV=highlight_ev, shadowEV=shadow_ev, sigma=sigma, reductionRows=4, guided=fusion_scale==4)
     def view(name, mip=0):
         return dict(resource=name, mip=mip)
     def add(entry, label, w, h, bindings, constants=None, baseline=False):
@@ -198,8 +204,9 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
                                        descriptors=descriptors, uniform=path, baseline=baseline,
                                        has_uniform=has_uniform))
     w, h = mapper.work_source.width, mapper.work_source.height
-    add('reduce_source', 'reduce_source', w, h, dict(fullSource=view('source'), reducedOutput=view('reduced')))
-    add('setup_weights', 'setup_weights', w, h, dict(hdrSource=view('reduced'),
+    if fusion_scale == 4:
+        add('reduce_source', 'reduce_source', w, h, dict(fullSource=view('source'), reducedOutput=view('reduced')))
+    add('setup_weights', 'setup_weights', w, h, dict(hdrSource=view('reduced' if fusion_scale==4 else 'source'),
         luminanceOutput=view('luminance'), weightOutput=view('weights')))
     levels = mapper.reconstructed.mip_count
     for name in ('luminance', 'weights'):
@@ -211,10 +218,11 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
             dict(fineLuminance=view('luminance',mip), coarseLuminance=view('luminance',min(mip+1,levels-1)),
                  layerWeights=view('weights',mip), previousResult=view('exposure') if mip==levels-1 else view('reconstructed',mip+1),
                  reconstructionOutput=view('reconstructed',mip)), dict(isCoarsest=mip==levels-1))
-    add('convert_exposure','convert_exposure',w,h,dict(hdrSource=view('reduced'), fusedLightness=view('reconstructed'),
+    add('convert_exposure','convert_exposure',w,h,dict(hdrSource=view('reduced' if fusion_scale==4 else 'source'), fusedLightness=view('reconstructed'),
          exposureOutput=view('exposure'), inverseLut=view('inverse')))
-    add('fit_coefficients','fit_coefficients',w,h,dict(reducedSource=view('reduced'),lowExposure=view('exposure'),coefficientOutput=view('coefficients')))
-    add('average_coefficients','average_coefficients',w,h,dict(coefficients=view('coefficients'),averagedOutput=view('averaged')))
+    if fusion_scale == 4:
+        add('fit_coefficients','fit_coefficients',w,h,dict(reducedSource=view('reduced'),lowExposure=view('exposure'),coefficientOutput=view('coefficients')))
+        add('average_coefficients','average_coefficients',w,h,dict(coefficients=view('coefficients'),averagedOutput=view('averaged')))
     add('apply_fragment' if output_format=='rgba8_srgb' else 'apply_exposure_production','apply_exposure_production',width,height,
         dict(fullSource=view('source'),lowExposure=view('exposure'),averagedCoefficients=view('averaged'),colorOutput=view('final')))
     if output_format=='rgba8_srgb': manifest['passes'][-1]['attachment']='final'

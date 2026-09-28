@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw
 OUT = ROOT / 'docs/images/comparison'
 SCENES = ['sundowner_deck', 'veranda']
 SETTINGS = dict(width=1920, height=1080, global_ev=0.0, bracket_ev=1.2,
-                sigma=0.2, fusion_scale=4, input_format='R11G11B10_FLOAT')
+                sigma=0.2, fusion_scale=4, reference_fusion_scale=1, input_format='R11G11B10_FLOAT')
 
 
 def digest(path):
@@ -25,7 +25,7 @@ def digest(path):
 
 
 def sources():
-    paths = [ROOT / name for name in ['tone_mapper.py', 'zcurve.py', 'requirements.txt',
+    paths = [ROOT / name for name in ['tone_mapper.py', 'zcurve.py', 'fusion_lookup.py', 'requirements.txt',
              'tools/render_comparison.py', 'tools/profiling/android/quality.py',
              'tools/profiling/android/quality_sweep.py', 'tools/profiling/android/variants.py',
              'tools/profiling/android/pack_source.slang']]
@@ -55,19 +55,21 @@ def main():
         for name, expected in record['artifacts'].items():
             if not (OUT / name).exists() or digest(OUT / name) != expected:
                 raise SystemExit(f'Missing or changed comparison artifact: {name}')
-        print('Comparison sources, settings and artifacts are current.')
-        return
+        print('Comparison sources, settings and artifacts are current. Quality gates: ' + ('PASS' if record['accepted'] else 'FAIL'))
+        raise SystemExit(0 if record['accepted'] else 1)
 
     import OpenEXR
     import slangpy as spy
     from tone_mapper import ToneMapper, create_hdr_texture
     from tools.profiling.android.quality_sweep import Candidate, codes
-    from tools.profiling.android.quality import image_quality
+    from tools.profiling.android.quality import full_resolution_quality as image_quality
     from tools.profiling.android.variants import DEFAULT_VARIANT, VARIANTS
 
     device = spy.Device(enable_hot_reload=False)
     mapper = ToneMapper(device, fusion_scale=SETTINGS['fusion_scale'])
     candidate = Candidate(device, mapper, DEFAULT_VARIANT)
+    reference_mapper = ToneMapper(device, fusion_scale=SETTINGS["reference_fusion_scale"])
+    reference_mapper.curve = mapper.curve  # Isolate algorithm differences from calibration.
     session = device.create_slang_session()
     pack = device.create_compute_kernel(session.load_program(
         str(ROOT / 'tools/profiling/android/pack_source.slang'), ['pack_source']))
@@ -92,16 +94,15 @@ def main():
         ev, bracket, sigma = SETTINGS['global_ev'], SETTINGS['bracket_ev'], SETTINGS['sigma']
         encoder = device.create_command_encoder()
         mapper.prepare_weights(encoder, packed, ev, bracket, bracket, sigma)
-        mapper.prepare_result(encoder, packed, ev)
+        reference_mapper.prepare_weights(encoder, packed, ev, bracket, bracket, sigma)
+        reference_mapper.prepare_result(encoder, packed, ev)
         device.submit_command_buffer(encoder.finish())
-        reference_linear = mapper.final_color.to_numpy()
+        reference_linear = reference_mapper.final_color.to_numpy()
         optimized_linear, coefficients = candidate.render(packed, ev, bracket, sigma)
         if not all(np.isfinite(x).all() for x in [reference_linear, optimized_linear, coefficients]):
             raise RuntimeError(f'{scene}: non-finite render')
         reference, optimized = codes(reference_linear), codes(optimized_linear)
         quality = image_quality(reference, optimized)
-        if not quality['accepted']:
-            raise RuntimeError(f'{scene}: quality gate failed: {quality}')
         error = abs(reference.astype(np.int16) - optimized.astype(np.int16)).max(axis=-1)
         for name, pixels in [('reference', reference), ('optimized', optimized), ('error', heatmap(error))]:
             save(Image.fromarray(pixels), f'{scene}-{name}.png')
@@ -109,7 +110,7 @@ def main():
         peak = error.reshape(h // 3, 3, w // 3, 3).max(axis=(1, 3))
         sheet = Image.new('RGB', (1920, 426), (22, 24, 29))
         draw = ImageDraw.Draw(sheet)
-        for i, (pixels, label) in enumerate([(reference, 'Full reference'),
+        for i, (pixels, label) in enumerate([(reference, 'Full-resolution Fusion reference'),
                                             (optimized, 'Optimized default')]):
             sheet.paste(Image.fromarray(pixels).resize((640, 360), Image.Resampling.LANCZOS), (640 * i, 26))
             draw.text((640 * i + 10, 7), label, fill='white')
@@ -127,10 +128,13 @@ def main():
     record = dict(settings=SETTINGS, variant=DEFAULT_VARIANT, variant_config=VARIANTS[DEFAULT_VARIANT],
                   backend=dict(api=device.info.api_name, adapter=device.info.adapter_name),
                   sources=fingerprint, artifacts=artifacts, scenes=records,
-                  reference='Independent unfused ToneMapper; full pyramid; quarter-width/height fusion + Guided.',
+                  accepted=all(r['quality']['accepted'] for r in records),
+                  reference='Independent unfused ToneMapper; full-resolution Fusion, all pyramid levels, no Guided upsampling.',
+                  optimized='Quarter-width/height Fusion with full-resolution fine-residual correction; shared calibration.',
                   comparison='Same desktop backend, packed HDR input, calibration and final sRGB8 encoding; not phone captures.',
                   error='Absolute sRGB8 RGB error; heatmap max channel, fixed 0..12 scale; preview 3x3 max pooled.')
     (OUT / 'manifest.json').write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
+    raise SystemExit(0 if record['accepted'] else 1)
 
 
 if __name__ == '__main__':

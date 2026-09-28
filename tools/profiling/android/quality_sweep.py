@@ -12,15 +12,21 @@ def codes(linear):
     return np.rint(np.clip(srgb,0,1)*255).astype(np.uint8)
 
 class Candidate:
+    lookup = None  # Independent reference subclasses do not create lookup tables.
     def __init__(self,device,mapper,variant):
         if variant == 'lossless':
             raise ValueError('Use ToneMapper for the independent unfused reference')
         self.device,self.mapper,self.config=device,mapper,dict(VARIANTS[variant])
-        from .variants import COMPACT_MODULES
+        from .variants import compact_modules
+        COMPACT_MODULES = compact_modules(self.config)
         defines={'PACKED_HALF_COEFFICIENTS': str(int(self.config.get('packed_half_coefficients', True)))}
         session=device.create_slang_session(compiler_options={'include_paths':[ROOT/'shaders'],'defines':defines})
         self.kernels={name:device.create_compute_kernel(session.load_program(module+'.slang',[name])) for name,module in COMPACT_MODULES.items()}
         self.unsigned_gather = None
+        self.lookup = None
+        if self.config.get("fine_residual_lookup"):
+            from fusion_lookup import FusionLookup
+            self.lookup = FusionLookup(device)
         if self.config.get('gather_unsigned_source'):
             unsigned_session = device.create_slang_session(compiler_options={
                 'include_paths': [ROOT/'shaders'],
@@ -28,6 +34,8 @@ class Candidate:
             self.unsigned_gather = device.create_compute_kernel(unsigned_session.load_program(
                 COMPACT_MODULES['reduce_setup_gather']+'.slang', ['reduce_setup_gather']))
         self.final=device.create_compute_kernel(session.load_program(str(Path(__file__).with_name('joint.slang')) if self.config.get('joint_upsample') else 'guided.slang',['apply_joint_linear' if self.config.get('joint_upsample') else 'apply_exposure_production']))
+        if self.lookup is not None:
+            self.final=device.create_compute_kernel(session.load_program('fine_residual/apply.slang',['apply_exposure_production']))
     def render(self,source,ev,bracket=1.2,sigma=.2,*,highlight_ev=None,shadow_ev=None):
         # Keep symmetric callers compatible; asymmetric brackets match the viewer UI.
         highlight_ev = bracket if highlight_ev is None else highlight_ev
@@ -54,8 +62,12 @@ class Candidate:
             if t is lum and coarse_float is not None and mip >= float_from:
                 return coarse_float.create_view(mip=mip-float_from, mip_count=1)
             return t.create_view(mip=mip, mip_count=1)
+        lookup_bindings = self.lookup.prepare(m.curve, highlight_ev, shadow_ev, sigma) if self.lookup else {}
         enc=self.device.create_command_encoder()
         def dispatch(name,width,height,**bindings):
+            if self.lookup and name in ('reduce_setup','reduce_setup_gather'):
+                bindings={k:bindings[k] for k in ('fullSource','linearSampler','globalEV','compactOutput','baseLightnessOutput','lightnessOutput')}
+                bindings.update(lookup_bindings)
             if name=='reconstruct_guided' and self.config.get('guided_vertical'):
                 width=((width+15)//16)*self.config.get('guided_threads_x',16)
                 height=((height+15)//16)*self.config.get('guided_threads_y',16)
@@ -83,10 +95,16 @@ class Candidate:
                 if fuse_fine:bindings.update(previousResult=view(recon,3),mip1Weights=view(weights,1),mip2Weights=view(weights,2),mip2Luminance=view(lum,2),mip3Luminance=view(lum,3))
                 if self.config.get('precomputed_ev'):dispatch('reconstruct_ev_fused' if fuse_fine else 'reconstruct_ev',w,h,compactSource=compact,compactOutput=guide_ev,globalEV=ev,**m.curve.bindings(),**bindings,**(dict(baseLightness=base_lightness) if self.config.get('residual_pyramid') else {}))
                 if self.config.get('moment_input'):dispatch('guided_moments',w,h,compactSource=guide_ev,momentOutput=moments,linearSampler=m.sampler)
-                if not self.config.get('joint_upsample'):dispatch('reconstruct_guided',w,h,compactSource=guide_ev if self.config.get('precomputed_ev') else compact,averagedOutput=avg,globalEV=ev,**m.curve.bindings(),**bindings,**(dict(momentSource=moments) if self.config.get('moment_input') else {}))
-        self.final.dispatch(thread_count=[source.width,source.height,1],vars=dict(fullSource=source,lowExposure=m.low_exposure,averagedCoefficients=avg,colorOutput=final,linearSampler=m.sampler,globalEV=ev,guided=True,**(dict(jointGuideExposure=guide_ev) if self.config.get('joint_upsample') else {})),command_encoder=enc)
+                if not self.config.get('joint_upsample') and not self.lookup:dispatch('reconstruct_guided',w,h,compactSource=guide_ev if self.config.get('precomputed_ev') else compact,averagedOutput=avg,globalEV=ev,**m.curve.bindings(),**bindings,**(dict(momentSource=moments) if self.config.get('moment_input') else {}))
+        if self.lookup:
+            self.final.dispatch(thread_count=[source.width,source.height,1], vars=dict(
+                fullSource=source, averagedCoefficients=guide_ev, lowResidual=view(lum),
+                fineLookup=lookup_bindings['fineLookup'], colorOutput=final,
+                linearSampler=m.sampler, globalEV=ev, guided=True, **m.curve.bindings()), command_encoder=enc)
+        else:
+            self.final.dispatch(thread_count=[source.width,source.height,1],vars=dict(fullSource=source,lowExposure=m.low_exposure,averagedCoefficients=avg,colorOutput=final,linearSampler=m.sampler,globalEV=ev,guided=True,**(dict(jointGuideExposure=guide_ev) if self.config.get('joint_upsample') else {})),command_encoder=enc)
         self.device.submit_command_buffer(enc.finish())
-        return final.to_numpy(),(guide_ev.to_numpy() if self.config.get('joint_upsample') else avg.to_numpy())
+        return final.to_numpy(),(guide_ev.to_numpy() if self.config.get('joint_upsample') or self.lookup else avg.to_numpy())
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--variants',nargs='+',default=['guided-packed-coefficients','guided-coefficient-layout']);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--game-format',action='store_true');ap.add_argument('--width',type=int,default=513);ap.add_argument('--height',type=int,default=289);ap.add_argument('--bracket',type=float,default=1.2);ap.add_argument('--sigma',type=float,default=.2);args=ap.parse_args()

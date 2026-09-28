@@ -1,6 +1,10 @@
 // Offscreen render-target equivalents of the production backbuffer passes.
 // Reuse core exposure and tone-operator math; sRGB conversion is attachment hardware.
+#if FINE_RESIDUAL_LOOKUP
+#include "fine_residual/apply.slang"
+#else
 #include "guided.slang"
+#endif
 #ifndef WORK_X
 #define WORK_X 8
 #endif

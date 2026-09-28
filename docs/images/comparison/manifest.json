@@ -6,9 +6,10 @@
     "bracket_ev": 1.2,
     "sigma": 0.2,
     "fusion_scale": 4,
+    "reference_fusion_scale": 1,
     "input_format": "R11G11B10_FLOAT"
   },
-  "variant": "guided-packed-coefficients",
+  "variant": "fine-residual-lookup",
   "variant_config": {
     "half_aux": true,
     "compute_srgb": true,
@@ -57,7 +58,8 @@
     "pyramid_y": 16,
     "gather_unsigned_source": true,
     "coefficient_padding": 4,
-    "packed_half_coefficients": true
+    "packed_half_coefficients": true,
+    "fine_residual_lookup": true
   },
   "backend": {
     "api": "D3D12",
@@ -66,11 +68,12 @@
   "sources": {
     "tone_mapper.py": "10ec0f77964e96a9c2a0417e8d4a9ae56f5bd9cf4ea0977821b0cbd1b5d6889b",
     "zcurve.py": "6c5e9f07dc8b9ca1e9cd877fe6cbca196c829b43bdc41ba59b48384c15c7db8b",
+    "fusion_lookup.py": "5f5b86a93ae157f74ba92f41cda8918dd40111a1a346c8af9f4924d6c279cded",
     "requirements.txt": "83309e8b213979037e2353ae66b125927ba4ffc718a2a9ce5bf1938c2ba5df80",
-    "tools/render_comparison.py": "0721898135db74c132b61c0183a29d63461e368333185eda699319b0e80a9d38",
-    "tools/profiling/android/quality.py": "a72ae178f4773c39a492d85a92eaff5f5862442f6b96ce352e1b22c5162a984f",
-    "tools/profiling/android/quality_sweep.py": "615cf95ec299d184ca5f36b5e6209e41b2f0e26850ae48efc57b782fac3d54ee",
-    "tools/profiling/android/variants.py": "6d801f429c5f3f4cf9c3c2208edae1bd4602ffe71dc7d54ef30ea47d775eddac",
+    "tools/render_comparison.py": "bfe07857c6f13b7d8b8aa2633f05ba2cb98f096cd5b213e2f186629a4f6ad2c3",
+    "tools/profiling/android/quality.py": "2132fc790311f9ae0b31732cb23ceee3a8aae8351a314855509db8fcb8bea69f",
+    "tools/profiling/android/quality_sweep.py": "a4f7d8a923e418283d3e868fdcc15e0a675e307f1f9d16db4e1c7bed8a7f1c26",
+    "tools/profiling/android/variants.py": "b86b107cf4dd4b37d2d179a02caaad20d613731790f8f5e28f40e1663774c7e7",
     "tools/profiling/android/pack_source.slang": "32a7d227670f04c003d46f6c37d9916f593f2a39d5045b874bb53b8244b7e346",
     "shaders/aces.slang": "926b65c08bd1cd46e13ce28eb82cba9ce6428b74a32ea5743ae7e3b8ac0d006f",
     "shaders/compact/guided.slang": "6f2d93ebe634e0dfce22ef4b2c5c92c48cdeaf54b642d212ebb46cf0c895540a",
@@ -78,6 +81,9 @@
     "shaders/compact/pyramid.slang": "160c58d13555fdbc3c34c321b600094615243e72f336a37ea87615c3c5292284",
     "shaders/compact/reconstruct.slang": "387a7ec2d786b22bfbc585ddd88a8102a4b76e2c9b3ef85e6f0057ff0ed7ca54",
     "shaders/compact/tail.slang": "1a8896d23535acb2d056c0b2be141ddc333d68f2db1a3a9e9d305db41b6de2c2",
+    "shaders/fine_residual/apply.slang": "089d90f241c4882c880ba3b6d901b03a52f223fc22fd10497f124bb27dc422e8",
+    "shaders/fine_residual/initialize.slang": "9d0a01391f8513b433ba954f49f60ea1e62da11cabfaa840bb52797219bf5ade",
+    "shaders/fine_residual/reconstruct.slang": "462fc8265f019bc04110b20dd1b7a4cc536abf3c6162d29ab64e0c3eb4707623",
     "shaders/fusion.slang": "ed98e36c678c1450d437bcbc84c9c186a0628e280332d5d5186e8154f317c75c",
     "shaders/guided.slang": "43050071379ca3ea95ce5929af6169155e80b3b116d5a359b30e81f8427f62fe",
     "shaders/pyramid.slang": "7f1e3b61cdfc95ca0c833c9a23316fd4ff5d8dccc734c30260a2925fe005758d",
@@ -89,24 +95,24 @@
     "Assets/veranda_4k.exr": "818c3b1d8086ab6e0a2b73852f8ac2db497848cc9f7e1d9bc32cc9c63910e4d8"
   },
   "artifacts": {
-    "sundowner_deck-reference.png": "c04de7241c944f0e62ef9002dc42643c028506f1f7ef5ee2b1faf340eb70881d",
-    "sundowner_deck-optimized.png": "e59cea56406ba140eb7f119fa0add29b38b1f8988ed3f73c32ed55a49a189103",
-    "sundowner_deck-error.png": "f07f46a66c4de6a4de2a76917aab5bf7cdce616ebe79284354975dff892b0a63",
-    "sundowner_deck-comparison.png": "5111f32d875d404e4bc6e46efefda388b13d5d93d153e32657c3315867411f93",
-    "veranda-reference.png": "9f57c45645203edab8e9a5f9987775718ac95217436fe7aad9b9fdb8d1fbd75d",
-    "veranda-optimized.png": "aaa956ea15b94787ed81acb2be813532d1bbe82b8c766e42b07b2fd0203b5555",
-    "veranda-error.png": "479cf4829eb5dde4c3e8bbfab9a5acb8eba2d5cca7c2e11bc05d591e63ea243b",
-    "veranda-comparison.png": "59eaee09f9f25f244d46a92138c3857f0506c332f18ec98e5cd3a9f8e69306aa"
+    "sundowner_deck-reference.png": "00fead9466e9bd575984cc0608ca53b4130248e0dca475d56a7075675e22975f",
+    "sundowner_deck-optimized.png": "e07f13bfadf77e152057829cb62832666e6929a267cdb133dcb5a5d6eca266f2",
+    "sundowner_deck-error.png": "9eb17121ba6e0b8591b8b001883a234a1c24b910cdb144e333b275d22dd9d062",
+    "sundowner_deck-comparison.png": "ac1148a2e36a25c9e47846486c59b7fdb2023fbab3947b17bcfa7149da6609bd",
+    "veranda-reference.png": "f1895bb755360b65719775a616f6525d86a899dbbe9295c9f705feb695d3148e",
+    "veranda-optimized.png": "a59b377d136e284c98344efe9f1d2c5c650f00ea13f5f16ad0d3e04675cfdd44",
+    "veranda-error.png": "06469f53586279be877af4a4521d1e4231116f3d8b6e5c8527c27d815b8395a4",
+    "veranda-comparison.png": "516206c48c9cf76ef92637fc878acb3ef5b795e095886042d32b36c61dcb534b"
   },
   "scenes": [
     {
       "scene": "sundowner_deck",
       "quality": {
         "finite": true,
-        "rmse_codes": 0.22675711362655618,
-        "p99_codes": 1.0,
-        "max_codes": 3.0,
-        "fraction_pixels_over4": 0.0,
+        "rmse_codes": 0.44037014161443144,
+        "p99_codes": 2.0,
+        "max_codes": 12.0,
+        "fraction_pixels_over4": 0.0005150462962962963,
         "thresholds": {
           "rmse_codes": 0.75,
           "p99_codes": 3,
@@ -114,17 +120,20 @@
           "fraction_pixels_over4": 0.001
         },
         "accepted": true,
-        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+        "legacy_accepted": true,
+        "red_fraction": 9.645061728395062e-07,
+        "acceptance_rule": "Native pixels with max RGB sRGB8 error >=12 must occupy <1%; independent full-resolution reference"
       }
     },
     {
       "scene": "veranda",
       "quality": {
         "finite": true,
-        "rmse_codes": 0.22639989464272875,
+        "rmse_codes": 0.3370825035470261,
         "p99_codes": 1.0,
-        "max_codes": 4.0,
-        "fraction_pixels_over4": 0.0,
+        "max_codes": 15.0,
+        "fraction_pixels_over4": 0.00015866126543209876,
         "thresholds": {
           "rmse_codes": 0.75,
           "p99_codes": 3,
@@ -132,11 +141,16 @@
           "fraction_pixels_over4": 0.001
         },
         "accepted": true,
-        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required."
+        "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
+        "legacy_accepted": false,
+        "red_fraction": 1.4467592592592592e-06,
+        "acceptance_rule": "Native pixels with max RGB sRGB8 error >=12 must occupy <1%; independent full-resolution reference"
       }
     }
   ],
-  "reference": "Independent unfused ToneMapper; full pyramid; quarter-width/height fusion + Guided.",
+  "accepted": true,
+  "reference": "Independent unfused ToneMapper; full-resolution Fusion, all pyramid levels, no Guided upsampling.",
+  "optimized": "Quarter-width/height Fusion with full-resolution fine-residual correction; shared calibration.",
   "comparison": "Same desktop backend, packed HDR input, calibration and final sRGB8 encoding; not phone captures.",
   "error": "Absolute sRGB8 RGB error; heatmap max channel, fixed 0..12 scale; preview 3x3 max pooled."
 }

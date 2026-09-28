@@ -1,9 +1,13 @@
 # Mobile performance
 
-The default is `guided-packed-coefficients`. The independent viewer reference
+The default is `fine-residual-lookup`. The former `guided-packed-coefficients` path remains a control. The independent viewer reference
 and `guided-coefficient-layout` (FP32 fitted-coefficient control) remain available.
 
 ## Current measurement
+
+**0.8514 ms Local Exposure increment / 3.2983 ms complete chain**, Adreno 830 / NX789J, process-local Qualcomm 512.842.6, 1080p / 45 FPS, 1,800 frames/path. Matched graphics-produced HDR and shared tonemapping; visualization and presentation excluded. Full-resolution quality goal: **16/16 desktop cases pass**, worst red area **0.02175%**. Extreme synthetic edges remain a documented limitation. See [validation, provenance and limits](quality-goal.md).
+
+## Previous Guided baseline
 
 **Adreno 830 / NX789J, process-local Qualcomm 512.842.6**, 1920×1080 at 45 FPS,
 R11G11B10 HDR → RGBA8 sRGB. The same graphics HDR producer and tone mapper run
@@ -47,7 +51,7 @@ it saves about 0.010 ms incremental and complete-chain; the three-round incremen
 (0.9588–0.9605 ms over two candidate runs, 0.9691–0.9705 ms control) do not overlap.
 The eight active integrated shaders match the sustained candidate byte for byte.
 Integrated foreground validation screens at 0.9587 ms (3.4017 ms chain) with exact
-phone output; use the sustained **0.9602 ms** repeat as the current baseline.
+phone output; use the sustained **0.9602 ms** repeat as the previous Guided baseline.
 The **0.9 ms goal
 is still open**. These are median increments, not per-frame guarantees or results
 for other GPUs. Separate pass diagnostics are not an additive frame budget.

@@ -86,7 +86,10 @@ def estimate(manifest, fps=45):
             if 'baseLightnessOutput' in descriptors:write('baseLightnessOutput')
         elif entry in ('reduce_setup','reduce_setup_cooperative','reduce_setup_gather'):
             gather=(entry=='reduce_setup_gather' or (entry=='reduce_setup_cooperative' and manifest['config'].get('variant_settings',{}).get('wave_reduction'))) and manifest['width']==4*p['width'] and manifest['height']==4*p['height']
-            read('fullSource', n*(12 if gather else manifest['config'].get('variant_settings',{}).get('reduction_grid',4)**2), True); write('compactOutput'); write('lightnessOutput')
+            fine_lookup='fineLookup' in descriptors
+            read('fullSource', n*(4 if fine_lookup else 12 if gather else manifest['config'].get('variant_settings',{}).get('reduction_grid',4)**2), True); write('compactOutput'); write('lightnessOutput')
+            if fine_lookup:
+                read('fineLookup',n*4,True);read('lowLookup',n*4,True)
             if 'weightsOutput' in descriptors:write('weightsOutput')
             if 'baseLightnessOutput' in descriptors:write('baseLightnessOutput')
         elif entry == 'reconstruct_ev_fused':
@@ -99,11 +102,15 @@ def estimate(manifest, fps=45):
             if 'mip1Weights' in descriptors:read('mip1Weights',groups*100)
             read('fineLuminance',n);read('coarseLuminance',n,True)
             if 'layerWeights' in descriptors:read('layerWeights',n)
-            read('compactSource',n);read('inverseLut',n,True);read('baseLightness',n);write('compactOutput')
+            if 'compactSource' in descriptors:read('compactSource',n)
+            if 'inverseLut' in descriptors:read('inverseLut',n,True)
+            read('baseLightness',n);write('compactOutput')
         elif entry == 'reconstruct_ev':
             read('fineLuminance',n);read('coarseLuminance',n,True);read('previousResult',n,True)
             if 'layerWeights' in descriptors:read('layerWeights',n)
-            read('compactSource',n);read('inverseLut',n,True);write('compactOutput')
+            if 'compactSource' in descriptors:read('compactSource',n)
+            if 'inverseLut' in descriptors:read('inverseLut',n,True)
+            write('compactOutput')
             if 'baseLightness' in descriptors:read('baseLightness',n)
         elif entry == 'reconstruct_exposure':
             read('fineLuminance', n)
@@ -142,6 +149,8 @@ def estimate(manifest, fps=45):
             # Source read + final write cancel against matched tonemap baseline.
             if 'jointGuideExposure' in descriptors:read('jointGuideExposure',n*4)
             else:read('averagedCoefficients', n, True)
+            if 'fineLookup' in descriptors:
+                read('fineLookup',n,True);read('inverseLut',n,True);read('lowResidual',n,True)
         else:
             raise ValueError(f'Unaccounted production entry: {entry}')
         rows.append(dict(pass_name=p['label'], read_sweep_bytes=sum(reads.values()),

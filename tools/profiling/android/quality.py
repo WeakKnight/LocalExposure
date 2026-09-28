@@ -23,6 +23,19 @@ def image_quality(reference, actual):
     return result
 
 
+def full_resolution_quality(reference, actual):
+    """User's spatial-error goal; retain the older strict gate for inspection."""
+    result = image_quality(reference, actual)
+    result['legacy_accepted'] = result['accepted']
+    if not result['finite']:
+        return result
+    error = abs(np.asarray(reference, dtype=float)[...,:3] - np.asarray(actual, dtype=float)[...,:3])
+    result['red_fraction'] = float(np.mean(error.max(axis=-1) >= 12))
+    result['accepted'] = result['red_fraction'] < .01
+    result['acceptance_rule'] = 'Native pixels with max RGB sRGB8 error >=12 must occupy <1%; independent full-resolution reference'
+    return result
+
+
 def save_comparison(bundle, manifest):
     from PIL import Image, ImageDraw
     from pathlib import Path

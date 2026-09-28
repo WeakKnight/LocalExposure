@@ -13,17 +13,21 @@ Start with the core files below. Tests and profiling tools are kept outside the 
 
 Supporting material: [documentation](README.md), [tests](../tests/README.md), and [developer tools](../tools/README.md). Profiling is optional; it is not needed to run the viewer.
 
-The Android benchmark compiles five independent stage files in `shaders/compact/`. Each file declares its own inputs, outputs, constants and shared memory; there is no umbrella shader or shared resource declaration file. The files above remain the independent viewer reference.
+The default mobile variant is `fine-residual-lookup`. It uses five stages, each with its own resources; the viewer and old Guided controls remain independent.
 
 | Stage | Responsibility |
 | --- | --- |
-| [initialize.slang](../shaders/compact/initialize.slang) | HDR reduction, three exposures and weights |
-| [pyramid.slang](../shaders/compact/pyramid.slang) | Residual and weight downsampling |
+| [initialize.slang](../shaders/fine_residual/initialize.slang) | Four bilinear HDR samples; evaluate exposure lightness and weights before averaging |
+| [pyramid.slang](../shaders/compact/pyramid.slang) | Packed residual and weight downsampling |
 | [tail.slang](../shaders/compact/tail.slang) | Small pyramid tail in one workgroup |
-| [reconstruct.slang](../shaders/compact/reconstruct.slang) | Residual reconstruction and inverse exposure |
-| [guided.slang](../shaders/compact/guided.slang) | Guided fitting and coefficient averaging |
+| [reconstruct.slang](../shaders/fine_residual/reconstruct.slang) | Reconstruct a low-resolution lightness residual |
+| [apply.slang](../shaders/fine_residual/apply.slang) | Restore fine residuals at full resolution, invert lightness, then apply the real tone mapper |
 
-The host maps entry points directly to stage files in [variants.py](../tools/profiling/android/variants.py). Production keeps only two compile-time choices: unsigned input gathering and packed-half versus FP32 Guided coefficients. Public benchmark presets are the optimized default, its FP32-coefficient control, and the independent unfused `lossless` reference. Historical macro combinations live only in the frozen test fixture; they are not production options.
+Two cached 2048-entry RGBA32F forward tables (64 KiB total) store weighted lightness, weights, exposure residuals and baseline. [fusion_lookup.py](../fusion_lookup.py) rebuilds them when curve, brackets or sigma change; global EV changes only lookup coordinates. The existing 1024-entry R16F inverse remains unchanged. Tables cover log2 luminance [-40,40]; input evaluation retains the calibrated 65535 limit.
+
+At full resolution, the target is `weighted lightness + reconstructed low residual - dot(low exposure residuals, full-resolution weights)`. This approximates omitted fine pyramid bands. It avoids Guided coefficient fitting, but is not algebraically identical to the full pyramid. See [quality validation and limits](performance/quality-goal.md).
+
+[variants.py](../tools/profiling/android/variants.py) selects the stage files. `guided-packed-coefficients`, its FP32-coefficient control and the independent unfused reference remain available.
 
 
 `HDR → Three-exposure lightness and weights → Multiscale pyramids → Weighted Laplacian blending and coarse-to-fine reconstruction → Local exposure multiplier → HDR × Exposure → ACES → sRGB`

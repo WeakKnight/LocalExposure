@@ -54,11 +54,12 @@ PRODUCTION = {'half_aux': True,
  'packed_half_coefficients': True}
 
 VARIANTS = {
+    "fine-residual-lookup": {**PRODUCTION, "fine_residual_lookup": True},
     "guided-packed-coefficients": dict(PRODUCTION),
     "guided-coefficient-layout": {**PRODUCTION, "packed_half_coefficients": False, "guided_uncentered": False},
     "lossless": {},
 }
-DEFAULT_VARIANT = "guided-packed-coefficients"
+DEFAULT_VARIANT = "fine-residual-lookup"
 COMPACT_MODULES = {
     "reduce_setup": "compact/initialize",
     "reduce_setup_gather": "compact/initialize",
@@ -69,3 +70,13 @@ COMPACT_MODULES = {
     "reconstruct_ev_fused": "compact/reconstruct",
     "reconstruct_guided": "compact/guided",
 }
+
+
+def compact_modules(config):
+    modules = dict(COMPACT_MODULES)
+    if config.get('fine_residual_lookup'):
+        for entry in ('reduce_setup', 'reduce_setup_gather'):
+            modules[entry] = 'fine_residual/initialize'
+        for entry in ('reconstruct_compact', 'reconstruct_ev', 'reconstruct_ev_fused'):
+            modules[entry] = 'fine_residual/reconstruct'
+    return modules

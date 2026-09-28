@@ -7,7 +7,7 @@
 | ![Deck before local exposure](docs/images/sundowner_deck-before.png) | ![Deck after local exposure](docs/images/sundowner_deck-after.png) |
 | ![Veranda before local exposure](docs/images/veranda-before.png) | ![Veranda after local exposure](docs/images/veranda-after.png) |
 
-Each pair uses the same HDR input, global exposure, and tone mapper. Examples use ±3 EV brackets to emphasize the effect; the default is ±1.2 EV.
+Each pair uses the same 1200×600 HDR input, global exposure, and tone mapper. The after images use the current optimized mobile algorithm. Examples use ±3 EV brackets to emphasize the effect; the default is ±1.2 EV.
 
 ## What we built
 

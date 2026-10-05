@@ -54,7 +54,7 @@ Each scene covers four parameter presets, top to bottom: default, darker global 
 
 Both paths use the same 1920×1080 HDR input and calibration. The independent reference runs Fusion at full resolution without Guided upsampling; the optimized path runs at quarter width and height with fine-residual correction. These comparisons include the quality cost of downsampling and upsampling. Error colors show the largest RGB difference in sRGB8 codes: black means identical, red means **12 or more**. Previews preserve peak errors.
 
-**16/16 scene and parameter cases meet the red-area goal: less than 1% of native pixels at error ≥12.** The worst case occupies **0.02175%**. The error images use a fixed scale and peak-preserving previews, so their visible red area is not the measured native-pixel fraction. Extreme synthetic edges and uncorrelated HDR noise remain limitations; this is not a universal error bound.
+**16/16 scene and parameter cases meet the red-area goal: less than 1% of native pixels at error ≥12.** The latest Metal comparison has a worst-case red area of **0.02170%**. The error images use a fixed scale and peak-preserving previews, so their visible red area is not the measured native-pixel fraction. Extreme synthetic edges and uncorrelated HDR noise remain limitations; this is not a universal error bound.
 
 [All settings and error metrics](docs/images/parameter-matrix/README.md) · [Full-size images and regeneration](docs/image-comparison.md)
 
@@ -81,6 +81,8 @@ python3 -m venv .venv
 The automatic backend uses Metal on macOS. The viewer negotiates a supported RGBA8 or BGRA8 UNORM window format on startup and resize. Its output is already sRGB encoded, so it requires a non-sRGB surface format.
 
 Switch HDR scenes, adjust exposure, and compare the result interactively. **F5** reloads shaders; **F2** saves an image.
+
+The **Algorithm** selector also includes standalone **UE 5.8 Fusion** and **UE 5.8 Bilateral Grid** ports, audited against the supplied engine source. Launch them with `--method ue-fusion` or `--method ue-bilateral`; `--ue-profile mobile` selects the mobile input-resolution graph. Bart remains the default. All three use the same final ACES operator for comparison. See [source correspondence, precision controls and limits](docs/unreal-local-exposure.md) and the [matched GPU comparison](docs/performance/unreal.md).
 
 The PC viewer remains the independent reference implementation. The optimized mobile graph runs initialization, pyramid downsampling, tail fusion, reconstruction, and full-resolution correction. Each stage declares its own resources. See the [stage guide](docs/implementation.md) and [Android benchmark](docs/performance/android.md).
 

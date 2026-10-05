@@ -12,6 +12,7 @@ These are optional; launch the application with `run.ps1` from the repository ro
 | `profiling/android/` | Deploy the production Vulkan benchmark and measure an attached phone; see the [workflow](../docs/performance/android.md) |
 | `profiling/android/activity.py` | Foreground graphics-produced HDR, joint submissions and sustained AB/BA timing |
 | `profiling/android/quality_sweep.py` | Same-backend spatial and temporal stress; presets live in `variants.py` |
+| `profiling/compare_unreal.py` | Matched Bart/UE static-EXR images, native/FP32 controls, complete-chain and incremental GPU timings |
 
 Run from the repository root, for example:
 

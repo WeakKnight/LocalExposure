@@ -1,5 +1,6 @@
 """Frozen numerical controls; never imported by the production benchmark."""
 from pathlib import Path
+import slangpy as spy
 from tone_mapper import ROOT
 from tools.profiling.android.quality_sweep import Candidate
 
@@ -203,6 +204,10 @@ class ReferenceCandidate(Candidate):
         defines={key:str(int(self.config.get(name,default))) for key,(name,default) in mapping.items()}
         defines['RESIDUAL_SCALE']=str(self.config.get('residual_scale',1.0))
         defines['PACKED_WEIGHT_BIAS']=str(self.config.get('packed_weight_bias',0.0))
+        # Keep the frozen shader intact; adapt only the unsupported Metal
+        # half-bit intrinsic, independently of the candidate's shader graph.
+        if device.info.type == spy.DeviceType.metal:
+            defines['asuint16'] = 'f32tof16'
         session=device.create_slang_session(compiler_options={'include_paths':[ROOT/'shaders'],'defines':defines})
         self.kernels={name:device.create_compute_kernel(session.load_program(str(ROOT/'tests/fixtures/fusion_compact_reference.slang'),[name])) for name in ['reconstruct_ev_fused','reduce_setup_gather','guided_moments','reduce_horizontal','reduce_setup_vertical','reduce_setup_cooperative','tail_reconstruct','reconstruct_ev','reduce_setup','downsample_compact','reconstruct_compact','reconstruct_guided']}
         self.unsigned_gather = None

@@ -1,5 +1,7 @@
 # Reference and optimized images
 
+The separate [Bart / UE 5.8 comparison](performance/unreal.md) shows the standalone Fusion and Bilateral Grid ports, including native-storage versus FP32 error controls. Differences between these algorithms are intentional; Bart is not a ground-truth image for UE.
+
 These images compare the independent `ToneMapper` reference with the current
 `DEFAULT_VARIANT` from the mobile profiling workflow. They run on the **same desktop
 backend**, not on a phone. The reference now runs Fusion at the full 1920×1080 input resolution, with all

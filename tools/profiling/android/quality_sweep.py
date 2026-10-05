@@ -20,6 +20,11 @@ class Candidate:
         from .variants import compact_modules
         COMPACT_MODULES = compact_modules(self.config)
         defines={'PACKED_HALF_COEFFICIENTS': str(int(self.config.get('packed_half_coefficients', True)))}
+        if device.info.type == spy.DeviceType.metal:
+            # Slang 0.43's Metal target rejects the uint16 bitcast intrinsic.
+            # Values are already rounded halfs: converting their FP32 promotion
+            # back to half bits preserves all finite coefficients and signed 0.
+            defines['asuint16'] = 'f32tof16'
         session=device.create_slang_session(compiler_options={'include_paths':[ROOT/'shaders'],'defines':defines})
         self.kernels={name:device.create_compute_kernel(session.load_program(module+'.slang',[name])) for name,module in COMPACT_MODULES.items()}
         self.unsigned_gather = None

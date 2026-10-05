@@ -1,0 +1,31 @@
+{
+  "engine_version": {
+    "MajorVersion": 5,
+    "MinorVersion": 8,
+    "PatchVersion": 0,
+    "Changelist": 0,
+    "CompatibleChangelist": 0,
+    "IsLicenseeVersion": 0,
+    "IsPromotedBuild": 0,
+    "BranchName": "UE5"
+  },
+  "audit_root": "/Users/litianyu/Perforce/hermitli_litianyudeMacBook-Pro_PBR",
+  "files": {
+    "Build/Build.version": "978817f6af35ba18c82db54f19fa76d946fc44aa65333177fb438a0a58ec9e81",
+    "Shaders/Private/PostProcessLocalExposure.usf": "24c203cb1dbdd2a540ac2ee8b9cf21b8b18b5445fd9f5102f76aaf9af18f57c7",
+    "Shaders/Private/PostProcessHistogramCommon.ush": "b85ae143d49fbd38ba5632e3c4e1875a1e29b1b34c1be74bb5aab832d00e442e",
+    "Shaders/Private/PostProcessHistogram.usf": "b5fa7afac21af4dba1baa4ce6a5927d7aa929e74745a75f73210aba6524bee1a",
+    "Shaders/Private/TonemapCommon.ush": "90268a65562770d569a846486baa16d052c287075634d2945abc967c701be090",
+    "Shaders/Private/PostProcessDownsample.usf": "9c036c55f2ca3b82bfef6b0036ee5309e94833bbff07d8db1c13e1abf9107813",
+    "Shaders/Private/FilterPixelShader.usf": "f420343e752b454c35847e0cefe0406c8ebdc840db1770c634d6328d9c7a833b",
+    "Source/Runtime/Renderer/Private/PostProcess/PostProcessLocalExposure.cpp": "7bd0f104f63ae00292b1aacf96682d3d9421f0a6cb873a466821fbb13e8c5373",
+    "Source/Runtime/Renderer/Private/PostProcess/PostProcessLocalExposure.h": "da121d581f31c2f95b27e32ba6fcdba540fe73b2ee2236aab6a1c3831cb310c4",
+    "Source/Runtime/Renderer/Private/PostProcess/PostProcessHistogram.cpp": "17213b8ce8b0a0015e54cf1c8ce52e91a99ee2a681d29b468f511b0c55688407",
+    "Source/Runtime/Renderer/Private/PostProcess/PostProcessEyeAdaptation.cpp": "e82edc8e096abe66cce8a7bd96988f817bb9b9d97ea7b1825df554610dd4f063",
+    "Source/Runtime/Renderer/Private/PostProcess/PostProcessing.cpp": "9a856831c2021e377f3947678ab011c9db9a64a792d73da1f38131e4adf83d66",
+    "Source/Runtime/Renderer/Private/PostProcess/PostProcessDownsample.cpp": "09b030db0c2299f0005cdfe84765d65b27cc999fb4fe11c3cafed54827758028",
+    "Source/Runtime/Renderer/Private/PostProcess/PostProcessWeightedSampleSum.cpp": "a1a8e1c33200ff19f39bb4ad45871ba7e479a2bdd2fe06d9cbfa9e1e3783c9a3",
+    "Source/Runtime/Engine/Private/Scene.cpp": "c5389967bd6be3a9eb557e4c259c9c1136e77e49dd5b877dbd57ed01d92f76e1",
+    "Source/Runtime/Apple/MetalRHI/Private/MetalRHI.cpp": "1e4d99b5f6949c4c68f5625402f332995f39505bf6a941588b555798f6da1777"
+  }
+}

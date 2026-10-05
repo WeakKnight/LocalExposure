@@ -10,6 +10,8 @@ Run from the repository root:
 - `test_reduction`, `test_average`, `test_fit`, `test_rounds`: bitwise checks against frozen pre-optimization shaders (GPU required).
 - `test_mobile_profile`, `test_mali_profile`: offline-report parsing and workflow checks.
 - `test_viewer_surface`: RGBA/BGRA window-format negotiation and resize/minimize/restore behavior (no GPU required).
+- `test_unreal_local_exposure`: independent NumPy equations for UE Fusion and Bilateral Grid; black/HDR edges, odd/thin dimensions, thresholds, film variants, pre-exposure and native/FP32 controls (GPU required). An independent ramp probe measures the backend's interpolation precision; this is not an engine capture.
+- `test_production_graph`: production/diagnostic parity after changing the contents of the same HDR texture, and every finite half bit pattern for Metal's half-packing compatibility define (GPU required).
 - `test_guided_direct_batch`: exact FP32 control coefficients and 140 final-image checks against the frozen centered implementation across tiny/odd/thin sizes, random/near-constant HDR guides and extreme global exposure.
 - `test_guided_batch`: short-window reuse versus the unchanged Guided kernel, including FP32 coefficient readback and nearly constant guides.
 - `test_compact_production`: fixed image-quality gates against the frozen optimized graph and finite coefficients, with packed/FP32 controls, signed/unsigned input, tiny/odd sizes and varied exposures.

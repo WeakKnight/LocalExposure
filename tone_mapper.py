@@ -64,8 +64,10 @@ class ToneMapper:
         guided_kernels = {name: self.device.create_compute_kernel(session.load_program("guided.slang", [name]))
                           for name in ("reduce_source", "fit_coefficients", "average_coefficients", "apply_exposure")}
         curve = ZCurve(self.device, session=session)
+        production_kernel = self.device.create_compute_kernel(session.load_program('guided.slang', ['apply_exposure_production']))
         self.curve = curve
         self.guided_kernels = guided_kernels
+        self.production_kernel = production_kernel
         self.session, self.kernel = session, kernel
         self.downsample_kernel, self.weight_kernel = downsample, weights
         self.reconstruction_kernel, self.convert_kernel = reconstruct, convert
@@ -138,8 +140,9 @@ class ToneMapper:
         self.build_pyramid(encoder, self.weight_pyramid)
         self._weight_key = key
 
-    def prepare_result(self, encoder, hdr_source, exposure_ev):
-        if self._result_key == self._weight_key:
+    def prepare_result(self, encoder, hdr_source, exposure_ev, production=False):
+        result_key = (self._weight_key, 'production') if production else self._weight_key
+        if self._result_key == result_key:
             return
         work = self.work_source
         last = self.reconstructed.mip_count - 1
@@ -167,14 +170,22 @@ class ToneMapper:
                 thread_count=[work.width, work.height, 1],
                 vars={"coefficients": self.coefficients, "averagedOutput": self.averaged_coefficients},
                 command_encoder=encoder)
-        self.guided_kernels["apply_exposure"].dispatch(
+        (self.production_kernel if production else self.guided_kernels["apply_exposure"]).dispatch(
             thread_count=[hdr_source.width, hdr_source.height, 1],
             vars={"fullSource": hdr_source, "lowExposure": self.low_exposure,
                   "averagedCoefficients": self.averaged_coefficients, "linearSampler": self.sampler,
                   "globalEV": exposure_ev, "guided": self.fusion_scale == 4,
-                  "fullExposureOutput": self.local_exposure,
-                  "baseOutput": self.base_color, "colorOutput": self.final_color}, command_encoder=encoder)
-        self._result_key = self._weight_key
+                  "colorOutput": self.final_color,
+                  **({} if production else {"fullExposureOutput": self.local_exposure,
+                                             "baseOutput": self.base_color})}, command_encoder=encoder)
+        self._result_key = result_key
+
+    def record_processing(self, encoder, source, exposure_ev, highlight_ev=1.2, shadow_ev=1.2, sigma=.2):
+        # Benchmark/animated inputs: record every pass even when the texture and
+        # parameters have not changed. Keep viewer caching and reference intact.
+        self._weight_key = self._result_key = self._reduced_source_key = None
+        self.prepare_weights(encoder, source, exposure_ev, highlight_ev, shadow_ev, sigma)
+        self.prepare_result(encoder, source, exposure_ev, production=True)
 
     def create_output(self, width: int, height: int) -> spy.Texture:
         # Values are already sRGB encoded: use UNORM, not an sRGB texture.

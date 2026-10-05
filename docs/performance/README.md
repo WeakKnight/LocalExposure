@@ -1,5 +1,7 @@
 # Mobile performance
 
+[Bart / UE 5.8 desktop comparison](unreal.md) records separate Apple M4 Pro Metal measurements on static EXRs. Those results do not replace the phone measurements below.
+
 The default is `fine-residual-lookup`. The former `guided-packed-coefficients` path remains a control. The independent viewer reference
 and `guided-coefficient-layout` (FP32 fitted-coefficient control) remain available.
 

@@ -1,4 +1,5 @@
 import argparse
+from dataclasses import replace
 import math
 from pathlib import Path
 import time
@@ -6,11 +7,21 @@ import time
 import slangpy as spy
 
 from tone_mapper import ROOT, ToneMapper, load_exr, save_png
+from ue_local_exposure import UEParameters, UnrealLocalExposure
+
+METHOD_NAMES = ['bart', 'ue-fusion', 'ue-bilateral']
+METHOD_LABELS = ['Bart Fusion', 'UE 5.8 Fusion', 'UE 5.8 Bilateral Grid']
+
+
+def create_mapper(device, args):
+    if args.method == 'bart':
+        return ToneMapper(device, args.levels, args.fusion_scale)
+    return UnrealLocalExposure(device, args.method, args.levels, args.ue_parameters)
 
 VIEW_NAMES = ["fusion", "compare", "local-exposure"]
-VIEW_LABELS = ["Fusion result", "Compare: original | fusion", "Local exposure (EV)"]
+VIEW_LABELS = ["Local exposure result", "Compare: global | local", "Local exposure (EV)"]
 VIEW_HELP = ["HDR x global exposure x local exposure -> ACES -> sRGB",
-             "Left: original | Right: fusion (same image coordinates)",
+             "Left: global only | Right: local exposure (same coordinates)",
              "Black -6 EV | Gray 0 EV | White +6 EV"]
 
 DEFAULT_CONTRAST_SCALE = 0.8  # UE project-template setting: 1.2 EV bracket.
@@ -36,7 +47,7 @@ class Viewer:
     def __init__(self, args):
         self.args = args
         self.device = spy.Device(type=getattr(spy.DeviceType, args.device), enable_hot_reload=False)
-        self.mapper = ToneMapper(self.device, args.levels, args.fusion_scale)
+        self.mapper = create_mapper(self.device, args)
         self.assets = sorted((ROOT / "Assets").glob("*.exr"))
         if args.image not in self.assets:
             self.assets.insert(0, args.image)
@@ -70,31 +81,42 @@ class Viewer:
         self.surface = self.device.create_surface(self.window)
         self.resize(self.window.width, self.window.height)
         self.ui = spy.ui.Context(self.device)
-        panel = spy.ui.Window(self.ui.screen, "Local Exposure", spy.float2(12, 12), spy.float2(480, 420))
+        panel = spy.ui.Window(self.ui.screen, "Local Exposure", spy.float2(12, 12), spy.float2(480, 560))
         self.label = spy.ui.Text(panel, self.assets[self.index].name)
+        self.method_selector = spy.ui.ComboBox(panel, "Algorithm", items=METHOD_LABELS,
+            value=METHOD_NAMES.index(self.args.method), callback=self.set_method)
         spy.ui.ComboBox(panel, "View", items=VIEW_LABELS,
                         value=self.view_mode, callback=self.set_view)
         self.view_help = spy.ui.Text(panel, VIEW_HELP[self.view_mode])
-        spy.ui.ComboBox(panel, "Fusion resolution", items=["1/4 x 1/4 (guided)", "Full resolution reference"],
-                        value=0 if self.mapper.fusion_scale == 4 else 1,
-                        callback=lambda value: setattr(self.mapper, "fusion_scale", 4 if value == 0 else 1))
+        self.resolution_selector = spy.ui.ComboBox(panel, "Bart resolution", items=["1/4 x 1/4 (guided)", "Full resolution reference"],
+                        value=0 if self.args.fusion_scale == 4 else 1, callback=self.set_resolution)
         self.slider = spy.ui.SliderFloat(panel, "Exposure (EV)", min=-16, max=16,
                                         value=self.exposure, callback=self.set_exposure)
         spy.ui.SliderFloat(panel, "Highlight Contrast Scale", min=0, max=1,
                            value=self.highlight_contrast, callback=self.set_highlights)
         spy.ui.SliderFloat(panel, "Shadow Contrast Scale", min=0, max=1,
                            value=self.shadow_contrast, callback=self.set_shadows)
-        spy.ui.Text(panel, "Scale 1: no adjustment | Scale 0: 6 EV bracket")
+        self.scale_help = spy.ui.Text(panel, "")
         self.exposure_info = spy.ui.Text(panel, "")
         self.update_exposure_ui()
         self.sigma_slider = spy.ui.SliderFloat(panel, "Weight sigma (UE exp2)", min=0.02, max=0.8, value=self.sigma,
                            callback=lambda value: setattr(self, "sigma", value))
+        self.bilateral_controls = [
+            spy.ui.SliderFloat(panel, label, min=low, max=high, value=getattr(self.args.ue_parameters, field),
+                callback=lambda value, name=field: self.set_ue_parameter(name, value))
+            for label, field, low, high in [
+                ('Detail strength', 'detail_strength', 0, 3), ('Blurred luminance blend', 'blurred_blend', 0, 1),
+                ('Blur kernel (%)', 'blur_percent', 0, 100), ('Middle grey bias (EV)', 'middle_grey_bias', -6, 6),
+                ('Highlight threshold (EV)', 'highlight_threshold', 0, 8), ('Shadow threshold (EV)', 'shadow_threshold', 0, 8),
+                ('Highlight threshold strength', 'highlight_threshold_strength', 0, 1),
+                ('Shadow threshold strength', 'shadow_threshold_strength', 0, 1)]]
         spy.ui.Button(panel, "Reset exposure", callback=self.reset_exposure)
         spy.ui.Button(panel, "Previous image", callback=lambda: self.change_image(-1))
         spy.ui.Button(panel, "Next image", callback=lambda: self.change_image(1))
         spy.ui.Button(panel, "Reload shader (F5)", callback=self.reload)
         spy.ui.Button(panel, "Save PNG (F2)", callback=self.save)
         self.status = spy.ui.Text(panel, "ACES Filmic + sRGB")
+        self.update_method_controls()
         self.window.on_keyboard_event = self.on_key
         self.window.on_mouse_event = self.ui.handle_mouse_event
         self.window.on_resize = self.resize
@@ -125,6 +147,40 @@ class Viewer:
         self.exposure = value
         self.update_exposure_ui()
 
+    def set_method(self, value):
+        previous = self.args.method
+        try:
+            self.device.wait()
+            self.args.method = METHOD_NAMES[value]
+            mapper = create_mapper(self.device, self.args)
+            self.mapper = mapper
+            self.update_method_controls()
+            self.update_exposure_ui()
+            self.status.text = METHOD_LABELS[value] + ' | ACES Filmic + sRGB'
+        except Exception as exc:
+            self.args.method = previous
+            self.method_selector.value = METHOD_NAMES.index(previous)
+            self.status.text = 'Algorithm load failed; previous algorithm retained'
+            print(exc, flush=True)
+
+    def set_resolution(self, value):
+        self.args.fusion_scale = 4 if value == 0 else 1
+        if self.args.method == 'bart':
+            self.mapper.fusion_scale = self.args.fusion_scale
+
+    def set_ue_parameter(self, name, value):
+        self.args.ue_parameters = replace(self.args.ue_parameters, **{name: value})
+        if self.args.method != 'bart':
+            self.mapper.parameters = self.args.ue_parameters
+
+    def update_method_controls(self):
+        self.resolution_selector.visible = self.args.method == 'bart'
+        self.sigma_slider.visible = self.args.method == 'bart'
+        for control in self.bilateral_controls:
+            control.visible = self.args.method == 'ue-bilateral'
+        self.scale_help.text = ('Scale 1: preserve base contrast | Scale 0: flatten base contrast'
+            if self.args.method == 'ue-bilateral' else 'Scale 1: no bracket | Scale 0: 6 EV bracket')
+
     def set_highlights(self, value):
         self.highlight_contrast = value
         self.update_exposure_ui()
@@ -142,10 +198,11 @@ class Viewer:
         return contrast_scale_to_ev(self.shadow_contrast)
 
     def update_exposure_ui(self):
-        self.exposure_info.text = (
+        self.exposure_info.text = (f'Highlight {self.highlight_contrast:.2f} | Shadow {self.shadow_contrast:.2f}'
+            if self.args.method == 'ue-bilateral' else (
             f"Darker {self.exposure - self.highlight_ev:+.1f} EV | "
             f"Base {self.exposure:+.1f} EV | Brighter {self.exposure + self.shadow_ev:+.1f} EV"
-        )
+        ))
 
     def set_view(self, value):
         self.view_mode = value
@@ -207,6 +264,7 @@ def parse_args(argv=None):
     parser.add_argument("--image", type=Path, default=ROOT / "Assets" / "veranda_4k.exr")
     parser.add_argument("--exposure", type=float, default=0.0, help="Exposure compensation in EV")
     parser.add_argument("--view", choices=VIEW_NAMES, default="fusion")
+    parser.add_argument('--method', choices=METHOD_NAMES, default='bart', help='Local exposure algorithm')
     parser.add_argument("--fusion-scale", type=int, choices=[1, 4], default=4,
                         help="Fusion resolution divisor per axis: 4 guided (default), 1 full reference")
     parser.add_argument("--sigma", type=float, default=0.2, help="UE exp2 weight width (0.02 to 0.8; default 0.2)")
@@ -223,10 +281,22 @@ def parse_args(argv=None):
                              help="Legacy: brighter bracket in EV (0..6), converted to Contrast Scale")
     parser.add_argument("--width", type=int, default=1440)
     parser.add_argument("--height", type=int, default=810)
-    parser.add_argument("--device", choices=["automatic", "d3d12", "vulkan"], default="automatic")
+    parser.add_argument("--device", choices=["automatic", "d3d12", "vulkan", "metal"], default="automatic")
     parser.add_argument("--headless", action="store_true", help="Render a PNG without a window")
     parser.add_argument("--output", type=Path, default=ROOT / "outputs" / "preview.png")
     parser.add_argument("--frames", type=int, default=0, help="Close viewer after N frames (0: unlimited)")
+    ue = parser.add_argument_group('UE 5.8 local exposure')
+    ue.add_argument('--ue-profile', choices=['desktop', 'mobile'], default='desktop', help='UE input/blur resolution graph')
+    ue.add_argument('--ue-storage', choices=['native', 'fp32'], default='native', help='UE texture storage or FP32 precision control')
+    ue.add_argument('--ue-luminance-method', choices=['uniform', 'rec709', 'ntsc'], default='uniform')
+    for flag, default in [('histogram-min', -8), ('histogram-max', 4), ('pre-exposure', 1),
+                          ('grey-multiplier', 1), ('middle-grey-bias', 0), ('detail-strength', 1),
+                          ('blurred-blend', .6), ('blur-percent', 50), ('highlight-threshold', 0),
+                          ('shadow-threshold', 0), ('highlight-threshold-strength', 1),
+                          ('shadow-threshold-strength', 1), ('target-luminance', .5),
+                          ('film-slope', .88), ('film-toe', .55), ('film-shoulder', .26),
+                          ('film-black-clip', 0), ('film-white-clip', .04)]:
+        ue.add_argument('--ue-' + flag, type=float, default=default)
     args = parser.parse_args(argv)
     if args.levels < 1:
         parser.error("Levels must be positive")
@@ -250,6 +320,10 @@ def parse_args(argv=None):
         setattr(args, name, value)
     if not math.isfinite(args.sigma) or not 0.02 <= args.sigma <= 0.8:
         parser.error("Sigma must be finite and between 0.02 and 0.8")
+    try:
+        args.ue_parameters = UEParameters(**{name[3:]: value for name, value in vars(args).items() if name.startswith('ue_')})
+    except ValueError as exc:
+        parser.error(str(exc))
     return args
 
 

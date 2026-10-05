@@ -23,6 +23,15 @@ def contrast_scale_to_ev(scale):
     return 6.0 * (1.0 - scale)
 
 
+def select_surface_format(formats):
+    # The viewer output already contains sRGB codes; avoid encoding them again.
+    # RGBA preserves the existing path; Metal surfaces typically require BGRA.
+    for format in (spy.Format.rgba8_unorm, spy.Format.bgra8_unorm):
+        if format in formats:
+            return format
+    raise RuntimeError(f"Viewer requires an RGBA8 or BGRA8 UNORM surface; supported formats: {formats}")
+
+
 class Viewer:
     def __init__(self, args):
         self.args = args
@@ -59,8 +68,7 @@ class Viewer:
         self.window = spy.Window(width=self.args.width, height=self.args.height,
                                  title="Local Exposure | ACES Filmic", resizable=True)
         self.surface = self.device.create_surface(self.window)
-        self.surface.configure(width=self.window.width, height=self.window.height,
-                               format=spy.Format.rgba8_unorm, vsync=True)
+        self.resize(self.window.width, self.window.height)
         self.ui = spy.ui.Context(self.device)
         panel = spy.ui.Window(self.ui.screen, "Local Exposure", spy.float2(12, 12), spy.float2(480, 420))
         self.label = spy.ui.Text(panel, self.assets[self.index].name)
@@ -188,7 +196,8 @@ class Viewer:
     def resize(self, width, height):
         self.device.wait()
         if width > 0 and height > 0:
-            self.surface.configure(width=width, height=height, format=spy.Format.rgba8_unorm, vsync=True)
+            self.surface.configure(width=width, height=height,
+                                   format=select_surface_format(self.surface.info.formats), vsync=True)
         else:
             self.surface.unconfigure()
 

@@ -78,6 +78,8 @@ python3 -m venv .venv
 .venv/bin/python main.py --view compare
 ```
 
+The automatic backend uses Metal on macOS. The viewer negotiates a supported RGBA8 or BGRA8 UNORM window format on startup and resize. Its output is already sRGB encoded, so it requires a non-sRGB surface format.
+
 Switch HDR scenes, adjust exposure, and compare the result interactively. **F5** reloads shaders; **F2** saves an image.
 
 The PC viewer remains the independent reference implementation. The optimized mobile graph runs initialization, pyramid downsampling, tail fusion, reconstruction, and full-resolution correction. Each stage declares its own resources. See the [stage guide](docs/implementation.md) and [Android benchmark](docs/performance/android.md).

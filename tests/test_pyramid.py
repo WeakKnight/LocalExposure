@@ -77,7 +77,7 @@ class PyramidTests(unittest.TestCase):
             encoder = self.device.create_command_encoder()
             self.mapper.prepare_weights(encoder, texture, 0, 2, 2, sigma)
             self.device.submit_command_buffer(encoder.finish())
-            y = np.stack([self.mapper.curve.sample((rgba[...,:3] @ np.array([.2126,.7152,.0722]))*2.0**ev)[...,0] for ev in [-2,0,2]],axis=-1)
+            y = np.stack([self.mapper.curve.sample((rgba[...,:3] @ np.array([1/3,1/3,1/3]))*2.0**ev)[...,0] for ev in [-2,0,2]],axis=-1)
             logw = -(y-.5)**2/(2*sigma*sigma)
             w = np.exp2(logw-logw.max(axis=-1,keepdims=True))
             w /= w.sum(axis=-1,keepdims=True)
@@ -130,7 +130,7 @@ class PyramidTests(unittest.TestCase):
             self.assertTrue(np.isfinite(multiplier).all())
             np.testing.assert_allclose(actual_rgb, aces(rgba[...,:3]*multiplier[...,None]), atol=2**-11 + 2e-6)
             # Inversion targets the fitted scalar proxy, not actual RGB output.
-            luminance = rgba[..., :3] @ np.array([.2126,.7152,.0722])
+            luminance = rgba[..., :3] @ np.array([1/3,1/3,1/3])
             achieved = self.mapper.curve.sample(luminance*multiplier)[..., 0]
             target = np.clip(self.mapper.reconstructed.to_numpy(), 0, self.mapper.curve.max_lightness)
             reachable = (multiplier > 2**-11.99) & (multiplier < 2**11.99)
@@ -159,7 +159,7 @@ class PyramidTests(unittest.TestCase):
                 self.mapper.execute(encoder, texture, output, ev,
                                     highlight_ev=highlight, shadow_ev=shadow, sigma=sigma)
                 self.device.submit_command_buffer(encoder.finish())
-                expected = np.stack([self.mapper.curve.sample((rgba[..., :3] @ np.array([.2126,.7152,.0722]))*2.0**e)[...,0]
+                expected = np.stack([self.mapper.curve.sample((rgba[..., :3] @ np.array([1/3,1/3,1/3]))*2.0**e)[...,0]
                                      for e in [ev-highlight, ev, ev+shadow]], axis=-1)
                 np.testing.assert_allclose(self.mapper.base_color.to_numpy()[..., :3],
                                            aces(rgba[..., :3]*2.0**ev), atol=2**-11 + 2e-6)

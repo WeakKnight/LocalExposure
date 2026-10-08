@@ -16,7 +16,7 @@ void reduce_setup_gather(uint3 tid:SV_DispatchThreadID){
  for(uint y=0;y<2;y++)for(uint x=0;x<2;x++){
   float2 uv=(float2(tid.xy)+(float2(x,y)+.5)/2.)/float2(w,h);
   float3 rgb=max(fullSource.SampleLevel(linearSampler,uv,0).rgb,0.);
-  float logL=log2(max(dot(rgb,float3(.2126,.7152,.0722)),exp2(-40.)))+globalEV;
+  float logL=log2(max(dot(rgb,float3(1.0/3.0)),exp2(-40.)))+globalEV;
   float coord=(saturate((logL+40.)/80.)*2047.+.5)/2048.;
   light+=lowLookup.SampleLevel(linearSampler,coord,0).xyz;
   weights+=fineLookup.SampleLevel(linearSampler,coord,0).yz;

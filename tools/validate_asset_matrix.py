@@ -19,7 +19,7 @@ PRESETS = [
 ]
 OUT = ROOT / 'docs/images/parameter-matrix'
 FULL = ROOT / 'outputs/quality/parameter-matrix'
-SETTINGS = dict(width=1920, height=1080, sigma=.2, fusion_scale=4, reference_fusion_scale=1,
+SETTINGS = dict(width=1920, height=1080, sigma=.2, luminance="equal RGB", fusion_scale=4, reference_fusion_scale=1,
                 input_format='R11G11B10_FLOAT', output_encoding='sRGB8', presets=PRESETS)
 
 
@@ -49,13 +49,17 @@ def main():
     import slangpy as spy
     from main import contrast_scale_to_ev
     from tone_mapper import ToneMapper, create_hdr_texture
+    from fine_residual import FineResidualToneMapper
+    from tools.profiling.controls.legacy_guided import LegacyGuidedToneMapper
     from tools.profiling.android.quality import full_resolution_quality as image_quality
     from tools.profiling.android.quality_sweep import Candidate, codes
     from tools.profiling.android.variants import DEFAULT_VARIANT, VARIANTS
 
     device = spy.Device(enable_hot_reload=False)
-    mapper = ToneMapper(device, fusion_scale=4)
+    mapper = LegacyGuidedToneMapper(device)
     candidate = Candidate(device, mapper, DEFAULT_VARIANT)
+    viewer_mapper = FineResidualToneMapper(device)
+    viewer_mapper.curve = mapper.curve
     reference_mapper = ToneMapper(device, fusion_scale=SETTINGS["reference_fusion_scale"])
     reference_mapper.curve = mapper.curve  # Share calibration, not spatial resolution.
     pack = device.create_compute_kernel(device.create_slang_session().load_program(
@@ -91,6 +95,11 @@ def main():
             reference_linear = reference_mapper.final_color.to_numpy()
             optimized_linear, coefficients = candidate.render(packed, ev, sigma=SETTINGS['sigma'],
                                                               highlight_ev=highlight, shadow_ev=shadow)
+            encoder = device.create_command_encoder()
+            viewer_mapper.record_processing(encoder, packed, ev, highlight, shadow, SETTINGS['sigma'])
+            device.submit_command_buffer(encoder.finish())
+            if not np.array_equal(viewer_mapper.final_color.to_numpy(), optimized_linear):
+                raise RuntimeError(f'{asset.stem}/{preset["name"]}: viewer differs from optimized default')
             finite = all(np.isfinite(x).all() for x in [reference_linear, optimized_linear, coefficients])
             key = f'{asset.stem}-{preset["name"]}'
             if not finite:

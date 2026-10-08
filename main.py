@@ -7,6 +7,7 @@ import time
 import slangpy as spy
 
 from tone_mapper import ROOT, ToneMapper, load_exr, save_png
+from fine_residual import FineResidualToneMapper
 from ue_local_exposure import UEParameters, UnrealLocalExposure
 
 METHOD_NAMES = ['bart', 'ue-fusion', 'ue-bilateral']
@@ -15,7 +16,9 @@ METHOD_LABELS = ['Bart Fusion', 'UE 5.8 Fusion', 'UE 5.8 Bilateral Grid']
 
 def create_mapper(device, args):
     if args.method == 'bart':
-        return ToneMapper(device, args.levels, args.fusion_scale)
+        settings = dict(curve_mode=args.fusion_curve, film_parameters=args.ue_parameters)
+        return (FineResidualToneMapper(device, args.levels, **settings) if args.fusion_scale == 4
+                else ToneMapper(device, args.levels, fusion_scale=1, **settings))
     return UnrealLocalExposure(device, args.method, args.levels, args.ue_parameters)
 
 VIEW_NAMES = ["fusion", "compare", "local-exposure"]
@@ -88,8 +91,11 @@ class Viewer:
         spy.ui.ComboBox(panel, "View", items=VIEW_LABELS,
                         value=self.view_mode, callback=self.set_view)
         self.view_help = spy.ui.Text(panel, VIEW_HELP[self.view_mode])
-        self.resolution_selector = spy.ui.ComboBox(panel, "Bart resolution", items=["1/4 x 1/4 (guided)", "Full resolution reference"],
+        self.resolution_selector = spy.ui.ComboBox(panel, "Bart resolution", items=["1/4 x 1/4 (fine residual)", "Full resolution reference"],
                         value=0 if self.args.fusion_scale == 4 else 1, callback=self.set_resolution)
+        self.curve_selector = spy.ui.ComboBox(panel, 'Bart curve',
+            items=['Calibrated Z (LUT)', 'UE film (analytic)'],
+            value=0 if self.args.fusion_curve == 'z' else 1, callback=self.set_curve)
         self.slider = spy.ui.SliderFloat(panel, "Exposure (EV)", min=-16, max=16,
                                         value=self.exposure, callback=self.set_exposure)
         spy.ui.SliderFloat(panel, "Highlight Contrast Scale", min=0, max=1,
@@ -163,10 +169,34 @@ class Viewer:
             self.status.text = 'Algorithm load failed; previous algorithm retained'
             print(exc, flush=True)
 
+    def set_curve(self, value):
+        previous = self.args.fusion_curve
+        try:
+            self.device.wait()
+            self.args.fusion_curve = ['z', 'ue-film'][value]
+            self.mapper = create_mapper(self.device, self.args)
+            self.status.text = 'Bart curve: ' + self.args.fusion_curve
+        except Exception as exc:
+            self.args.fusion_curve = previous
+            self.curve_selector.value = 0 if previous == 'z' else 1
+            self.status.text = 'Curve change failed; previous curve retained'
+            print(exc, flush=True)
+
     def set_resolution(self, value):
-        self.args.fusion_scale = 4 if value == 0 else 1
-        if self.args.method == 'bart':
-            self.mapper.fusion_scale = self.args.fusion_scale
+        previous = self.args.fusion_scale
+        try:
+            self.device.wait()
+            self.args.fusion_scale = 4 if value == 0 else 1
+            if self.args.method == 'bart':
+                mapper = create_mapper(self.device, self.args)
+                mapper.curve = self.mapper.curve
+                self.mapper = mapper
+                self.status.text = 'Bart fine residual' if value == 0 else 'Bart full-resolution reference'
+        except Exception as exc:
+            self.args.fusion_scale = previous
+            self.resolution_selector.value = 0 if previous == 4 else 1
+            self.status.text = 'Resolution change failed; previous algorithm retained'
+            print(exc, flush=True)
 
     def set_ue_parameter(self, name, value):
         self.args.ue_parameters = replace(self.args.ue_parameters, **{name: value})
@@ -175,6 +205,7 @@ class Viewer:
 
     def update_method_controls(self):
         self.resolution_selector.visible = self.args.method == 'bart'
+        self.curve_selector.visible = self.args.method == 'bart'
         self.sigma_slider.visible = self.args.method == 'bart'
         for control in self.bilateral_controls:
             control.visible = self.args.method == 'ue-bilateral'
@@ -265,8 +296,10 @@ def parse_args(argv=None):
     parser.add_argument("--exposure", type=float, default=0.0, help="Exposure compensation in EV")
     parser.add_argument("--view", choices=VIEW_NAMES, default="fusion")
     parser.add_argument('--method', choices=METHOD_NAMES, default='bart', help='Local exposure algorithm')
+    parser.add_argument('--fusion-curve', choices=['z', 'ue-film'], default='z',
+                        help='Bart curve: calibrated Z LUT or analytic UE film/fixed inverse; UE film flags apply')
     parser.add_argument("--fusion-scale", type=int, choices=[1, 4], default=4,
-                        help="Fusion resolution divisor per axis: 4 guided (default), 1 full reference")
+                        help="Fusion resolution divisor per axis: 4 fine residual (default), 1 full reference")
     parser.add_argument("--sigma", type=float, default=0.2, help="UE exp2 weight width (0.02 to 0.8; default 0.2)")
     parser.add_argument("--levels", type=int, default=16, help="Maximum fusion levels, capped by shorter side (UE default: 16)")
     highlight_group = parser.add_mutually_exclusive_group()

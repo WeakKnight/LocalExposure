@@ -13,7 +13,7 @@ class AverageTests(unittest.TestCase):
         session = device.create_slang_session(compiler_options={
             'include_paths': [ROOT/'shaders', ROOT/'tests/fixtures']})
         kernels = [device.create_compute_kernel(session.load_program(name,['average_coefficients']))
-                   for name in ['average_coefficients_original.slang','guided.slang']]
+                   for name in ['average_coefficients_original.slang',str(ROOT/'tools/profiling/controls/guided.slang')]]
         rng = np.random.default_rng(730)
         usage = spy.TextureUsage.shader_resource | spy.TextureUsage.unordered_access
         for h,w in [(1,1),(1,9),(9,1),(7,7),(8,8),(9,17),(270,480),(271,481)]:

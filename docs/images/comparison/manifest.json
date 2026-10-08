@@ -5,6 +5,7 @@
     "global_ev": 0.0,
     "bracket_ev": 1.2,
     "sigma": 0.2,
+    "luminance": "equal RGB",
     "fusion_scale": 4,
     "reference_fusion_scale": 1,
     "input_format": "R11G11B10_FLOAT"
@@ -66,13 +67,15 @@
     "adapter": "Apple M4 Pro"
   },
   "sources": {
-    "tone_mapper.py": "b294b6f9f06008e9e1816174d7d974cc14c7e029267b5763ce767cd23e02ddd6",
+    "tone_mapper.py": "23a0e752778b6ef364141b5a048474dc194c0eca883aa33e5b5f9e92d796933a",
+    "fine_residual.py": "5168c0f9051a47d6be642108a00d91842d50a3bd303447ab9d3610ecca485729",
     "zcurve.py": "6c5e9f07dc8b9ca1e9cd877fe6cbca196c829b43bdc41ba59b48384c15c7db8b",
     "fusion_lookup.py": "5f5b86a93ae157f74ba92f41cda8918dd40111a1a346c8af9f4924d6c279cded",
+    "ue_film_curve.py": "42b8c184c8df116b7b3a5e898f4625f6482285690d728bb25ad8c99fe6561056",
     "requirements.txt": "83309e8b213979037e2353ae66b125927ba4ffc718a2a9ce5bf1938c2ba5df80",
-    "tools/render_comparison.py": "bfe07857c6f13b7d8b8aa2633f05ba2cb98f096cd5b213e2f186629a4f6ad2c3",
+    "tools/render_comparison.py": "5f3367aa361ad37dd431e60f0b2664a189b01f5a3625b8255df5a72ee3390945",
     "tools/profiling/android/quality.py": "2132fc790311f9ae0b31732cb23ceee3a8aae8351a314855509db8fcb8bea69f",
-    "tools/profiling/android/quality_sweep.py": "2d9fdb734e87fcefa7bf1767a2cef07d65ad390335e79d501fe38a1cbea2db07",
+    "tools/profiling/android/quality_sweep.py": "6f54818aeb427b0a9e8f1e3c44dc06d46857cd1a56e04dde2a9568ea00314a63",
     "tools/profiling/android/variants.py": "b86b107cf4dd4b37d2d179a02caaad20d613731790f8f5e28f40e1663774c7e7",
     "tools/profiling/android/pack_source.slang": "32a7d227670f04c003d46f6c37d9916f593f2a39d5045b874bb53b8244b7e346",
     "shaders/aces.slang": "926b65c08bd1cd46e13ce28eb82cba9ce6428b74a32ea5743ae7e3b8ac0d006f",
@@ -81,14 +84,18 @@
     "shaders/compact/pyramid.slang": "160c58d13555fdbc3c34c321b600094615243e72f336a37ea87615c3c5292284",
     "shaders/compact/reconstruct.slang": "387a7ec2d786b22bfbc585ddd88a8102a4b76e2c9b3ef85e6f0057ff0ed7ca54",
     "shaders/compact/tail.slang": "1a8896d23535acb2d056c0b2be141ddc333d68f2db1a3a9e9d305db41b6de2c2",
-    "shaders/fine_residual/apply.slang": "089d90f241c4882c880ba3b6d901b03a52f223fc22fd10497f124bb27dc422e8",
-    "shaders/fine_residual/initialize.slang": "9d0a01391f8513b433ba954f49f60ea1e62da11cabfaa840bb52797219bf5ade",
+    "shaders/fine_residual/apply.slang": "cf32a39ccd486a4298ba81e4d4367643a98543948641d7edb9ca07e1ee279932",
+    "shaders/fine_residual/apply_ue_film.slang": "8b97300cbaffc83b5a0ac379503a9d921783260b68f1596b71140f98fca9e38b",
+    "shaders/fine_residual/initialize.slang": "88f8a77dc3d11412f5ca69f79ba4b57e734b1dfd4e90f5766343a33431ef2251",
+    "shaders/fine_residual/initialize_ue_film.slang": "2e967389f16d4f49c7989a8dc02689fd87f17948087f56b06e8bdd732a12a65e",
     "shaders/fine_residual/reconstruct.slang": "462fc8265f019bc04110b20dd1b7a4cc536abf3c6162d29ab64e0c3eb4707623",
-    "shaders/fusion.slang": "ed98e36c678c1450d437bcbc84c9c186a0628e280332d5d5186e8154f317c75c",
-    "shaders/guided.slang": "43050071379ca3ea95ce5929af6169155e80b3b116d5a359b30e81f8427f62fe",
-    "shaders/pyramid.slang": "7f1e3b61cdfc95ca0c833c9a23316fd4ff5d8dccc734c30260a2925fe005758d",
+    "shaders/fusion.slang": "d5965d18a64ca6bef0758d87ca5336aaf147a6ec44911b163325d737412d0aa8",
+    "shaders/pyramid.slang": "7ce531cf2c5439fb2e5a27dbf1a5ac8e0dc053933f294a8b20f08ee50813bcce",
+    "shaders/reference_apply.slang": "c68297423a85bd27c50cb9a989dd889d0def46f637d0d50112e8c295e061f06f",
     "shaders/tone_operator.slang": "5ddc7bf52dabba3427fb4d87d95fac268142101b9301f1d660aa82799891fb72",
     "shaders/tonemap.slang": "87ac9969949225b35f3c8fb7fffa21268a9301c3bcf5de211296376bd6dd299d",
+    "shaders/ue_film_curve.slang": "5cf71aa576902ba30a1c4bb2f0c79daae8733bbaf74f3c3b24aebedb37cfb04b",
+    "shaders/ue_film_reference.slang": "884fb60a35a612551702a208328467e1c0a17cde321b5fec83c493dec9e2b041",
     "shaders/unreal/apply.slang": "aea6aaa414c4c908829bd8bc764ec71b895fe1ac3b52cd5249c62e72f6fa5ee1",
     "shaders/unreal/bilateral.slang": "91f67a5c36a92c2e889b37a5374ec0b51a737324b6568d1dde5c2656e5be016a",
     "shaders/unreal/common.slang": "a76683da896f88b8695f7dd57502175f10376e24628d47d5772dacfbf87e3a04",
@@ -96,28 +103,32 @@
     "shaders/unreal/fusion.slang": "a2965f6af4163b600ec1a4685897372256e631ed82b9b2f66f0c4c9d398d1b82",
     "shaders/zcurve.slang": "94aeed77fb2843675a1104be81e076b7476c7430ce0c8b1bbaa53f225c39cc76",
     "shaders/zcurve_calibrate.slang": "36010790bb5cee42e4501e0cd8cc883631fe128a8be2211340914ed74537928a",
+    "tools/profiling/controls/fusion_rec709.slang": "ed98e36c678c1450d437bcbc84c9c186a0628e280332d5d5186e8154f317c75c",
+    "tools/profiling/controls/guided.slang": "43050071379ca3ea95ce5929af6169155e80b3b116d5a359b30e81f8427f62fe",
+    "tools/profiling/controls/pyramid_rec709.slang": "7f1e3b61cdfc95ca0c833c9a23316fd4ff5d8dccc734c30260a2925fe005758d",
+    "tools/profiling/controls/legacy_guided.py": "58ddbae56f9a7562569c73192942219f826d65e57bffee8fa807c1dbec89e33d",
     "Assets/sundowner_deck_4k.exr": "1a64e9e8ef071356fd6c1b28b201fc3425c3e481138ceae56abb9555c99cd0d7",
     "Assets/veranda_4k.exr": "818c3b1d8086ab6e0a2b73852f8ac2db497848cc9f7e1d9bc32cc9c63910e4d8"
   },
   "artifacts": {
-    "sundowner_deck-reference.png": "67e8353b1d88ca76dfa6d7a9bf0150e915742369a1202ba8bbe0c6ec2a85cb0b",
-    "sundowner_deck-optimized.png": "bd6d093369adb98355285e7bbefb81f35776158e290214c4f4e3aec6487d812d",
-    "sundowner_deck-error.png": "efe198a2e60e726c44111402c6620df4cc7624f74b9f3be1e7dc5fdf5817fee7",
-    "sundowner_deck-comparison.png": "73b54ac0a00e842261123ae4b0a89d108be7f19866f51d4ead172ff4ba3a1a9c",
-    "veranda-reference.png": "0f2e523153d2b4153575ee77f325fd8355dcbea3ad8539eb8985fc71b4cdcdca",
-    "veranda-optimized.png": "b038fa7960dc27952ac70b0a0db99398228724d644bd00bae2e043cc0a5c387c",
-    "veranda-error.png": "2d49cac27a2b2b1e2421eb01006212a7063a40b64372a6b8ac92d26c36f10aa5",
-    "veranda-comparison.png": "34fc8b9379577440889ff201bc74e9ba6a7c0dbb38bd96b50f55d523404b0e29"
+    "sundowner_deck-reference.png": "8c6df9964e789def07b40941bf0baea6bb2f407774ee177b900dcd550b280693",
+    "sundowner_deck-optimized.png": "ba6e2a4b84b175b4e82c3f8b49f4d4cba9bb749e6a1b90a49ea682305fdfc819",
+    "sundowner_deck-error.png": "d3ef66a02e739438bac3e4d80000b774e818cfd798356a9ab57193ed041894cd",
+    "sundowner_deck-comparison.png": "0be4cc108b1df095aa6d7206fdafe97545a119dd9cb81f1cb812feab223609e7",
+    "veranda-reference.png": "4457d7c121f4265568409bd3c8553fc8bf028733a0d669ea6550c04f9e02fdad",
+    "veranda-optimized.png": "461829129055d15031b45cb5c1fda767714b33910db5eae455dfa597c304c55b",
+    "veranda-error.png": "67609f29e97c6fb1f7ce21d8d1b27cef701a24b201b40d59c1bf72865499338f",
+    "veranda-comparison.png": "0cdbec2077a8336beba13e68a8545b314c0228a3470401e3c9ff51326d8ab331"
   },
   "scenes": [
     {
       "scene": "sundowner_deck",
       "quality": {
         "finite": true,
-        "rmse_codes": 0.4404688728299637,
+        "rmse_codes": 0.4358353102898769,
         "p99_codes": 2.0,
-        "max_codes": 13.0,
-        "fraction_pixels_over4": 0.0005164930555555555,
+        "max_codes": 11.0,
+        "fraction_pixels_over4": 0.0004349922839506173,
         "thresholds": {
           "rmse_codes": 0.75,
           "p99_codes": 3,
@@ -126,8 +137,8 @@
         },
         "accepted": true,
         "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
-        "legacy_accepted": false,
-        "red_fraction": 9.645061728395062e-07,
+        "legacy_accepted": true,
+        "red_fraction": 0.0,
         "acceptance_rule": "Native pixels with max RGB sRGB8 error >=12 must occupy <1%; independent full-resolution reference"
       }
     },
@@ -135,10 +146,10 @@
       "scene": "veranda",
       "quality": {
         "finite": true,
-        "rmse_codes": 0.33720694867479806,
+        "rmse_codes": 0.34453683796663803,
         "p99_codes": 1.0,
-        "max_codes": 15.0,
-        "fraction_pixels_over4": 0.00015817901234567902,
+        "max_codes": 9.0,
+        "fraction_pixels_over4": 0.0001552854938271605,
         "thresholds": {
           "rmse_codes": 0.75,
           "p99_codes": 3,
@@ -147,8 +158,8 @@
         },
         "accepted": true,
         "note": "Preliminary numerical gate, not proof of perceptual equivalence; multi-scene and edge inspection still required.",
-        "legacy_accepted": false,
-        "red_fraction": 1.9290123456790124e-06,
+        "legacy_accepted": true,
+        "red_fraction": 0.0,
         "acceptance_rule": "Native pixels with max RGB sRGB8 error >=12 must occupy <1%; independent full-resolution reference"
       }
     }
@@ -156,6 +167,7 @@
   "accepted": true,
   "reference": "Independent unfused ToneMapper; full-resolution Fusion, all pyramid levels, no Guided upsampling.",
   "optimized": "Quarter-width/height Fusion with full-resolution fine-residual correction; shared calibration.",
+  "viewer_parity": "Exact linear RGBA16F equality with FineResidualToneMapper on every scene.",
   "comparison": "Same desktop backend, packed HDR input, calibration and final sRGB8 encoding; not phone captures.",
   "error": "Absolute sRGB8 RGB error; heatmap max channel, fixed 0..12 scale; preview 3x3 max pooled."
 }

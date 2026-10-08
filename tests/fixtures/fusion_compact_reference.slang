@@ -55,7 +55,7 @@
 // RESIDUAL_PYRAMID stores exposure differences in RG16F, independent weights in
 // RG16_UNORM, and the finest middle exposure separately in R32F.
 // The legacy graph remains the independent numerical reference.
-#include "guided.slang"
+#include "../../tools/profiling/controls/guided.slang"
 #include "zcurve.slang"
 #ifndef GUIDED_DIRECT_MOMENTS
 #define GUIDED_DIRECT_MOMENTS 0

@@ -2,10 +2,11 @@
 
 Start with the [project README](../README.md) for examples and setup.
 
-- [Implementation](implementation.md): pipeline, calibration and guided upsampling.
+- [Implementation](implementation.md): pipeline, calibration, fine-residual correction and Guided controls.
 - [Precision](precision.md): half precision choices and sensitive calculations.
 - [Image comparisons](image-comparison.md): full reference, optimized output, error maps and regeneration.
 - [Performance](performance/README.md): current mobile path and measured results.
+- [Viewer halo fix](performance/viewer-halo.md): stage ablation, full-resolution comparisons and matched desktop timings.
 - [Android benchmark](performance/android.md): reproduce phone measurements.
 - [UE 5.8 ports](unreal-local-exposure.md): Fusion and Bilateral Grid fidelity, controls and limitations.
 - [Bart/UE comparison](performance/unreal.md): matched static-HDR GPU timings and image comparisons.

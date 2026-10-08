@@ -74,7 +74,7 @@ def main():
             shutil.copy2(args.bundle/(base['entry']+'.spv'),dest/(base['entry']+'.spv'))
             base=copy.deepcopy(base)
             if args.group_size!=[8,8]:
-                text=(ROOT/'shaders/guided.slang').read_text()
+                text=(ROOT/'tools/profiling/controls/guided.slang').read_text()
                 text,count=re.subn(r'\[numthreads\(8, 8, 1\)\](\s*void tonemap_baseline)',
                     f'[numthreads({args.group_size[0]}, {args.group_size[1]}, 1)]'+r'\1',text)
                 if count!=1: raise ValueError('Cannot locate baseline group shape')

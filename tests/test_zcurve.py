@@ -95,8 +95,8 @@ class ZCurveTests(unittest.TestCase):
     def test_equal_luminance_colors_share_fusion_proxy(self):
         mapper = ToneMapper(self.device, fusion_scale=1)
         rgba = np.ones((1, 3, 4), np.float32)
-        # Gray, red and green with identical linear luminance.
-        rgba[0, :, :3] = [[.18, .18, .18], [.18/.2126, 0, 0], [0, .18/.7152, 0]]
+        # Gray, red and green with identical equal-RGB proxy luminance.
+        rgba[0, :, :3] = [[.18, .18, .18], [.54, 0, 0], [0, .54, 0]]
         source = create_hdr_texture(self.device, rgba)
         encoder = self.device.create_command_encoder()
         mapper.prepare_weights(encoder, source, 0, 1.2, 1.2)

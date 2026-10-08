@@ -1,6 +1,14 @@
 # Reference and optimized images
 
+The optional [analytic UE film mode](performance/ue-film-analytic.md) has its own
+[reference / fine-residual / error matrix](images/ue-film/manifest.json), including
+four HDR scenes, four presets and the native-resolution Veranda edge case.
+Its errors are measured against the independent full-resolution **same-curve** reference,
+not against the calibrated Z curve or the complete UE renderer.
+
 The separate [Bart / UE 5.8 comparison](performance/unreal.md) shows the standalone Fusion and Bilateral Grid ports, including native-storage versus FP32 error controls. Differences between these algorithms are intentional; Bart is not a ground-truth image for UE.
+
+The viewer defaults to this same fine-residual graph. Both generators also require exact linear-output equality between the viewer runtime and the optimized profiling control; a stale or incorrectly wired viewer fails regeneration.
 
 These images compare the independent `ToneMapper` reference with the current
 `DEFAULT_VARIANT` from the mobile profiling workflow. They run on the **same desktop
@@ -16,6 +24,7 @@ and height with full-resolution fine-residual correction. The reference is not a
 ## Matched settings
 
 - HDR panoramas resized to 1920×1080 using bilinear filtering, then packed into R11G11B10_FLOAT. Both paths read the same packed texture.
+- Both current Bart curve modes use equal RGB weights, `(R + G + B) / 3`, in setup and exposure recovery.
 - Global exposure 0 EV, brackets ±1.2 EV, weight sigma 0.2, ACES output. Reference Fusion scale is 1; optimized Fusion scale is 4 with fine-residual correction. Both share the same fitted Z curve and inverse LUT.
 - Final linear RGB converted identically to sRGB8. Metrics are measured at full output resolution, before preview resizing.
 - Heatmaps show maximum absolute RGB-channel error per pixel: black = 0, blue = 1, cyan = 3, yellow = 6, red = 12 or above. The README heatmap uses the maximum error in each 3×3 block to keep sparse errors visible; full-size heatmaps have no pooling.

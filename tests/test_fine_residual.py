@@ -3,6 +3,7 @@ import unittest
 import numpy as np
 import slangpy as spy
 from tone_mapper import ToneMapper, create_hdr_texture
+from tools.profiling.controls.legacy_guided import LegacyGuidedToneMapper
 from tools.profiling.android.quality import full_resolution_quality
 from tools.profiling.android.quality_sweep import Candidate, codes
 
@@ -20,7 +21,7 @@ class FineResidualTests(unittest.TestCase):
 
     def check_odd_edge(self, exposures):
         device = spy.Device(enable_hot_reload=False)
-        mapper = ToneMapper(device)
+        mapper = LegacyGuidedToneMapper(device)
         reference = ToneMapper(device, fusion_scale=1)
         reference.curve = mapper.curve
         candidate = Candidate(device, mapper, 'fine-residual-lookup')

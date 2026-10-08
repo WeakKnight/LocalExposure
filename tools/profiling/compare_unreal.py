@@ -20,6 +20,7 @@ from PIL import Image, ImageDraw
 import slangpy as spy
 
 from tone_mapper import ToneMapper, create_hdr_texture
+from tools.profiling.controls.legacy_guided import LegacyGuidedToneMapper
 from ue_local_exposure import UEParameters, UnrealLocalExposure
 from tools.profiling.gpu_timer import GpuTimer
 from tools.profiling.android.quality_sweep import codes
@@ -90,7 +91,7 @@ def main():
     timer = GpuTimer(device)
     pack = device.create_compute_kernel(device.create_slang_session().load_program(
         str(ROOT / 'tools/profiling/android/pack_source.slang'), ['pack_source']))
-    bart = ToneMapper(device, fusion_scale=4)
+    bart = LegacyGuidedToneMapper(device)
     full = ToneMapper(device, fusion_scale=1)
     full.curve = bart.curve
     fusion = UnrealLocalExposure(device, 'ue-fusion', parameters=parameters)

@@ -3,7 +3,8 @@ import argparse,json
 from pathlib import Path
 import numpy as np
 import slangpy as spy
-from tone_mapper import ToneMapper,create_hdr_texture,ROOT
+from tone_mapper import create_hdr_texture, ROOT
+from tools.profiling.controls.legacy_guided import LegacyGuidedToneMapper as ToneMapper
 from .quality import VARIANTS,image_quality
 
 def codes(linear):
@@ -38,7 +39,7 @@ class Candidate:
                 'defines': {**defines, 'GATHER_UNSIGNED_SOURCE': '1'}})
             self.unsigned_gather = device.create_compute_kernel(unsigned_session.load_program(
                 COMPACT_MODULES['reduce_setup_gather']+'.slang', ['reduce_setup_gather']))
-        self.final=device.create_compute_kernel(session.load_program(str(Path(__file__).with_name('joint.slang')) if self.config.get('joint_upsample') else 'guided.slang',['apply_joint_linear' if self.config.get('joint_upsample') else 'apply_exposure_production']))
+        self.final=device.create_compute_kernel(session.load_program(str(Path(__file__).with_name('joint.slang')) if self.config.get('joint_upsample') else str(ROOT / 'tools/profiling/controls/guided.slang'),['apply_joint_linear' if self.config.get('joint_upsample') else 'apply_exposure_production']))
         if self.lookup is not None:
             self.final=device.create_compute_kernel(session.load_program('fine_residual/apply.slang',['apply_exposure_production']))
     def render(self,source,ev,bracket=1.2,sigma=.2,*,highlight_ev=None,shadow_ev=None):

@@ -2,7 +2,8 @@
 import unittest
 import numpy as np
 import slangpy as spy
-from tone_mapper import ToneMapper, create_hdr_texture, ROOT
+from tone_mapper import create_hdr_texture, ROOT
+from tools.profiling.controls.legacy_guided import LegacyGuidedToneMapper as ToneMapper
 
 class CompactTests(unittest.TestCase):
     def test_fused_graph_matches_legacy(self):

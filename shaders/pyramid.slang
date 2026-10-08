@@ -39,7 +39,7 @@ void setup_weights(uint3 tid : SV_DispatchThreadID)
     if (tid.x >= width || tid.y >= height) return;
     // Channels encode exposures, not color: R=darker, G=base, B=brighter.
     float3 hdr = max(hdrSource[tid.xy].rgb, 0.0);
-    float luminance = dot(hdr, float3(0.2126, 0.7152, 0.0722)) * exp2(globalEV);
+    float luminance = dot(hdr, float3(1.0/3.0)) * exp2(globalEV);
     float3 y = float3(fusionLightness(luminance * exp2(-highlightEV)),
                       fusionLightness(luminance),
                       fusionLightness(luminance * exp2(shadowEV)));

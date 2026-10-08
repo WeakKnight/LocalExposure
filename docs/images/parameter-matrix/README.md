@@ -10,22 +10,22 @@ Contrast Scale uses the viewer mapping: bracket magnitude = 6 × (1 − scale) E
 
 | Scene | Preset | Global EV | Highlight / Shadow | RMSE | P99 | Max | Red area (%) | Goal |
 | --- | --- | ---: | --- | ---: | ---: | ---: | ---: | --- |
-| abandoned_tiled_room_4k | default | +0 | 0.8 / 0.8 | 0.3764 | 1 | 15 | 0.00005 | PASS |
-| abandoned_tiled_room_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.6012 | 2 | 18 | 0.00950 | PASS |
-| abandoned_tiled_room_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.6291 | 2 | 30 | 0.01654 | PASS |
-| abandoned_tiled_room_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.7817 | 2 | 33 | 0.02170 | PASS |
-| qwantani_patio_4k | default | +0 | 0.8 / 0.8 | 0.4111 | 1 | 8 | 0.00000 | PASS |
-| qwantani_patio_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.6650 | 2 | 15 | 0.00125 | PASS |
-| qwantani_patio_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.6220 | 2 | 19 | 0.00313 | PASS |
-| qwantani_patio_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.7059 | 2 | 14 | 0.00212 | PASS |
-| sundowner_deck_4k | default | +0 | 0.8 / 0.8 | 0.4405 | 2 | 13 | 0.00010 | PASS |
-| sundowner_deck_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.7562 | 3 | 20 | 0.00781 | PASS |
-| sundowner_deck_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.7125 | 3 | 27 | 0.00502 | PASS |
-| sundowner_deck_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.8665 | 3 | 26 | 0.00318 | PASS |
-| veranda_4k | default | +0 | 0.8 / 0.8 | 0.3372 | 1 | 15 | 0.00019 | PASS |
-| veranda_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.5316 | 2 | 16 | 0.00135 | PASS |
-| veranda_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.5752 | 2 | 33 | 0.00670 | PASS |
-| veranda_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.6919 | 3 | 32 | 0.00265 | PASS |
+| abandoned_tiled_room_4k | default | +0 | 0.8 / 0.8 | 0.3719 | 1 | 13 | 0.00005 | PASS |
+| abandoned_tiled_room_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.5949 | 2 | 22 | 0.00921 | PASS |
+| abandoned_tiled_room_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.6203 | 2 | 28 | 0.01509 | PASS |
+| abandoned_tiled_room_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.7730 | 2 | 31 | 0.02079 | PASS |
+| qwantani_patio_4k | default | +0 | 0.8 / 0.8 | 0.4142 | 1 | 7 | 0.00000 | PASS |
+| qwantani_patio_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.6730 | 2 | 14 | 0.00096 | PASS |
+| qwantani_patio_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.6293 | 2 | 17 | 0.00183 | PASS |
+| qwantani_patio_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.7106 | 2 | 14 | 0.00178 | PASS |
+| sundowner_deck_4k | default | +0 | 0.8 / 0.8 | 0.4358 | 2 | 11 | 0.00000 | PASS |
+| sundowner_deck_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.7518 | 3 | 21 | 0.00767 | PASS |
+| sundowner_deck_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.6999 | 3 | 31 | 0.00313 | PASS |
+| sundowner_deck_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.8540 | 3 | 23 | 0.00207 | PASS |
+| veranda_4k | default | +0 | 0.8 / 0.8 | 0.3445 | 1 | 9 | 0.00000 | PASS |
+| veranda_4k | dark-shadow-lift | -2 | 0.9 / 0.5 | 0.5642 | 2 | 18 | 0.00289 | PASS |
+| veranda_4k | bright-highlight-protection | +2 | 0.5 / 0.9 | 0.5748 | 2 | 59 | 0.00448 | PASS |
+| veranda_4k | strong-balanced | +0 | 0.5 / 0.5 | 0.7102 | 3 | 17 | 0.00299 | PASS |
 
 Errors are sRGB8 code values. Goal: red area <1% per case (max-channel error ≥12). The earlier strict RMSE/P99/max gate remains in manifest.json as legacy_accepted. Numerical gates supplement visual inspection; this is not an exhaustive parameter sweep.
 

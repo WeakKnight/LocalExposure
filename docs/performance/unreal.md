@@ -33,7 +33,7 @@ The incremental duration subtracts the same-round global-only baseline. Shared t
 | veranda_4k | ue-fusion | 0.5879 | 0.4794 |
 | veranda_4k | ue-bilateral | 0.1969 | 0.0874 |
 
-Bart guided and full are the independent viewer graphs. The optimized mobile `fine-residual-lookup` default is a separate graph and is not timed in this table. UE Bilateral is the fastest tested graph; UE Fusion is faster than full-resolution Bart here, but slower than quarter-resolution Bart. Algorithms, storage and effect differ, so this is not a quality-matched optimization claim. No GPU bandwidth is measured or estimated by this tool.
+Bart guided and full are the isolated legacy Guided control and independent full-resolution reference. The viewer now defaults to `fine-residual-lookup`, which is not timed in this historical table; see [current viewer measurements](viewer-halo.md). UE Bilateral is the fastest tested graph; UE Fusion is faster than full-resolution Bart here, but slower than quarter-resolution Bart. Algorithms, storage and effect differ, so this is not a quality-matched optimization claim. No GPU bandwidth is measured or estimated by this tool.
 
 ## Images and precision controls
 

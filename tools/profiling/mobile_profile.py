@@ -137,7 +137,8 @@ def export_pass(exe, module, entry, dest):
     dest.mkdir(parents=True, exist_ok=True)
     commands = []
     for target, suffix in (("spirv", "spv"), ("spirv-asm", "spvasm")):
-        cmd = [exe, ROOT/f"shaders/{module}.slang", "-entry", entry, *FLAGS,
+        source = ROOT/"tools/profiling/controls/guided.slang" if module == "guided" else ROOT/f"shaders/{module}.slang"
+        cmd = [exe, source, "-I", ROOT/"shaders", "-entry", entry, *FLAGS,
                "-target", target, "-o", dest/f"shader.{suffix}"]
         run(cmd, dest/f"{suffix}.log")
         commands.append([str(x) for x in cmd])

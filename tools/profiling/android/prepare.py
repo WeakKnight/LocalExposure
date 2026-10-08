@@ -13,7 +13,8 @@ import slangpy as spy
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
-from tone_mapper import ToneMapper, create_hdr_texture
+from tone_mapper import create_hdr_texture
+from tools.profiling.controls.legacy_guided import LegacyGuidedToneMapper as ToneMapper
 from tools.profiling.mobile_profile import compiler, FLAGS
 
 
@@ -126,6 +127,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
                     config=dict(globalEV=ev, highlightEV=highlight_ev, shadowEV=shadow_ev, sigma=sigma, fusion_scale=fusion_scale,source_format=source_format,output_format=output_format),
                     calibration=curve.report, image=dict(path=str(image.resolve()), sha256=sha(image)),
                     reference_backend=str(device.info), shaders={p.relative_to(ROOT/'shaders').as_posix(): sha(p) for p in (ROOT/'shaders').rglob('*.slang')})
+    manifest['control_shaders']={p.name:sha(p) for p in (ROOT/'tools/profiling/controls').glob('*.slang')}
     manifest['benchmark_shaders']={p.name:sha(p) for p in Path(__file__).parent.glob('*.slang')}
     modules = dict(reduce_source='guided', fit_coefficients='guided', average_coefficients='guided', apply_exposure='guided',
                    apply_exposure_production='guided', tonemap_baseline='guided',
@@ -145,7 +147,7 @@ def prepare(out, width, height, image, ev=0., source_format='rgba32_float', outp
     manifest['slangc_sha256'] = sha(exe)
     manifest['commands'] = []
     for entry, module in modules.items():
-        path=Path(__file__).with_name(module+'.slang') if module in ('present','joint') else ROOT/'shaders'/f'{module}.slang'
+        path=Path(__file__).with_name(module+'.slang') if module in ('present','joint') else (ROOT/'tools/profiling/controls/guided.slang' if module == 'guided' else ROOT/'shaders'/f'{module}.slang')
         flags=list(FLAGS)
         if module in ('present','joint'): flags[1]='compute' if entry.endswith('_compute') else ('vertex' if entry=='fullscreen_vertex' else 'fragment')
         if module == 'present':

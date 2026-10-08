@@ -2,7 +2,8 @@
 import unittest
 import numpy as np
 import slangpy as spy
-from tone_mapper import ROOT, ToneMapper, create_hdr_texture
+from tone_mapper import ROOT, create_hdr_texture
+from tools.profiling.controls.legacy_guided import LegacyGuidedToneMapper as ToneMapper
 
 
 class ResidualCompensationTests(unittest.TestCase):

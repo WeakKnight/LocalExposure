@@ -23,6 +23,14 @@ The three color previews use the real tone mapper; weights use its fitted scalar
 
 ## What we built
 
+Bart also supports an **analytic UE film curve** with UE's fixed approximate inverse:
+`python main.py --fusion-curve ue-film --view compare`. Select **Bart curve → UE film (analytic)**
+in the viewer; both quarter-resolution fine residual and full-resolution reference support it.
+Both Bart curve modes now use equal-RGB luminance, matching the UE default.
+This mode allocates no forward or inverse curve LUT. The existing calibrated Z mode remains
+available and is still the default. Film parameters use the existing `--ue-film-*` flags.
+See [behavior, quality and GPU measurements](docs/performance/ue-film-analytic.md).
+
 Exposure fusion supplies the foundation. Our work focuses on turning it into a practical **HDR exposure adjustment** with a small mobile runtime:
 
 - **Fuse lightness, apply exposure to HDR.** Blend three synthetic exposures across a Laplacian pyramid, reconstruct the desired lightness, then recover a local exposure multiplier. The final RGB image passes through the real tone mapper.
@@ -84,7 +92,7 @@ Switch HDR scenes, adjust exposure, and compare the result interactively. **F5**
 
 The **Algorithm** selector also includes standalone **UE 5.8 Fusion** and **UE 5.8 Bilateral Grid** ports, audited against the supplied engine source. Launch them with `--method ue-fusion` or `--method ue-bilateral`; `--ue-profile mobile` selects the mobile input-resolution graph. Bart remains the default. All three use the same final ACES operator for comparison. See [source correspondence, precision controls and limits](docs/unreal-local-exposure.md) and the [matched GPU comparison](docs/performance/unreal.md).
 
-The PC viewer remains the independent reference implementation. The optimized mobile graph runs initialization, pyramid downsampling, tail fusion, reconstruction, and full-resolution correction. Each stage declares its own resources. See the [stage guide](docs/implementation.md) and [Android benchmark](docs/performance/android.md).
+The viewer defaults to **1/4 × 1/4 (fine residual)**, using the same stage shaders as the optimized mobile graph. **Bart resolution → Full resolution reference** (or `--fusion-scale 1`) selects the independent reference. The old Guided implementation remains available to benchmark controls. See the [halo diagnosis and matched desktop timings](docs/performance/viewer-halo.md), [stage guide](docs/implementation.md), and [Android benchmark](docs/performance/android.md).
 
 [Pipeline and calibration details](docs/implementation.md) · [Developer documentation](docs/README.md)
 

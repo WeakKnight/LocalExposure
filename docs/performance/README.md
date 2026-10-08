@@ -1,5 +1,15 @@
 # Mobile performance
 
+[Current algorithm comparison](current-algorithms.md) measures Bart fine residual,
+UE Fusion and UE Bilateral Grid at 1080p/4K, including native and FP32 controls, on
+Apple M4 Pro. These static-EXR desktop results do not replace mobile/game workloads.
+
+The viewer's optional [analytic UE film mode](ue-film-analytic.md) has separate
+desktop quality and GPU measurements. It has no curve LUTs and is not the current
+mobile benchmark default; no phone measurements are claimed for it.
+
+The interactive viewer now defaults to the same fine-residual stage shaders. The old Guided application path has been removed and isolated as a historical profiling control. See [viewer halo diagnosis and desktop measurements](viewer-halo.md).
+
 [Bart / UE 5.8 desktop comparison](unreal.md) records separate Apple M4 Pro Metal measurements on static EXRs. Those results do not replace the phone measurements below.
 
 The default is `fine-residual-lookup`. The former `guided-packed-coefficients` path remains a control. The independent viewer reference

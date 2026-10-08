@@ -3,6 +3,7 @@ import unittest
 import numpy as np
 import slangpy as spy
 from tone_mapper import ROOT, ToneMapper, create_hdr_texture
+from fine_residual import FineResidualToneMapper
 from ue_local_exposure import UEParameters, UnrealLocalExposure
 
 
@@ -26,7 +27,7 @@ class ProductionGraphTests(unittest.TestCase):
     def test_same_texture_content_change_and_diagnostic_parity(self):
         device = spy.Device(enable_hot_reload=False)
         source = create_hdr_texture(device, np.full((33, 65, 4), .12, np.float32))
-        factories = [lambda s=s: ToneMapper(device, fusion_scale=s) for s in (1, 4)]
+        factories = [lambda: ToneMapper(device), lambda: FineResidualToneMapper(device)]
         factories += [lambda method=m: UnrealLocalExposure(device, method, parameters=UEParameters(profile='mobile'))
                       for m in ('ue-fusion', 'ue-bilateral')]
         for factory in factories:

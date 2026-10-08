@@ -4,7 +4,8 @@ import unittest
 import numpy as np
 import slangpy as spy
 
-from tone_mapper import ROOT, ToneMapper, create_hdr_texture
+from tone_mapper import ROOT, create_hdr_texture
+from tools.profiling.controls.legacy_guided import LegacyGuidedToneMapper as ToneMapper
 from tools.profiling.android.benchmark import stats, summarize, validate
 from tools.profiling.android.bandwidth import bandwidth_stats
 from tools.profiling.android.timer_audit import analyze
@@ -15,7 +16,7 @@ class AndroidBenchmarkTests(unittest.TestCase):
         device=spy.Device(enable_hot_reload=False)
         mapper=ToneMapper(device)
         session=device.create_slang_session(compiler_options={'include_paths':[ROOT/'shaders']})
-        kernel=device.create_compute_kernel(session.load_program('guided.slang',['apply_exposure_production']))
+        kernel=device.create_compute_kernel(session.load_program(str(ROOT / 'tools/profiling/controls/guided.slang'),['apply_exposure_production']))
         rng=np.random.default_rng(671)
         for h,w in [(1,1),(17,31),(108,192)]:
             rgba=np.exp2(rng.uniform(-16,15,(h,w,4))).astype(np.float32)

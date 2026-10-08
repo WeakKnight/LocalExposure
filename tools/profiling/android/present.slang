@@ -3,7 +3,7 @@
 #if FINE_RESIDUAL_LOOKUP
 #include "fine_residual/apply.slang"
 #else
-#include "guided.slang"
+#include "../controls/guided.slang"
 #endif
 #ifndef WORK_X
 #define WORK_X 8

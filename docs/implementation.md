@@ -1,19 +1,34 @@
 # Implementation Notes
 
+Both current Bart curve policies use linear RGB arithmetic-mean luminance in setup
+and final exposure recovery, matching UE's default metric. Z calibration still
+measures the neutral-axis display response; final ACES and display colorimetry are
+unchanged. Historical Guided controls retain their Rec.709 setup/conversion shaders.
+
+`--fusion-curve ue-film` selects an optional analytic curve policy in both Bart hosts.
+`ue_film_curve.py` supplies five film uniforms, without calibration or texture allocation.
+`shaders/ue_film_curve.slang` uses the audited functions in `shaders/unreal/common.slang`;
+the new full-reference and fine-residual initialize/apply entries evaluate them directly.
+Shared pyramid/reconstruction stages and the independent UE renderer remain unchanged.
+This reproduces the neutral film response, fixed approximate inverse and upper-only
+pre-square limit, not Unreal's complete post-processing. See
+[validation and limitations](performance/ue-film-analytic.md).
+
 Start with the core files below. Tests and profiling tools are kept outside the main reading path.
 
 | Read in order | Purpose |
 | --- | --- |
-| [tone_mapper.py](../tone_mapper.py) | Pipeline orchestration, textures, and pass ordering |
+| [fine_residual.py](../fine_residual.py) | Default optimized viewer host, textures and stage ordering |
+| [tone_mapper.py](../tone_mapper.py) | Independent full-resolution reference |
 | [shaders/pyramid.slang](../shaders/pyramid.slang) | Three exposures, weights, and downsampling |
 | [shaders/fusion.slang](../shaders/fusion.slang) | Laplacian fusion, reconstruction, and exposure conversion |
-| [shaders/guided.slang](../shaders/guided.slang) | Low-resolution guidance and full-resolution application |
+| [shaders/reference_apply.slang](../shaders/reference_apply.slang) | Full-resolution reference exposure application |
 | [zcurve.py](../zcurve.py) / [shaders/zcurve.slang](../shaders/zcurve.slang) | Curve fitting and inverse LUT |
 | [main.py](../main.py) | Interactive viewer and command-line entry point |
 
 Supporting material: [documentation](README.md), [tests](../tests/README.md), and [developer tools](../tools/README.md). Profiling is optional; it is not needed to run the viewer.
 
-The default mobile variant is `fine-residual-lookup`. It uses five stages, each with its own resources; the viewer and old Guided controls remain independent.
+The default mobile variant is `fine-residual-lookup`. It uses five stages, each with its own resources; the viewer uses the same stage shaders through `FineResidualToneMapper`. Historical Guided controls are isolated under `tools/profiling/controls/` and cannot be selected in the application.
 
 | Stage | Responsibility |
 | --- | --- |
@@ -41,11 +56,11 @@ At full resolution, the target is `weighted lightness + reconstructed low residu
 
 ## Quarter-Resolution Fusion
 
-By default, Fusion and inverse exposure conversion run at **1/4 width x 1/4 height** (1/16 as many pixels). A 4096x2048 input uses a 1024x512 working image. The UI's **Fusion resolution** selector switches between the guided version and the full-resolution reference; `--fusion-scale 1` selects the reference from the command line.
+The default viewer runs Fusion at **1/4 width × 1/4 height**, restores missing fine residuals and inverts lightness at full resolution. A 4096×2048 source uses a 1024×512 pyramid. **Bart resolution** switches between **1/4 × 1/4 (fine residual)** and the independent **Full resolution reference**; `--fusion-scale 1` selects the latter on the command line.
 
-`shaders/guided.slang` downsamples linear HDR and log-luminance guidance separately, fits local `EV = a * guide + b` models in 5x5 low-resolution windows, averages the coefficients, and evaluates them with full-resolution guidance. Regularization is 0.04 EV squared, and the resulting local EV is limited to [-12, 12]. Only exposure application and the real tone mapper run at full resolution.
+The old average-HDR / low-resolution exposure inversion / Guided fitting path has been removed from application code. Its frozen host and shader live under `tools/profiling/controls/` solely for historical benchmarks and regressions. `ToneMapper` now accepts only full-resolution Fusion. The default host imports no profiling code.
 
-This is an approximation: averaging HDR before nonlinear tone mapping and omitting the finest Fusion bands can change fine detail and strong highlights. Guided upsampling reduces edge bleed but cannot recover information already lost during reduction. The lower working pixel count is not a measured 16x frame-time speedup; full-resolution output and guided-filter passes still have a cost.
+Fine-residual correction approximates missing fine pyramid bands; it is not exact full-resolution Fusion. The lower pixel count is not a measured 16× frame-time speedup. See [the viewer halo diagnosis](performance/viewer-halo.md) for the screenshot reproduction, initialization ablation, native-resolution limits and matched GPU measurements.
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest tests.test_guided tests.test_zcurve tests.test_pyramid tests.test_precision
@@ -71,4 +86,3 @@ Current ACES fit: contrast **1.52577**, shoulder **0.999449**, b **1.00612**, c 
 ```
 
 Colors use RGBA16F and exposure maps use R16F. Guided sample products, regularized slope division, and display multiply/add operations use half. Curve evaluation, inverse lookup, sensitive Fusion calculations and guided accumulation/evaluation remain float. See the [precision review](precision.md).
-

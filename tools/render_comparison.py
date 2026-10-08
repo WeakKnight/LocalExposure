@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw
 OUT = ROOT / 'docs/images/comparison'
 SCENES = ['sundowner_deck', 'veranda']
 SETTINGS = dict(width=1920, height=1080, global_ev=0.0, bracket_ev=1.2,
-                sigma=0.2, fusion_scale=4, reference_fusion_scale=1, input_format='R11G11B10_FLOAT')
+                sigma=0.2, luminance="equal RGB", fusion_scale=4, reference_fusion_scale=1, input_format='R11G11B10_FLOAT')
 
 
 def digest(path):
@@ -25,11 +25,13 @@ def digest(path):
 
 
 def sources():
-    paths = [ROOT / name for name in ['tone_mapper.py', 'zcurve.py', 'fusion_lookup.py', 'requirements.txt',
+    paths = [ROOT / name for name in ['tone_mapper.py', 'fine_residual.py', 'zcurve.py', 'fusion_lookup.py', 'ue_film_curve.py', 'requirements.txt',
              'tools/render_comparison.py', 'tools/profiling/android/quality.py',
              'tools/profiling/android/quality_sweep.py', 'tools/profiling/android/variants.py',
              'tools/profiling/android/pack_source.slang']]
     paths += sorted((ROOT / 'shaders').rglob('*.slang'))
+    paths += sorted((ROOT / 'tools/profiling/controls').glob('*.slang'))
+    paths += [ROOT / 'tools/profiling/controls/legacy_guided.py']
     paths += [ROOT / 'Assets' / f'{scene}_4k.exr' for scene in SCENES]
     return {p.relative_to(ROOT).as_posix(): digest(p) for p in paths}
 
@@ -61,13 +63,17 @@ def main():
     import OpenEXR
     import slangpy as spy
     from tone_mapper import ToneMapper, create_hdr_texture
+    from fine_residual import FineResidualToneMapper
+    from tools.profiling.controls.legacy_guided import LegacyGuidedToneMapper
     from tools.profiling.android.quality_sweep import Candidate, codes
     from tools.profiling.android.quality import full_resolution_quality as image_quality
     from tools.profiling.android.variants import DEFAULT_VARIANT, VARIANTS
 
     device = spy.Device(enable_hot_reload=False)
-    mapper = ToneMapper(device, fusion_scale=SETTINGS['fusion_scale'])
+    mapper = LegacyGuidedToneMapper(device, fusion_scale=SETTINGS['fusion_scale'])
     candidate = Candidate(device, mapper, DEFAULT_VARIANT)
+    viewer_mapper = FineResidualToneMapper(device)
+    viewer_mapper.curve = mapper.curve
     reference_mapper = ToneMapper(device, fusion_scale=SETTINGS["reference_fusion_scale"])
     reference_mapper.curve = mapper.curve  # Isolate algorithm differences from calibration.
     session = device.create_slang_session()
@@ -99,6 +105,11 @@ def main():
         device.submit_command_buffer(encoder.finish())
         reference_linear = reference_mapper.final_color.to_numpy()
         optimized_linear, coefficients = candidate.render(packed, ev, bracket, sigma)
+        encoder = device.create_command_encoder()
+        viewer_mapper.record_processing(encoder, packed, ev, bracket, bracket, sigma)
+        device.submit_command_buffer(encoder.finish())
+        if not np.array_equal(viewer_mapper.final_color.to_numpy(), optimized_linear):
+            raise RuntimeError(f'{scene}: viewer differs from the optimized default')
         if not all(np.isfinite(x).all() for x in [reference_linear, optimized_linear, coefficients]):
             raise RuntimeError(f'{scene}: non-finite render')
         reference, optimized = codes(reference_linear), codes(optimized_linear)
@@ -131,6 +142,7 @@ def main():
                   accepted=all(r['quality']['accepted'] for r in records),
                   reference='Independent unfused ToneMapper; full-resolution Fusion, all pyramid levels, no Guided upsampling.',
                   optimized='Quarter-width/height Fusion with full-resolution fine-residual correction; shared calibration.',
+                  viewer_parity='Exact linear RGBA16F equality with FineResidualToneMapper on every scene.',
                   comparison='Same desktop backend, packed HDR input, calibration and final sRGB8 encoding; not phone captures.',
                   error='Absolute sRGB8 RGB error; heatmap max channel, fixed 0..12 scale; preview 3x3 max pooled.')
     (OUT / 'manifest.json').write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')

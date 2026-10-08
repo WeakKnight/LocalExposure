@@ -4,7 +4,8 @@ import unittest
 import numpy as np
 import slangpy as spy
 
-from tone_mapper import ToneMapper, create_hdr_texture
+from tone_mapper import create_hdr_texture
+from tools.profiling.controls.legacy_guided import LegacyGuidedToneMapper as ToneMapper
 from tests.test_pyramid import aces
 from tests.test_guided import box5
 

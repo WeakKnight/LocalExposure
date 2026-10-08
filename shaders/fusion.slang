@@ -44,7 +44,7 @@ void convert_exposure(uint3 tid : SV_DispatchThreadID)
     uint width, height;
     exposureOutput.GetDimensions(width, height);
     if (tid.x >= width || tid.y >= height) return;
-    float luminance = dot(max(hdrSource[tid.xy].rgb, 0.0), float3(0.2126, 0.7152, 0.0722)) * exp2(globalEV);
+    float luminance = dot(max(hdrSource[tid.xy].rgb, 0.0), float3(1.0/3.0)) * exp2(globalEV);
     float target = clamp(fusedLightness[tid.xy], 0.0, zMaxLightness);
     float baseline = fusionLightness(luminance);
     half multiplier = half(1.0);

@@ -217,4 +217,4 @@ class ReferenceCandidate(Candidate):
                 'defines': {**defines, 'GATHER_UNSIGNED_SOURCE': '1'}})
             self.unsigned_gather = device.create_compute_kernel(unsigned_session.load_program(
                 str(ROOT/'tests/fixtures/fusion_compact_reference.slang'), ['reduce_setup_gather']))
-        self.final=device.create_compute_kernel(session.load_program(str(Path(__file__).with_name('joint.slang')) if self.config.get('joint_upsample') else 'guided.slang',['apply_joint_linear' if self.config.get('joint_upsample') else 'apply_exposure_production']))
+        self.final=device.create_compute_kernel(session.load_program(str(Path(__file__).with_name('joint.slang')) if self.config.get('joint_upsample') else str(ROOT / 'tools/profiling/controls/guided.slang'),['apply_joint_linear' if self.config.get('joint_upsample') else 'apply_exposure_production']))

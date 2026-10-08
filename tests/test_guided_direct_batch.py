@@ -16,7 +16,7 @@ class GuidedInteriorTests(unittest.TestCase):
             address_u=spy.TextureAddressingMode.clamp_to_edge,
             address_v=spy.TextureAddressingMode.clamp_to_edge)
         apply_session = device.create_slang_session(compiler_options={'include_paths': [ROOT/'shaders']})
-        apply = device.create_compute_kernel(apply_session.load_program('guided.slang', ['apply_exposure_production']))
+        apply = device.create_compute_kernel(apply_session.load_program(str(ROOT / 'tools/profiling/controls/guided.slang'), ['apply_exposure_production']))
         usage = spy.TextureUsage.shader_resource | spy.TextureUsage.unordered_access
         dummy = device.create_texture(width=1, height=1, format=spy.Format.r16_float, usage=usage)
         kernels = []

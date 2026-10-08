@@ -14,7 +14,7 @@ class ReductionTests(unittest.TestCase):
         session = device.create_slang_session(compiler_options={
             'include_paths': [ROOT/'shaders', ROOT/'tests/fixtures']})
         old = device.create_compute_kernel(session.load_program('reduce_source_original.slang', ['reduce_source']))
-        new = device.create_compute_kernel(session.load_program('guided.slang', ['reduce_source']))
+        new = device.create_compute_kernel(session.load_program(str(ROOT / 'tools/profiling/controls/guided.slang'), ['reduce_source']))
         sampler = device.create_sampler(min_filter=spy.TextureFilteringMode.linear,
             mag_filter=spy.TextureFilteringMode.linear,
             address_u=spy.TextureAddressingMode.clamp_to_edge,

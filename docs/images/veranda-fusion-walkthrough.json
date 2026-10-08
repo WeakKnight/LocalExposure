@@ -12,15 +12,15 @@
   "weight_max": 0.77197265625,
   "weight_sum_max_error": 0.0,
   "ev_source": "Production exposureMultiplier(), including half rounding; excludes global EV",
-  "ev_min": -11.999999046325684,
+  "ev_min": -12.0,
   "ev_max": 12.0,
   "display_ev_range": [
     -3,
     0,
     3
   ],
-  "ev_display_clipped_fraction": 0.021480555555555555,
+  "ev_display_clipped_fraction": 0.02103611111111111,
   "final_matches": "veranda-after.png",
   "shader_sha256": "7a5f6fa770d4a893d7229db22618b1bc79f2878e6d3aaaef764c6fd4d22b4942",
-  "image_sha256": "52a0ba7cd21485602bc54561ca261784df963ca7fe684f7cb8e37d71325a8efa"
+  "image_sha256": "b86dc140348b27cc1f7f51bf314ac35587acd20ad8e4c7dbefc6e01d4bfb8877"
 }

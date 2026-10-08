@@ -21,7 +21,7 @@ half exposureMultiplier(uint2 pixel, uint2 size, float3 hdr)
     {
         float2 uv = (float2(pixel) + 0.5) / float2(size);
         float2 ab = averagedCoefficients.SampleLevel(linearSampler, uv, 0);
-        float luminance=dot(hdr,float3(.2126,.7152,.0722))*exp2(globalEV);
+        float luminance=dot(hdr,float3(1.0/3.0))*exp2(globalEV);
         float logL=log2(max(luminance,exp2(-40.)));
         float coord=(saturate((logL+40.)/80.)*2047.+.5)/2048.;
         float4 f=fineLookup.SampleLevel(linearSampler,coord,0);
@@ -47,3 +47,20 @@ void apply_exposure_production(uint3 tid : SV_DispatchThreadID)
     colorOutput[tid.xy] = half4(half3(toneOperator(color * float(multiplier))), half(1.0));
 }
 
+// Viewer diagnostics share the exact production multiplier and final color.
+RWTexture2D<half> fullExposureOutput;
+RWTexture2D<half4> baseOutput;
+[shader("compute")]
+[numthreads(8, 8, 1)]
+void apply_exposure(uint3 tid : SV_DispatchThreadID)
+{
+    uint w, h;
+    colorOutput.GetDimensions(w, h);
+    if (tid.x >= w || tid.y >= h) return;
+    float3 hdr = max(fullSource[tid.xy].rgb, 0.0);
+    half multiplier = exposureMultiplier(tid.xy, uint2(w, h), hdr);
+    float3 color = hdr * exp2(globalEV);
+    fullExposureOutput[tid.xy] = multiplier;
+    baseOutput[tid.xy] = half4(half3(toneOperator(color)), half(1.0));
+    colorOutput[tid.xy] = half4(half3(toneOperator(color * float(multiplier))), half(1.0));
+}
